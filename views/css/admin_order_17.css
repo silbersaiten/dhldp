@@ -1,0 +1,29 @@
+#dhldp_dhl_addit_services .card {
+    margin: 5px;
+    width: 100%;
+}
+#dhldp_dhl_export_documents .card {
+    margin: 5px;
+    width: 100%;
+}
+.form-inline .form-group-flex {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: start!important;
+}
+.form-inline label {
+    align: top;
+    display: flex;
+    justify-content: end!important;
+}
+
+
+.form-horizontal .control-label {
+    text-align: right;
+    margin-bottom: 0;
+    padding-top: 7px;
+}
+
+.bootstrap .btn .material-icons {
+    font-size: 11px;
+}

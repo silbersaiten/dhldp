@@ -1,0 +1,49 @@
+.dhl-tabs {
+    border-bottom: 1px solid #00529b;
+    list-style-type: none;
+    margin-top: 20px;
+}
+
+ul.dhl-tabs li {
+    float: left;
+    margin-right: 1px;
+    margin-bottom: -1px;
+}
+.dhl-tabs a {
+    background: #585a69 none repeat scroll 0 0;
+    color: #fff;
+    display: block;
+    font-weight: bold;
+    padding: 10px 10px 7px;
+    text-decoration: none;
+}
+.dhl-tabs .selected {
+    background: rgba(0, 0, 0, 0) repeat-x scroll 0 0;
+    color: #000;
+    border-left: 1px solid #00529b;
+    border-top: 1px solid #00529b;
+    border-right: 1px solid #00529b;
+    border-bottom: 1px solid #ffffff;
+}
+
+.form-group.dhlp_new_release>label::before {
+    font-family: "Material Icons",Arial,sans-serif;
+    font-size: 19px;
+    color: #25b9d7;
+    content: "\e031";
+    transition: .25s ease-out;
+}
+
+.dhl-tabs-div {
+    margin-top: 20px;
+}
+
+.block_hidden_only_for_screen {
+    display: none;
+}
+
+.dhl_authdata_live {display: none;}
+.dhl_authdata_sbx {display: none;}
+
+.menu-dhlintraship .navbar-nav.menu  li {text-transform: uppercase; font-weight: bold;}
+.bootstrap .menu-dhlintraship {background-color: #ffffff!important;}

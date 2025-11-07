@@ -1,0 +1,91 @@
+.dhl_order_panel {
+    border-left: 5px solid #FECC00!important;
+}
+
+.dhldp_dp_order_panel {
+    border-left: 5px solid #FECC00!important;
+}
+
+#dhldp_dhl_addit_services {
+    width: 100%;
+}
+
+#dhldp_dhl_export_documents {
+    width: 100%;
+}
+
+.dhl_panel {
+    width: 100%;
+}
+
+.dhl_panel .ordercarrier-panel {
+    width: 100%;
+}
+
+.dhl_panel .footer-panel {
+    width: 100%;
+}
+
+.param-footer {
+    padding: 5px 0px;
+}
+
+/* ps 1.7.6.1 - working */
+.help-box {
+    display: inline-flex;
+    align-items: center;
+    width: 1.4rem;
+    height: 1.2rem;
+    padding: 0;
+    margin: 0 5px 2px;
+    line-height: 19px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.help-box i, .help-box::after {
+    font-family: "Material Icons",Arial,sans-serif;
+    font-size: 19px;
+    color: #25b9d7;
+    content: "\e887";
+    transition: .25s ease-out;
+}
+
+.help-box-f i, .help-box-f::after {
+    font-family: FontAwesome,Arial,sans-serif;
+    font-size: 19px;
+    color: #25b9d7;
+    content: "\f059";
+    transition: .25s ease-out;
+}
+
+.form-group.dhlp_new_release label, .dhlp_new_release::before {
+    font-family: "Material Icons",Arial,sans-serif;
+    font-size: 19px;
+    color: #25b9d7;
+    content: "\e031";
+    transition: .25s ease-out;
+}
+
+.popover {
+    width: 276px;
+}
+
+#dhldp_dhl_addit_services .panel {
+    width: 100%;
+}
+
+#dhldp_dhl_addit_services {
+    width: 100%;
+}
+
+.form-inline .form-group-flex {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: start!important;
+}
+
+.form-group-flex-content {
+    padding-top: 8px;
+}
+/* === ps 1.7.6.1 - working */

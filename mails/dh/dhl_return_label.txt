@@ -1,0 +1,9 @@
+Hello {firstname} {lastname},
+
+================================
+
+Return Label for {order_name}
+
+Best regards
+================================
+Your {shop_name} Team

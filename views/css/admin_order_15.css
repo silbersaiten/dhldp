@@ -1,0 +1,60 @@
+.dhl_panel label{
+    width: auto;
+
+}
+#dhl_update_address .dhl_delivery_address label {
+    padding-top: 0px !important;
+}
+
+#dhl_update_address label.control-label {
+    float: none !important;
+    font-weight: normal!important;
+}
+
+#dhl_update_address fieldset {
+    font-size: 1.0em !important;
+}
+
+.dhl_panel a.button{
+    display: inline-block;
+}
+
+.dhl-slider {
+    padding-top: 5px;
+    padding-bottom: 30px;
+}
+
+.dhl-slider-label {
+    position: relative;
+    top: 5px;
+}
+.dhl-slider-label span {
+    position: absolute;
+    display: inline-block;
+    font-size: 10px;
+}
+.itemsDiv {
+  background: #E5E8EA;
+  clear: both;
+  margin: 3px 0;
+  overflow: hidden;
+  padding: 10px 15px 0;
+  width: 120px;
+}
+
+.dhl_panel span.badge {
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 20px;
+    font-weight: bold;
+    padding: 0 2px;
+}
+
+.dhl_panel .panel-heading {
+    line-height: 2.2em;
+    padding: 0 0 0 5px;
+    text-transform: uppercase;
+}
+.panel-heading a.button {
+    line-height: 1em;
+}

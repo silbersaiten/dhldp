@@ -1,0 +1,184 @@
+<?php
+
+namespace PrestaShop\Module\dhldp\classes;
+use Configuration;
+use Tools;
+use DHLDPRestClient;
+
+/**
+ * DHL Deutschepost
+ *
+ * @author    silbersaiten <info@silbersaiten.de>
+ * @copyright 2023 silbersaiten
+ * @license   See joined file licence.txt
+ * @category  Module
+ * @support   silbersaiten <support@silbersaiten.de>
+ * @version   2.0.0
+ * @link      http://www.silbersaiten.de
+ */
+class DHLTokenManager
+{
+    const ENV_TOKEN_KEY = 'DHLDP_DHL_ACCESS_TOKEN';
+    const ENV_TOKEN_EXPIRY = 'DHLDP_DHL_TOKEN_EXPIRY';
+
+    private $clientId;
+    private $clientSecret;
+    private $dhl_user;
+    private $dhl_pass;
+    private $tokenUrlSDX = 'https://api-sandbox.dhl.com/parcel/de/account/auth/ropc/v1/token';  // Sandbox environment
+    private $tokenUrlLive = 'https://api-eu.dhl.com/parcel/de/account/auth/ropc/v1/token';  // Production environment
+
+    private $tokenUrl;
+
+    public function __construct($id_shop = null)
+    {
+        if (Tools::getIsset('DHLDP_DHL_MODE')) {
+            $mode = (int)Tools::getValue('DHLDP_DHL_MODE');
+        } else {
+            $mode = (int)Configuration::get('DHLDP_DHL_MODE', null, null, $id_shop);
+        }
+        if ($mode == 1) {
+            $this->tokenUrl = $this->tokenUrlLive;
+            if (Tools::getIsset('DHLDP_DHL_LIVE_USER') && Tools::getIsset('DHLDP_DHL_LIVE_SIGN')) {
+                $this->dhl_user = Tools::getValue('DHLDP_DHL_LIVE_USER');
+                $this->dhl_pass = Tools::getValue('DHLDP_DHL_LIVE_SIGN');
+            } else {
+                $this->dhl_user = Configuration::get('DHLDP_DHL_LIVE_USER', null, null, $id_shop);
+                $this->dhl_pass = Configuration::get('DHLDP_DHL_LIVE_SIGN', null, null, $id_shop);
+            }
+        } else {
+            $this->tokenUrl = $this->tokenUrlSDX;
+            $this->dhl_user = getenv('DHLDP_DHL_SDX_USER');
+            $this->dhl_pass = getenv('DHLDP_DHL_SDX_PASS');
+        }
+        $this->clientId = getenv('DHLDP_DHL_CLIENT_ID');
+        $this->clientSecret = getenv('DHLDP_DHL_CLIENT_SECRET');
+    }
+
+    public function getToken()
+    {
+        if ($this->isTokenExpired()) {
+            return $this->requestNewToken();
+        }
+
+        return getenv(self::ENV_TOKEN_KEY);
+    }
+
+    private function isTokenExpired()
+    {
+        $tokenExpiry = getenv(self::ENV_TOKEN_EXPIRY);
+        return !$tokenExpiry || time() >= (int)$tokenExpiry;
+    }
+
+    private function requestNewToken()
+    {
+        $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
+
+        $requestData = array(
+            'grant_type' => 'password',
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'username' => $this->dhl_user,
+            'password' => $this->dhl_pass
+        );
+
+        $rclient->saveLogData('DHL', 'requestNewToken', [
+            'endpoint' => $this->tokenUrl,
+            'data' => array_merge($requestData, ['password' => '***', 'client_secret' => '***']) // Скрываем чувствительные данные
+        ]);
+
+        $res = $rclient->post($this->tokenUrl, $requestData);
+
+        if ($res->error) {
+            $rclient->saveLogData('DHL', 'requestNewToken', null, null, curl_error($res->error));
+            throw new \Exception('Error requesting DHL token: ' . curl_error($res->error));
+        }
+
+        $tokenData = $res->decodeResponse();
+
+        if (isset($tokenData['access_token']) && isset($tokenData['expires_in'])) {
+            $this->storeToken($tokenData['access_token'], $tokenData['expires_in']);
+            return $tokenData['access_token'];
+        }
+
+        $rclient->saveLogData('DHL', 'requestNewToken', null, [
+            'access_token' => isset($tokenData['access_token']) ? '***' : null,
+            'expires_in' => isset($tokenData['expires_in']) ? $tokenData['expires_in'] : null,
+            'token_type' => isset($tokenData['token_type']) ? $tokenData['token_type'] : null
+        ]);
+
+        throw new \Exception('Invalid response from DHL: ' . $res->response);
+    }
+
+    private function storeToken($accessToken, $expiresIn)
+    {
+        $expiryTime = time() + (int)$expiresIn;
+        Configuration::updateValue('DHLDP_DHL_ACCESS_TOKEN', $accessToken);
+        Configuration::updateValue('DHLDP_DHL_TOKEN_EXPIRY', $expiryTime);
+    }
+
+    // Method to use the token in a DHL API request
+    public function makeApiRequest($endpoint, $method = 'GET', $data = [])
+    {
+        $accessToken = $this->getToken();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $accessToken,
+            'Content-Type: application/json',
+        ]);
+        if ($method === 'GET') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+        if ($method === 'DELETE') {
+            curl_setopt($ch, CURLOPT_ENCODING, '');
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 0);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+//            curl_setopt($ch, CURLOPT_POST, true);
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw new \Exception('DHL API Request Error: ' . curl_error($ch));
+        }
+
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+//    public function saveLogData($request_header, $request, $response_header, $response, $curl_error)
+//    {
+//        $aresph = array();
+//        foreach ($this->objectToArray($response_header) as $k => $v) {
+//            $aresph[] = print_r($k, true) . ": " . print_r($v, true);
+//        }
+//        $msg = "\r\n*Request header*: " . $request_header .
+//            "\r\n*Request*: " . $request .
+//            "\r\n*Response header*: \r\n" . implode("\r\n", $aresph) .
+//            "\r\n*Response*: " . $response .
+//            "\r\n*Curl error*: " . $curl_error . "\r\n";
+//        if ($this->options['savelog_callback'] != null) {
+//            call_user_func($this->options['savelog_callback'], 'DHL', $msg, 'dhl_api');
+//        }
+//    }
+//
+//    public function objectToArray($object)
+//    {
+//        if (!is_object($object) && !is_array($object)) {
+//            return $object;
+//        }
+//
+//        return array_map(array($this, 'objectToArray'), (array)$object);
+//    }
+}

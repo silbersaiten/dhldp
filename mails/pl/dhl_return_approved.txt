@@ -1,0 +1,10 @@
+Hello {firstname} {lastname},
+
+================================
+
+Return has been approved.
+Please get DHL Return label for {order_name} on {order_return_url} .
+
+Best regards
+================================
+Your {shop_name} Team
