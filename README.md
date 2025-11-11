@@ -1,6 +1,11 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.1.0 (11.11.2025)
+* Refactoring
+* Remove old code
+* Fixed API to the REST
+
 #### 3.0.5 (20.10.2025)
 * Fixed tracking number in the email
 
