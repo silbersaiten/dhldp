@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.0.4
+ * @version   3.1.0
  * @link      https://www.silbersaiten.de
  */
 
@@ -388,54 +388,8 @@ class DHLDPApiRest
                     'countryISOCode' => Tools::strtoupper($country->iso_code),
                 );
             } else {
-                $addressAddition = $address->address2;
-                $matches = array();
-                preg_match(
-                    '/^(?P<streetname>[^\d]+) (?P<streetnumber>([ \/0-9-])+.?)$/',
-                    trim($address->address1),
-                    $matches
-                );
-                if (!count($matches)) {
-                    preg_match(
-                        '/^(?P<streetnumber>[ \/0-9-]+.?) (?P<streetname>[^\d]+.?)$/',
-                        trim($address->address1),
-                        $matches
-                    );
-                    if (!count($matches)) {
-                        preg_match(
-                            '/(?P<streetnumber>[ \/0-9-]+.?) (?P<streetname>[^\d]+.?)/',
-                            trim($address->address1),
-                            $matches
-                        );
-                        if (!count($matches)) {
-                            $street_name = $address->address1;
-                            preg_match(
-                                '/(?P<streetnumber>[ \/0-9-]+.?)/',
-                                trim($addressAddition),
-                                $matches
-                            );
-                            if (isset($matches['streetnumber'])) {
-                                $street_number = $matches['streetnumber'];
-                                $addressAddition = str_replace($matches['streetnumber'], '', $addressAddition);
-                            } else {
-                                $street_number = '';
-                            }
-                        } else {
-                            $street_name = trim($matches['streetname']);
-                            $street_number = trim($matches['streetnumber']);
-                        }
-                    } else {
-                        $street_name = trim($matches['streetname']);
-                        $street_number = trim($matches['streetnumber']);
-                    }
-                } else {
-                    $street_name = trim($matches['streetname']);
-                    $street_number = trim($matches['streetnumber']);
-                }
                 $receiver['Address'] = array(
-                    'streetName' => $street_name,
-                    'streetNumber' => $street_number,
-                    'additionalAddressInformation1' => $addressAddition,
+                    'additionalAddressInformation1' => $address->address2,
                     'Zip' => array(),
                     'city' => $address->city,
                     'Origin' => array(
@@ -455,24 +409,9 @@ class DHLDPApiRest
             $receiver['Communication']['email'] = $customer->email;
             $receiver['Communication']['phone'] = $address->phone;
             $receiver['Communication']['mobile'] = $address->phone_mobile;
-
-
-            // fixed
-            if (in_array(Tools::strtoupper($country->iso_code), array('DE', 'NL', 'IT', 'LU', 'US'))) {
-                $receiver['Address']['streetName'] = trim($address->address1) . ((trim($address->address2) != '') ? ' ' . trim($address->address2) : '');
-                unset($receiver['Address']['streetNumber']);
-                $receiver['Address']['name3'] = $address->address2;
-                $receiver['Address']['addressAddition'] = '';
-            } else {
-                $receiver['Address']['streetName'] = $address->address1;
-                unset($receiver['Address']['streetNumber']);
-                $receiver['name3'] = $address->address2;
-                $receiver['Address']['addressAddition'] = '';
-            }
             $receiver['Address']['dispatchingInformation'] = '';
             return $receiver;
         }
-
         return false;
     }
 
@@ -481,7 +420,7 @@ class DHLDPApiRest
         if ($address_input === false) {
             $address = $this->normalizeAddress(new Address((int)$id_address));
         } else {
-            $address = array();
+            $address = [];
 
             $norm_address = $this->normalizeAddress(new Address((int)$id_address));
 
@@ -606,15 +545,12 @@ class DHLDPApiRest
                 'value' => $this->convertWeightToKg($package['weight']),
             );
         }
-
         return $details;
     }
 
     function convertSizeToMillimeters($size)
     {
-
         $dimension_unit = Configuration::get('PS_DIMENSION_UNIT');
-        $size_in_mm = $size;
         switch ($dimension_unit) {
             case 'm':
                 $size_in_mm = $size * 1000;
@@ -627,11 +563,9 @@ class DHLDPApiRest
                 break;
             case 'mm':
             default:
-
                 $size_in_mm = $size;
                 break;
         }
-
         return $size_in_mm;
     }
 
@@ -657,9 +591,7 @@ class DHLDPApiRest
 
     public function convertWeightToKg($weight)
     {
-
         $weight_unit = Configuration::get('PS_WEIGHT_UNIT');
-        $weight_in_kg = $weight;
         switch ($weight_unit) {
             case 'lb':
                 $weight_in_kg = $weight * 0.453592;
@@ -675,14 +607,12 @@ class DHLDPApiRest
                 $weight_in_kg = $weight;
                 break;
         }
-
         return $weight_in_kg;
     }
 
     function convertKGToPSWeightUnit($weight_in_kg)
     {
         $weight_unit = Configuration::get('PS_WEIGHT_UNIT');
-        $weight_PS = $weight_in_kg;
         switch ($weight_unit) {
             case 'g':
                 $weight_PS = $weight_in_kg * 1000;
@@ -694,6 +624,7 @@ class DHLDPApiRest
                 $weight_PS = $weight_in_kg * 35.274;
                 break;
             default:
+                $weight_PS = $weight_in_kg;
                 break;
         }
         return $weight_PS;
@@ -711,7 +642,6 @@ class DHLDPApiRest
         } else {
             $trackingEndpoint = self::$cig_endpoint_sandbox;
         }
-
 
         try {
             $data = [];
@@ -744,7 +674,6 @@ class DHLDPApiRest
 //                $trackingEndpoint .= '/manifests?date='.$params['manifestDate'].'&includeDocs=URL';
                 $method = 'GET';
             }
-
 
             $dhlManager = new DHLTokenManager();
 
@@ -796,7 +725,6 @@ class DHLDPApiRest
 //
 //            return $this->getResponse($response);
         } catch (\Exception $e) {
-
             $error_msg = $e->getMessage() . ((isset($e->detail)) ? ', ' . $e->detail : '');
             $this->errors[] = $error_msg;
 
@@ -810,7 +738,6 @@ class DHLDPApiRest
 
     public function getResponse($res)
     {
-
         $http_status = $res['status']['status'];
         $http_status_title = $res['status']['title'];
         $http_status_detail = $res['status']['detail'];
@@ -835,7 +762,6 @@ class DHLDPApiRest
         if (is_array($this->errors) && count($this->errors) > 0) {
             return false;
         }
-
         return $res;
     }
 
@@ -960,7 +886,6 @@ class DHLDPApiRest
 
     public function getPreparationCustoms($customs)
     {
-
         $result = [
             "exportType" => $customs['exportType'], //exportType
             "exportDescription" => $customs['exportTypeDescription'], //exportTypeDescription
@@ -1003,7 +928,6 @@ class DHLDPApiRest
 
     public function getPreparationServices(array $services)
     {
-
         $result = [];
 
         if (isset($services['Service']['PreferredLocation']) && $services['Service']['PreferredLocation']['active'] == "1") {
