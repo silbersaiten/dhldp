@@ -93,7 +93,6 @@ class DhlDp extends Module
         if ($clear) {
             $this->dhldp_api_rest->errors = array();
         }
-
         return $errors;
     }
 
@@ -106,11 +105,8 @@ class DhlDp extends Module
 
     public function install()
     {
-
         $return = true;
-
         $return &= parent::install();
-
         $return &= $this->createDbTables();
         $return &= $this->installTab('AdminDhldpManifest', 'DHL', 'AdminParentShipping', true);
         $return &= $this->installTab('AdminDhldpAjax', 'DHL Ajax', 'AdminParentShipping', false);
@@ -138,7 +134,6 @@ class DhlDp extends Module
         }
 
         $this->dp_api->retrievePageFormats();
-
         return (bool)$return;
     }
 
@@ -292,21 +287,18 @@ class DhlDp extends Module
     public function deleteDeliveryLabel($shipment_number, $id_shop = null)
     {
         $this->dhldp_api_rest->setApiVersionByIdShop($id_shop);
-
         return $this->dhl_service->deleteDeliveryLabel($shipment_number, $id_shop);
     }
 
     public function doManifest($shipment_number, $id_shop = null)
     {
         $this->dhldp_api_rest->setApiVersionByIdShop($id_shop);
-
         return $this->dhl_service->doManifest($shipment_number, $id_shop);
     }
 
     public function createDhlRetoureLabel($sender_address, $id_order_carrier, $reference_number, $id_order_return = 0, $id_shop = null)
     {
         $this->dhldp_api_rest->setApiVersionByIdShop($id_shop);
-
         return $this->dhl_service->createReturnLabel($sender_address, $id_order_carrier, $reference_number, $id_order_return, $id_shop);
     }
 
@@ -336,14 +328,10 @@ class DhlDp extends Module
         }
 
         $this->dhldp_api_rest->setApiVersionByIdShop($id_shop);
-
         $aproduct_code = explode(':', $product_code);
-
         $receiver = $dhldp_delivery_address;
-
         $shipper = $this->dhldp_api_rest->getShipper($id_shop);
         $details = $this->dhldp_api_rest->getShipperDetails($packages);
-
         $def = $this->dhldp_api_rest->getDefinedProducts($aproduct_code[0], $receiver['countryISOCode'], $shipper['countryISOCode'], $this->dhldp_api_rest->getApiVersion());
 
         if (self::getConfig('DHL_MODE', $id_shop) == 1) {
@@ -382,7 +370,6 @@ class DhlDp extends Module
                 ((self::getConfig('DHL_RETURN_PARTICIPATION', $id_shop) != '') ? self::getConfig('DHL_RETURN_PARTICIPATION', $id_shop) : '01');
             $shipment_order['Shipment']['ShipmentDetails']['returnShipmentReference'] = 'Return for ' . $reference_number;
             $shipment_order['Shipment']['ReturnReceiver'] = $shipper;
-
             $shipment_order['Shipment']['ShipmentDetails']['dhlRetoure'] = [];
             $shipment_order['Shipment']['ShipmentDetails']['dhlRetoure']['billingNumber'] = $ekp . '07' . ((self::getConfig('DHL_RETURN_PARTICIPATION', $id_shop) != '') ? self::getConfig('DHL_RETURN_PARTICIPATION', $id_shop) : '01');
             $shipment_order['Shipment']['ShipmentDetails']['dhlRetoure']['returnAddress'] = $shipper;
@@ -5504,7 +5491,7 @@ class DhlDp extends Module
             }
             return $arr;
         }
-        return array();
+        return [];
     }
 
     public function getDPLabelData($id_order_carrier)
@@ -5569,7 +5556,7 @@ class DhlDp extends Module
 
     public function filterDPShipping($shipping, $id_shop)
     {
-        $return_shipping = array();
+        $return_shipping = [];
         if (is_array($shipping)) {
             foreach ($shipping as $shipping_item) {
                 if (in_array($shipping_item['id_carrier'], $this->getDPCarriers(true, $id_shop))) {
@@ -5578,7 +5565,7 @@ class DhlDp extends Module
             }
             return $return_shipping;
         }
-        return array();
+        return [];
     }
 
     public function createDPDeliveryLabel($id_shop, $id_address, $product, $additional_info, $label_position, $id_order_carrier, $reference_number)
@@ -5684,7 +5671,6 @@ class DhlDp extends Module
                         $this->updateOrderStatus($id_order_carrier, 'createDPDeliveryLabel');
                     }
                 }
-
                 return true;
             }
         }
@@ -5745,11 +5731,9 @@ class DhlDp extends Module
                         $order->id_shop
                     );
                 }
-
                 return true;
             }
         }
-
         return false;
     }
 
@@ -6101,7 +6085,6 @@ class DhlDp extends Module
 
     public function getDhlProductDimensions($product_code = null, $id_order = null)
     {
-
         if (!$product_code) {
             return false;
         }
@@ -6129,7 +6112,6 @@ class DhlDp extends Module
             'HEIGHT' => Configuration::get('DHLDP_DHL_' . $product_code . '_HEIGHT', null, $id_shop_group, $id_shop) ?: '',
             'WEIGHT' => $weight
         );
-
         return $dimensions;
     }
 
@@ -6186,7 +6168,6 @@ class DhlDp extends Module
 
     public function getAjaxDhlProductDimensions()
     {
-
         $product_code = Tools::getValue('dhl_product_dimension');
         $orderId = Tools::getValue('orderId');
 
@@ -6198,7 +6179,6 @@ class DhlDp extends Module
         }
 
         $dimensions = $this->getDhlProductDimensions($product_code, $orderId);
-
         die(json_encode([
             'success' => true,
             'dimensions' => $dimensions
