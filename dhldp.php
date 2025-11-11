@@ -22,7 +22,6 @@ if (!defined('_PS_VERSION_')) {
 }
 
 require_once(dirname(__FILE__) . '/classes/DHLDPApiRest.php');
-require_once(dirname(__FILE__) . '/classes/DHLDPApi.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPLabel.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPPackage.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPOrder.php');
