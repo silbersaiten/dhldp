@@ -1,21 +1,21 @@
 <?php
+/**
+ * DHL Deutschepost
+ *
+ * @author    silbersaiten <info@silbersaiten.de>
+ * @copyright 2025 silbersaiten
+ * @license   See joined file licence.txt
+ * @category  Module
+ * @support   silbersaiten <support@silbersaiten.de>
+ * @version   3.1.0
+ * @link      https://www.silbersaiten.de
+ */
 
 namespace PrestaShop\Module\dhldp\classes;
 use Configuration;
 use Tools;
 use DHLDPRestClient;
 
-/**
- * DHL Deutschepost
- *
- * @author    silbersaiten <info@silbersaiten.de>
- * @copyright 2023 silbersaiten
- * @license   See joined file licence.txt
- * @category  Module
- * @support   silbersaiten <support@silbersaiten.de>
- * @version   2.0.0
- * @link      http://www.silbersaiten.de
- */
 class DHLTokenManager
 {
     const ENV_TOKEN_KEY = 'DHLDP_DHL_ACCESS_TOKEN';

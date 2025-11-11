@@ -47,3 +47,6 @@ ul.dhl-tabs li {
 
 .menu-dhlintraship .navbar-nav.menu  li {text-transform: uppercase; font-weight: bold;}
 .bootstrap .menu-dhlintraship {background-color: #ffffff!important;}
+.bootstrap .menu-dhldp {
+    background-color: white;
+}

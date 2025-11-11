@@ -2,7 +2,13 @@
 /**
  * DHL Deutschepost
  *
- * Service responsible for DHL REST operations.
+ * @author    silbersaiten <info@silbersaiten.de>
+ * @copyright 2025 silbersaiten
+ * @license   See joined file licence.txt
+ * @category  Module
+ * @support   silbersaiten <support@silbersaiten.de>
+ * @version   3.1.0
+ * @link      https://www.silbersaiten.de
  */
 
 namespace PrestaShop\Module\dhldp\Service;
@@ -10,7 +16,7 @@ namespace PrestaShop\Module\dhldp\Service;
 use Customer;
 use DHLDPPackage;
 use DHLDPLabel;
-use DHLTokenManager;
+use PrestaShop\Module\dhldp\classes\DHLTokenManager;
 use Mail;
 use Order;
 use OrderCarrier;

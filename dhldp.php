@@ -69,7 +69,6 @@ class DhlDp extends Module
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 
         new \PrestaShop\Module\dhldp\classes\Env($this->name);
-//        $this->dhldp_api = new DHLDPApi($this);
         $this->dp_api = new DPApi();
         $this->dhldp_api_rest = new DHLDPApiRest($this);
         $this->dhl_service = new DHLRestService($this, $this->dhldp_api_rest);
