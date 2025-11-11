@@ -34,13 +34,15 @@ class DHLDPApiRest
     public static $cig_endpoint_sandbox = 'https://api-sandbox.dhl.com/parcel/de/shipping/v2';
     public static $cig_endpoint_live = 'https://api-eu.dhl.com/parcel/de/shipping/v2/';
 
+    public static $tracking_url = 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=[tracking_number]';
+//    public static $supported_shipper_countries = ['DE' => ['api_versions' => ['3.4', '3.5']]];
+    public static $supported_shipper_countries = ['DE' => ['api_versions' => ['2.1']]];
     public static $dhl_sbx_user;
     public static $dhl_sbx_pass;
     public static $dhl_live_user;
     public static $dhl_live_pass;
     public static $dhl_sbx_ciguser;
     public static $dhl_sbx_cigpass;
-    public static $supported_shipper_countries = array('DE' => array('api_versions' => array('2.1')));
 
     public static $dhl_sbx_ekp = array(
         //'3.4' => '2222222222',

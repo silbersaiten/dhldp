@@ -1234,7 +1234,7 @@ class DhlDp extends Module
                 $selected_values[$selected_value_index]['tracking_url'] = str_replace(
                     '[tracking_number]',
                     $selected_value['shipment_number'],
-                    DHLDPApi::$tracking_url
+                    DHLDPApiRest::$tracking_url
                 );
             }
             return $selected_values;
@@ -2242,7 +2242,7 @@ class DhlDp extends Module
 
                 // Send mail to customer
                 if (self::getConfig('DHL_INTRANSIT_MAIL', $order->id_shop)) {
-                    $tracking_url = str_replace('[tracking_number]', $tracking_number, DHLDPApi::$tracking_url);
+                    $tracking_url = str_replace('[tracking_number]', $tracking_number, DHLDPApiRest::$tracking_url);
 
                     $template_vars = array(
                         '{followup}' => $tracking_url,
@@ -2377,7 +2377,7 @@ class DhlDp extends Module
                         }
                     }
                     Media::addJsDef([
-                        'defined_dhl_api_versions' => json_encode(DHLDPApi::$supported_shipper_countries),
+                        'defined_dhl_api_versions' => json_encode(DHLDPApiRest::$supported_shipper_countries),
                         'defined_dhl_products' => json_encode($dhl_products_js),
                         'dhl_translation' => json_encode(
                             [
@@ -3433,7 +3433,7 @@ class DhlDp extends Module
     {
         $form_fields = array();
 
-        $api_versions = DHLDPApi::getSupportedApiVersions();
+        $api_versions = DHLDPApiRest::getSupportedApiVersions();
         $api_version_options = array(
             'id' => 'value',
             'name' => 'label'
@@ -3449,7 +3449,7 @@ class DhlDp extends Module
             'id' => 'value',
             'name' => 'label'
         );
-        foreach (array_keys(DHLDPApi::$supported_shipper_countries) as $iso_code) {
+        foreach (array_keys(DHLDPApiRest::$supported_shipper_countries) as $iso_code) {
             $shipper_country_options['query'][] = array(
                 'value' => $iso_code,
                 'label' => Country::getNameById($this->context->language->id, Country::getByIso($iso_code))
@@ -4796,10 +4796,10 @@ class DhlDp extends Module
         if (Tools::isSubmit('submitSaveOptions')) {
             $form_errors = array();
 
-            if (!in_array(Tools::getValue('DHLDP_DHL_COUNTRY'), array_keys(DHLDPApi::$supported_shipper_countries))) {
+            if (!in_array(Tools::getValue('DHLDP_DHL_COUNTRY'), array_keys(DHLDPApiRest::$supported_shipper_countries))) {
                 $form_errors[] = $this->_errors[] = $this->l('Please select supported country');
             }
-            if (!in_array(Tools::getValue('DHLDP_DHL_API_VERSION'), DHLDPApi::$supported_shipper_countries[Tools::getValue('DHLDP_DHL_COUNTRY')]['api_versions'])) {
+            if (!in_array(Tools::getValue('DHLDP_DHL_API_VERSION'), DHLDPApiRest::$supported_shipper_countries[Tools::getValue('DHLDP_DHL_COUNTRY')]['api_versions'])) {
                 $form_errors[] = $this->_errors[] = $this->l('Please select supported API version');
             }
             if (count($form_errors) == 0) {
