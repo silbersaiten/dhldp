@@ -2314,11 +2314,9 @@ class DhlDp extends Module
         return $link;
     }
 
-    public function hookDisplayBackOfficeHeader($params)
+    public function hookDisplayBackOfficeHeader()
     {
-        Media::addJsDef(array('is177' => $this->is177));
-        unset($params);
-        $script = '';
+        Media::addJsDef(['is177' => $this->is177]);
 
         if (($this->context->controller->controller_name == 'AdminOrders' || $this->context->controller instanceof AdminOrdersController) && $this->is177 && !Tools::getIsset('id_order')) {
             global $kernel;
@@ -2326,34 +2324,29 @@ class DhlDp extends Module
         } else {
             $id_order = Tools::getValue('id_order');
         }
+        if (version_compare(_PS_VERSION_, '8.0', '<')) {
+            $this->context->controller->addJquery();
+        }
         if (($this->context->controller->controller_name == 'AdminOrders' || $this->context->controller instanceof AdminOrdersController) && !$id_order) {
-            if (version_compare(_PS_VERSION_, '8.0', '<')) {
-                $this->context->controller->addJquery();
-            }
             $this->context->controller->addJS($this->_path . 'views/js/order-list.js');
             if ($this->is177) {
                 $this->context->controller->addCSS($this->_path . 'views/css/order_list.css');
             }
-
-            return '<script type="text/javascript">
-                var dhldp_request_path = "' . $this->getModuleUrl(array('view' => 'generateLabels')) . '";
-                var dhldp_translation = ' .
-                json_encode(
-                    array(
+            Media::addJsDef([
+                'dhldp_request_path' => $this->getModuleUrl(array('view' => 'generateLabels')),
+                'dhldp_translation' => json_encode(
+                    [
                         'Generate DHL labels' => $this->l('Generate DHL labels'),
                         'Generate DP labels' => $this->l('Generate Deutschepost labels'),
-                    )
-                ) . '</script>';
+                    ]
+                ),
+            ]);
         } elseif (($this->context->controller->controller_name == 'AdminOrders' || $this->context->controller instanceof AdminOrdersController) && $id_order) {
-            if (version_compare(_PS_VERSION_, '8.0', '<')) {
-                $this->context->controller->addJquery();
-            }
             if (!$this->is177) {
                 $this->context->controller->addJS($this->_path . 'views/js/popper.min.js');
             }
             $this->context->controller->addJS($this->_path . 'views/js/admin_order.js');
             $this->context->controller->addJS($this->_path . 'views/js/dp-admin-order.js');
-
             $this->context->controller->addCSS($this->_path . 'views/css/admin_order.css');
             $this->context->controller->addJS($this->_path . 'views/js/jquery.maxlength.min.js');
 
@@ -2361,9 +2354,6 @@ class DhlDp extends Module
                 $this->context->controller->addCSS($this->_path . 'views/css/admin_order_17.css');
             }
         } elseif (Tools::getValue('configure') == $this->name) {
-            if (version_compare(_PS_VERSION_, '8.0', '<')) {
-                $this->context->controller->addJquery();
-            }
             if (Tools::getValue('view') == 'settings_dp') {
                 $this->context->controller->addJS($this->_path . 'views/js/dp_admin_configure.js');
             } else {
@@ -2378,7 +2368,7 @@ class DhlDp extends Module
                         $this->context->controller->addCSS($this->_path . 'views/css/admin-15.css');
                     }
                     $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
-                    $this->context->controller->addJqueryPlugin(array('idTabs', 'select2'));
+                    $this->context->controller->addJqueryPlugin(['idTabs', 'select2']);
 
 
                     if (version_compare(_PS_VERSION_, '1.6', '<')) {
@@ -2390,9 +2380,8 @@ class DhlDp extends Module
                         );
                     }
                     $this->context->controller->addJS($this->_path . 'views/js/admin_configure.js');
-
                     $dhl_products = $this->dhldp_api_rest->getDefinedProducts('', '', self::getConfig('DHL_COUNTRY'), self::getConfig('DHL_API_VERSION'));
-                    $dhl_products_js = array();
+                    $dhl_products_js = [];
                     foreach ($dhl_products as $dhl_product_key => $dhl_product) {
                         if ($dhl_product['active'] == true) {
                             $dhl_product_js = new stdClass();
@@ -2401,36 +2390,24 @@ class DhlDp extends Module
                             $dhl_products_js[] = $dhl_product_js;
                         }
                     }
-//                    $dhl_gogreen_options_js = array();
-//                    $dhl_gogreen_option_js = new stdClass();
-//                    $dhl_gogreen_option_js->name = '';
-//                    $dhl_gogreen_option_js->code = '';
-//                    $dhl_gogreen_options_js[] = $dhl_gogreen_option_js;
-//
-//                    $dhl_gogreen_option_js = new stdClass();
-//                    $dhl_gogreen_option_js->name = 'GoGreen';
-//                    $dhl_gogreen_option_js->code = 'gogreen';
-//                    $dhl_gogreen_options_js[] = $dhl_gogreen_option_js;
-                    $script .= '<script>
-                    var defined_dhl_api_versions = ' . json_encode(DHLDPApi::$supported_shipper_countries) . ';
-                    var defined_dhl_products = ' . json_encode($dhl_products_js) . ';
-                    var dhl_translation = ' .
-                        json_encode(
-                            array(
+                    Media::addJsDef([
+                        'defined_dhl_api_versions' => json_encode(DHLDPApi::$supported_shipper_countries),
+                        'defined_dhl_products' => json_encode($dhl_products_js),
+                        'dhl_translation' => json_encode(
+                            [
                                 'Remove' => $this->l('Remove'),
                                 'ExistsParticipation' => $this->l('Such participation exists for this product'),
                                 'Exists' => $this->l('This product already exists in the list')
-                            )
-                        ) .
-                        '</script>';
+                            ]
+                        ),
+                    ]);
                 }
             }
         }
         $this->context->controller->addJS($this->_path . 'views/js/dhl-product-dimensions.js');
         Media::addJsDef([
-            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, array(), array()) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
         ]);
-        return $script;
     }
 
     public function getModuleUrl($params = false)
@@ -3322,7 +3299,7 @@ class DhlDp extends Module
         $helper->fields_value['DHLDP_DHL_COUNTRY'] = $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->name . '/views/templates/admin/dhl-shipper-country.tpl'
         );
-        $helper->fields_value['DHLDP_DHL_LIVE_SIGN'] =  str_repeat('*', mb_strlen(Configuration::get('DHLDP_DHL_LIVE_SIGN')));
+        $helper->fields_value['DHLDP_DHL_LIVE_SIGN'] = str_repeat('*', mb_strlen(Configuration::get('DHLDP_DHL_LIVE_SIGN')));
         return $helper->generateForm($this->getFormFieldsDHLSettings());
     }
 
