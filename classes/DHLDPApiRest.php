@@ -406,6 +406,10 @@ class DHLDPApiRest
                     $receiver['Address']['Zip']['other'] = $address->postcode;
                 }
             }
+
+            $receiver['Address']['streetName'] = trim($address->address1);
+            $receiver['name3'] = trim($address->address2);
+            $receiver['Address']['addressAddition'] = trim($address->address2);
             $receiver['Communication']['email'] = $customer->email;
             $receiver['Communication']['phone'] = $address->phone;
             $receiver['Communication']['mobile'] = $address->phone_mobile;

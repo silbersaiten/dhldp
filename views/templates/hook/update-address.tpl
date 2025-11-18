@@ -175,17 +175,12 @@
                             <input class="form-control" type="text" name="address[{$address.id_order_carrier|escape:'htmlall':'UTF-8'}][street_name]"
                                    value="{$address.street_name|escape:'htmlall':'UTF-8'}" maxlength="35"/>
                         </div>
-                        {*<div class="form-group-flex">
-                            <label class="control-label col-lg-4"><sup>*</sup> {l s='House number' mod='dhldp'}</label>
-                            <input class="form-control" type="text" name="address[{$address.id_order_carrier|escape:'htmlall':'UTF-8'}][street_number]"
-                                   value="{$address.street_number|escape:'htmlall':'UTF-8'}" maxlength="5"/>
-                        </div>*}
-                        <div class="form-group-flex"{if $address.country_iso_code == 'DE'} style="display: none;"{/if}>
+                        <div class="form-group-flex">
                             <label class="control-label col-lg-4">{l s='Address addition' mod='dhldp'}</label>
                             <input class="form-control" type="text" name="address[{$address.id_order_carrier|escape:'htmlall':'UTF-8'}][address_addition]"
                                    value="{$address.address_addition|escape:'htmlall':'UTF-8'}" maxlength="35"/>
                         </div>
-                        <div class="form-group-flex"{if $address.country_iso_code == 'DE'} style="display: none;"{/if}>
+                        <div class="form-group-flex"{if !in_array($address.country_iso_code, ['BE', 'CZ', 'NL'])} style="display: none;"{/if}>
                             <label class="control-label col-lg-4">{l s='Dispatching information' mod='dhldp'}</label>
                             <input class="form-control" type="text" name="address[{$address.id_order_carrier|escape:'htmlall':'UTF-8'}][dispatching_information]"
                                    value="{$address.dispatching_information|escape:'htmlall':'UTF-8'}" maxlength="35"/>

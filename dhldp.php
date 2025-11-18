@@ -1764,7 +1764,6 @@ class DhlDp extends Module
         return $weight;
     }
 
-
     public function getTemplateVarsForUpdateAddress($order, $id_order_carrier, $id_address_delivery, $perm_c)
     {
         $conf_private = self::getConfig('DHL_CONFIRMATION_PRIVATE', $order->id_shop);
@@ -1819,7 +1818,6 @@ class DhlDp extends Module
             'pf_zip' => isset($address_input['pf_zip']) ? $address_input['pf_zip'] : (isset($norm_address['Postfiliale']['Zip']) ? $norm_address['Postfiliale']['Zip'] : ''),
             'pf_city' => isset($address_input['pf_city']) ? $address_input['pf_city'] : (isset($norm_address['Postfiliale']['City']) ? $norm_address['Postfiliale']['City'] : ''),
             'street_name' => isset($address_input['street_name']) ? $address_input['street_name'] : (isset($norm_address['Address']['streetName']) ? $norm_address['Address']['streetName'] : ''),
-            //'street_number'         => isset($address_input['street_number']) ? $address_input['street_number'] : (isset($norm_address['Address']['streetNumber']) ? $norm_address['Address']['streetNumber'] : ''),
             'address_addition' => isset($address_input['address_addition']) ? $address_input['address_addition'] : (isset($norm_address['Address']['addressAddition']) ? $norm_address['Address']['addressAddition'] : ''),
             'dispatching_information' => isset($address_input['dispatching_information']) ? $address_input['dispatching_information'] : (isset($norm_address['Address']['dispatchingInformation']) ? $norm_address['Address']['dispatchingInformation'] : ''),
             'zip' => isset($address_input['zip']) ? $address_input['zip'] : (isset($zip) ? $zip : ''),
