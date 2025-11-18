@@ -452,14 +452,9 @@ class DHLDPApiRest
             if ($address_input['state'] != '') {
                 $address['consignee']['state'] = $address_input['state'];
             }
-            if (in_array($country['iso_code'], array('NL', 'IT', 'LU', 'US'))) {
+            if (in_array($country['iso_code'], array('NL', 'IT', 'LU', 'US', 'DE'))) {
                 $address['consignee']['name3'] = $address['consignee']['additionalAddressInformation1'];
-            }
-            if ($country['iso_code'] === 'DE') {
-                $AddressHouse = $this->extractAddressHouse($address['consignee']['addressStreet']);
-                if ($AddressHouse) {
-                    $this->moveTextAfterAddressHouse($address['consignee']['addressStreet'], $address['consignee']['name3'], $AddressHouse);
-                }
+                unset($address['consignee']['additionalAddressInformation1']);
             }
 
             if ($address_input['address_type'] === 'ps') {
@@ -834,30 +829,6 @@ class DHLDPApiRest
             return $houseNumber;
         } else {
             return "No house number found";
-        }
-    }
-
-    public function extractAddressHouse($address)
-    {
-        // Regular expression to find the first sequence of digits followed by optional symbols
-        // \d+ matches one or more digits, and [\w\-\/]* allows optional word characters, hyphens, or slashes.
-        preg_match('/\b\d+[\w\-\/]*/', $address, $matches);
-
-        if (!empty($matches)) {
-            return $matches[0];
-        }
-        return false;
-    }
-
-    public function moveTextAfterAddressHouse(&$address, &$name3, $addressHouse)
-    {
-        $position = strpos($address, $addressHouse);
-
-        if ($position !== false) {
-            $name3 = trim(substr($address, $position + strlen($addressHouse)));
-            $address = trim(substr($address, 0, $position + strlen($addressHouse)));
-        } else {
-            $name3 = "";
         }
     }
 
