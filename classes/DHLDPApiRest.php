@@ -22,6 +22,7 @@ use PrestaShop\Module\dhldp\classes\DHLTokenManager;
 use State;
 use Tools;
 use DHLDPRestClient;
+use Validate;
 
 require_once(dirname(__FILE__) . '/DHLTokenManager.php');
 require_once(dirname(__FILE__) . '/DHLDPRestClient.php');
@@ -33,9 +34,7 @@ class DHLDPApiRest
     public $confirmations = [];
     public static $cig_endpoint_sandbox = 'https://api-sandbox.dhl.com/parcel/de/shipping/v2';
     public static $cig_endpoint_live = 'https://api-eu.dhl.com/parcel/de/shipping/v2/';
-
-    public static $tracking_url = 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=[tracking_number]';
-//    public static $supported_shipper_countries = ['DE' => ['api_versions' => ['3.4', '3.5']]];
+    public static $tracking_url = 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=[tracking_number]';
     public static $supported_shipper_countries = ['DE' => ['api_versions' => ['2.1']]];
     public static $dhl_sbx_user;
     public static $dhl_sbx_pass;
@@ -43,22 +42,14 @@ class DHLDPApiRest
     public static $dhl_live_pass;
     public static $dhl_sbx_ciguser;
     public static $dhl_sbx_cigpass;
-
-    public static $dhl_sbx_ekp = array(
-        //'3.4' => '2222222222',
-        '2.1' => '3333333333',
-    );
-
-    public static $cig_endpoint_retoure_sandbox = 'https://cig.dhl.de/services/sandbox/rest/returns/';
-    public static $cig_endpoint_retoure_live = 'https://cig.dhl.de/services/production/rest/returns/';
+    public static $dhl_sbx_ekp = ['2.1' => '3333333333'];
+    public static $cig_endpoint_retoure_sandbox = 'https://api-sandbox.dhl.com/parcel/de/shipping/returns/v1/orders';
+    public static $cig_endpoint_retoure_live = 'https://api-eu.dhl.com/parcel/de/shipping/returns/v1/orders';//#TODO !!!!!?????
     public static $dhl_sbx_retoure_user;
     public static $dhl_sbx_retoure_sign;
 
-    //public static $dhl_sbx_retoure_token = 'MjIyMjIyMjIyMl9jdXN0b21lcjp1QlFiWjYyIVppQmlWVmJoYw==';
-
     public function __construct($module, $api_version = '2')
     {
-
         $this->module = $module;
         $this->setApiVersion($api_version);
 //        self::$dhl_sbx_user = getenv('DHL_SDX_USER');
@@ -67,9 +58,8 @@ class DHLDPApiRest
         self::$dhl_live_pass = getenv('DHL_LIVE_PASS');
         self::$dhl_sbx_ciguser = getenv('DHL_SDX_CIGUSER');
         self::$dhl_sbx_cigpass = getenv('DHL_SDX_CIGPASS');
-        self::$dhl_sbx_retoure_user = getenv('DHL_SDX_RETOURE_USER');
-        self::$dhl_sbx_retoure_sign = getenv('DHL_SDX_RETOURE_SIGN');
-
+        self::$dhl_sbx_retoure_user = getenv('DHLDP_DHL_SDX_USER');
+        self::$dhl_sbx_retoure_sign = getenv('DHLDP_DHL_SDX_PASS');
     }
 
     public function setApiVersion($api_version)
@@ -294,26 +284,12 @@ class DHLDPApiRest
         }
 
         if ($api_version != '') {
-//            $major_api_version = $this->getMajorApiVersion($api_version);
-//            foreach ($products as $product_code => $product) {
-//                if (($major_api_version == '2' || $major_api_version == '3') && !isset($product['alias_v2'])) {
-//                    unset($products[$product_code]);
-//                }
-//            }
             foreach ($products as $product_code => $product) {
-//                if ($major_api_version == 2) {
-//                    $products[$product_code]['services'] = array_keys($products[$product_code]['services_v2']);
-//                }
-//                if ($major_api_version == 3) {
-//                    $products[$product_code]['services'] = array_keys($products[$product_code]['services_v3']);
-//                }
-
                 if ((count($products[$product_code]['to_country_codes']) == 0) && $to_country != $from_country && !in_array($to_country, $this->module->getEUCountriesCodes())) {
                     $products[$product_code]['export_documents'] = 1;
                 }
             }
         }
-
         return $products;
     }
 
@@ -547,6 +523,91 @@ class DHLDPApiRest
         return $details;
     }
 
+    public function getDHLRASenderAddress($id_address, $address_input = false)
+    {
+        if ($address_input == false) {
+            $address = $this->normalizeAddressForRA(new Address((int)$id_address));
+        } else {
+            $address = [];
+            $address['name1'] = $address_input['name1'];
+            $address['name2'] = $address_input['name2'];
+            $address['name3'] = $address_input['name3'];
+            $address['addressStreet'] = $address_input['streetName'];
+            $address['addressHouse'] = $address_input['houseNumber'];
+            $address['postalCode'] = $address_input['postCode'];
+            $address['city'] = $address_input['city'];
+            $address['country'] = ['countryISOCode' => $address_input['country']['countryISOCode']];
+        }
+        return $address;
+    }
+
+    public function normalizeAddressForRA(Address $address)
+    {
+        $country_and_state = Address::getCountryAndState($address->id);
+
+        if ($country_and_state) {
+            $country = new Country((int)$country_and_state['id_country']);
+            $state_obj = new State((int)$country_and_state['id_state']);
+            if (Validate::isLoadedObject($state_obj)) {
+                $state = $state_obj->iso_code;
+            } else {
+                $state = '';
+            }
+
+            $res_address = array();
+            if ($address->company != '') {
+                $res_address['name1'] = $address->firstname . ' ' . $address->lastname;
+                $res_address['name2'] = $address->company;
+            } else {
+                $res_address['name1'] = $address->firstname . ' ' . $address->lastname;
+                $res_address['name2'] = '';
+            }
+
+            $res_address['postalCode'] = $address->postcode;
+            $res_address['city'] = $address->city;
+
+            $matches = array();
+            preg_match(
+                '/^(?P<streetname>[^\d]+) (?P<streetnumber>([ \/0-9-])+.?)$/',
+                trim($address->address1),
+                $matches
+            );
+            if (!count($matches)) {
+                preg_match(
+                    '/^(?P<streetnumber>[ \/0-9-]+.?) (?P<streetname>[^\d]+.?)$/',
+                    trim($address->address1),
+                    $matches
+                );
+                if (!count($matches)) {
+                    preg_match(
+                        '/(?P<streetnumber>[ \/0-9-]+.?) (?P<streetname>[^\d]+.?)/',
+                        trim($address->address1),
+                        $matches
+                    );
+                    if (!count($matches)) {
+                        $street_name = $address->address1;
+                        $street_number = '';
+                    } else {
+                        $street_name = trim($matches['streetname']);
+                        $street_number = trim($matches['streetnumber']);
+                    }
+                } else {
+                    $street_name = trim($matches['streetname']);
+                    $street_number = trim($matches['streetnumber']);
+                }
+            } else {
+                $street_name = trim($matches['streetname']);
+                $street_number = trim($matches['streetnumber']);
+            }
+            $res_address['addressStreet'] = $street_name;
+            $res_address['addressHouse'] = $street_number;
+            $res_address['country'] = array('state' => $state, 'countryISOCode' => Tools::strtoupper($country->iso_code));
+
+            return $res_address;
+        }
+        return false;
+    }
+
     function convertSizeToMillimeters($size)
     {
         $dimension_unit = Configuration::get('PS_DIMENSION_UNIT');
@@ -629,6 +690,37 @@ class DHLDPApiRest
         return $weight_PS;
     }
 
+    public function getDhlReturnLabel($data, $id_shop = null)
+    {
+        $this->errors = [];
+        $this->warnings = [];
+        $this->confirmations = [];
+        $mode = Configuration::get('DHLDP_DHL_MODE', null, null, $id_shop);
+        if ($mode == 1) {
+            $trackingEndpoint = self::$cig_endpoint_retoure_live . '?labelType=BOTH';
+        } else {
+            $trackingEndpoint = self::$cig_endpoint_retoure_sandbox . '?labelType=BOTH';
+        }
+
+        $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
+        try {
+            $method = 'POST';
+            $dhlManager = new DHLTokenManager();
+            $rclient->saveLogData('DHL', 'Return label', [
+                'endpoint' => $trackingEndpoint,
+                'data' => $data
+            ]);
+            $response = $dhlManager->makeApiRequest($trackingEndpoint, $method, $data);
+            $rclient->saveLogData('DHL', 'Return label', null, $response);
+            return $this->getResponse($response);
+        } catch (\Exception $e) {
+            $error_msg = $e->getMessage() . ((isset($e->detail)) ? ', ' . $e->detail : '');
+            $this->errors[] = $error_msg;
+            $rclient->saveLogData('DHL', 'Return label', null, null, $error_msg);
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
     public function callDhlApi($function, $params, $id_shop = null)
     {
         $this->errors = array();
@@ -686,43 +778,6 @@ class DHLDPApiRest
 
             $rclient->saveLogData('DHL', $function, null, $response);
             return $this->getResponse($response);
-//            $log_message = sprintf(
-//                "\n=== DHL API Request ===\n" .
-//                "Timestamp: %s\n" .
-//                "Operation: %s\n" .
-//                "Endpoint: %s\n" .
-//                "Request Data: %s\n" .
-//                "===================\n",
-//                date('Y-m-d H:i:s'),
-//                $function,
-//                $trackingEndpoint,
-//                json_encode($data, JSON_PRETTY_PRINT)
-//            );
-//
-//            DHLDP::logToFile('DHL', $log_message, 'dhl_api');
-//
-//            $response = $dhlManager->makeApiRequest($trackingEndpoint, $method , $data);
-//
-//            $log_message = sprintf(
-//                "\n=== DHL API Response ===\n" .
-//                "Timestamp: %s\n" .
-//                "Operation: %s\n" .
-//                "Response Data: %s\n" .
-//                "=====================\n",
-//                date('Y-m-d H:i:s'),
-//                $function,
-//                json_encode($response, JSON_PRETTY_PRINT)
-//            );
-//
-//            DHLDP::logToFile('DHL', $log_message, 'dhl_api');
-////
-////            $msg = "\n-----------------------------------------";
-////            $msg .= "\nAPI Version: " . $this->api_version;
-////            $msg .= "\nREQUEST:\n" . print_r($trackingEndpoint, true) . "\n";
-////            $msg .= "\nREQUEST:\n" . print_r(json_encode($response), true) . "\n";
-////            DHLDP::logToFile('DHL', $msg, 'dhl_api');
-//
-//            return $this->getResponse($response);
         } catch (\Exception $e) {
             $error_msg = $e->getMessage() . ((isset($e->detail)) ? ', ' . $e->detail : '');
             $this->errors[] = $error_msg;
@@ -737,13 +792,24 @@ class DHLDPApiRest
 
     public function getResponse($res)
     {
-        $http_status = $res['status']['status'];
-        $http_status_title = $res['status']['title'];
-        $http_status_detail = $res['status']['detail'];
+        if (isset($res['sstatus'])) {
+            // Return label
+            $http_status = $res['sstatus']['status'];
+            $http_status_title = $res['sstatus']['title'];
+            $http_status_detail = $res['sstatus']['detail'];
+        } elseif(isset($res['status']['status'])) {
+            $http_status = $res['status']['status'];
+            $http_status_title = $res['status']['title'];
+            $http_status_detail = $res['status']['detail'];
+        } else {
+            // Return label
+            $http_status = $res['status'];
+            $http_status_title = $res['title'];
+            $http_status_detail = $res['detail'];
+        }
 
-        if ($http_status == '200' || $http_status == '207') {
+        if ($http_status == '200' || $http_status == '201' || $http_status == '207') {
             $this->confirmations[] = $http_status_title . ': ' . $http_status_detail;
-
         }
         if (isset($res['items'])) {
             if (isset($res['items'][0]['validationMessages'])) {
@@ -776,7 +842,6 @@ class DHLDPApiRest
         return $formats;
     }
 
-    // Function to validate shipment with DHL API
     public function validateDHLShipment($function, $params, $id_shop = null)
     {
         $this->errors = array();
@@ -1088,7 +1153,6 @@ class DHLDPApiRest
         );
         $response = $res->decodeResponse();
 
-        //echo '<pre>'.print_r($response, true).'</pre>'; exit;
         if (is_array($response) && isset($response['locations'])) {
             $postfiliales = array();
             if (is_array($response['locations'])) {

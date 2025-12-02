@@ -137,15 +137,15 @@ class DHLRestService
             'receiverId' => $receiverId,
             'customerReference' => 'Retoure ' . $reference_number,
             'shipmentReference' => 'Retoure ' . $reference_number,
-            'senderAddress' => $sender_address,
-            'email' => '',
-            'telephoneNumber' => '',
-            'returnDocumentType' => 'SHIPMENT_LABEL',
+            'shipper' => $sender_address,
+//            'email' => '',
+//            'telephoneNumber' => '',
+//            'returnDocumentType' => 'SHIPMENT_LABEL',
         );
 
-        $response = $this->api->callDhlRetoureApi($return_order, $id_shop);
+        $response = $this->api->getDhlReturnLabel($return_order, $id_shop);
 
-        if (!is_array($response) || empty($response['shipmentNumber']) || empty($response['labelData'])) {
+        if (!is_array($response) || empty($response['shipmentNo']) || empty($response['label']) || empty($response['label']['b64'])) {
             return false;
         }
 
@@ -153,10 +153,10 @@ class DHLRestService
         $dhldp_label->id_order_carrier = (int) $id_order_carrier;
         $dhldp_label->product_code = 'ra';
         $dhldp_label->options = '';
-        $dhldp_label->shipment_number = $response['shipmentNumber'];
+        $dhldp_label->shipment_number = $response['shipmentNo'];
 
         $labelIdentifier = 'return-' . $dhldp_label->shipment_number;
-        $dhldp_label->label_url = $this->module->saveLabelFile($labelIdentifier, base64_decode($response['labelData']));
+        $dhldp_label->label_url = $this->module->saveLabelFile($labelIdentifier, base64_decode($response['label']['b64']));
         if (!$dhldp_label->label_url) {
             return false;
         }

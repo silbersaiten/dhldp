@@ -20,14 +20,12 @@ class DHLTokenManager
 {
     const ENV_TOKEN_KEY = 'DHLDP_DHL_ACCESS_TOKEN';
     const ENV_TOKEN_EXPIRY = 'DHLDP_DHL_TOKEN_EXPIRY';
-
     private $clientId;
     private $clientSecret;
     private $dhl_user;
     private $dhl_pass;
     private $tokenUrlSDX = 'https://api-sandbox.dhl.com/parcel/de/account/auth/ropc/v1/token';  // Sandbox environment
     private $tokenUrlLive = 'https://api-eu.dhl.com/parcel/de/account/auth/ropc/v1/token';  // Production environment
-
     private $tokenUrl;
 
     public function __construct($id_shop = null)
@@ -60,7 +58,6 @@ class DHLTokenManager
         if ($this->isTokenExpired()) {
             return $this->requestNewToken();
         }
-
         return getenv(self::ENV_TOKEN_KEY);
     }
 
@@ -73,7 +70,6 @@ class DHLTokenManager
     private function requestNewToken()
     {
         $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
-
         $requestData = array(
             'grant_type' => 'password',
             'client_id' => $this->clientId,
@@ -81,12 +77,10 @@ class DHLTokenManager
             'username' => $this->dhl_user,
             'password' => $this->dhl_pass
         );
-
         $rclient->saveLogData('DHL', 'requestNewToken', [
             'endpoint' => $this->tokenUrl,
             'data' => array_merge($requestData, ['password' => '***', 'client_secret' => '***']) // Скрываем чувствительные данные
         ]);
-
         $res = $rclient->post($this->tokenUrl, $requestData);
 
         if ($res->error) {
@@ -106,7 +100,6 @@ class DHLTokenManager
             'expires_in' => isset($tokenData['expires_in']) ? $tokenData['expires_in'] : null,
             'token_type' => isset($tokenData['token_type']) ? $tokenData['token_type'] : null
         ]);
-
         throw new \Exception('Invalid response from DHL: ' . $res->response);
     }
 
@@ -142,43 +135,17 @@ class DHLTokenManager
             curl_setopt($ch, CURLOPT_TIMEOUT, 0);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-//            curl_setopt($ch, CURLOPT_POST, true);
-//            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         }
-
+//dump($ch);
         $response = curl_exec($ch);
 
+//dump($response);
+//dump(curl_errno($ch));die;
         if (curl_errno($ch)) {
             throw new \Exception('DHL API Request Error: ' . curl_error($ch));
         }
 
         curl_close($ch);
-
         return json_decode($response, true);
     }
-
-//    public function saveLogData($request_header, $request, $response_header, $response, $curl_error)
-//    {
-//        $aresph = array();
-//        foreach ($this->objectToArray($response_header) as $k => $v) {
-//            $aresph[] = print_r($k, true) . ": " . print_r($v, true);
-//        }
-//        $msg = "\r\n*Request header*: " . $request_header .
-//            "\r\n*Request*: " . $request .
-//            "\r\n*Response header*: \r\n" . implode("\r\n", $aresph) .
-//            "\r\n*Response*: " . $response .
-//            "\r\n*Curl error*: " . $curl_error . "\r\n";
-//        if ($this->options['savelog_callback'] != null) {
-//            call_user_func($this->options['savelog_callback'], 'DHL', $msg, 'dhl_api');
-//        }
-//    }
-//
-//    public function objectToArray($object)
-//    {
-//        if (!is_object($object) && !is_array($object)) {
-//            return $object;
-//        }
-//
-//        return array_map(array($this, 'objectToArray'), (array)$object);
-//    }
 }
