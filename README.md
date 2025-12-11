@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.1.1 (11.12.2025)
+* Fixed `dhldp_translation`, transform to object
+
 #### 3.1.0 (11.11.2025)
 * Refactoring
 * Remove old code
