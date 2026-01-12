@@ -29,7 +29,7 @@ require_once(dirname(__FILE__) . '/classes/DHLDPOrder.php');
 require_once(dirname(__FILE__) . '/classes/Helper/ConfigurationHelperTrait.php');
 require_once(dirname(__FILE__) . '/classes/Service/DHLRestService.php');
 
-require_once(dirname(__FILE__) . '/classes/DPApi.php');
+require_once(dirname(__FILE__) . '/classes/DPRestApi.php');
 require_once(dirname(__FILE__) . '/classes/DPLabel.php');
 
 require_once(dirname(__FILE__) . '/classes/DHLDPRestClient.php');
@@ -44,7 +44,7 @@ class DhlDp extends Module
     /** @var DHLDPApiRest */
     public $dhldp_api_rest;
 
-    /** @var DPApi */
+    /** @var DPRestApi */
     protected $dp_api;
 
     /** @var DHLRestService */
@@ -68,7 +68,7 @@ class DhlDp extends Module
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 
         new \PrestaShop\Module\dhldp\classes\Env($this->name);
-        $this->dp_api = new DPApi();
+        $this->dp_api = new DPRestApi();
         $this->dhldp_api_rest = new DHLDPApiRest($this);
         $this->dhl_service = new DHLRestService($this, $this->dhldp_api_rest);
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
@@ -4924,9 +4924,9 @@ class DhlDp extends Module
 
                 $check_client = $this->dp_api->authenticateUser(
                     $deutschepost_mode,
-                    DPApi::$partnerid,
-                    DPApi::$keyphase,
-                    DPApi::$apikey,
+                    DPRestApi::$partnerid,
+                    DPRestApi::$keyphase,
+                    DPRestApi::$apikey,
                     ($deutschepost_mode == 1) ? $deutschepost_live_username : $deutschepost_sbx_username,
                     ($deutschepost_mode == 1) ? $deutschepost_live_password : $deutschepost_sbx_password
                 );
@@ -5690,7 +5690,7 @@ class DhlDp extends Module
                 $customer = new Customer((int)$order->id_customer);
                 $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
 
-                $tracking_url = str_replace('[tracking_number]', $tracking_number, DPApi::$tracking_url);
+                $tracking_url = str_replace('[tracking_number]', $tracking_number, DPRestApi::$tracking_url);
 
                 $template_vars = array(
                     '{followup}' => $tracking_url,
