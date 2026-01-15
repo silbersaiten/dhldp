@@ -3,11 +3,11 @@
  * DHL Deutschepost
  *
  * @author    silbersaiten <info@silbersaiten.de>
- * @copyright 2025 silbersaiten
+ * @copyright 2026 silbersaiten
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.1.1
+ * @version   3.1.2
  * @link      https://www.silbersaiten.de
  */
 
@@ -54,7 +54,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.1.1';
+        $this->version = '3.1.2';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -2337,6 +2337,10 @@ class DhlDp extends Module
                 $this->context->controller->addCSS($this->_path . 'views/css/admin_order_17.css');
             }
         } elseif (Tools::getValue('configure') == $this->name) {
+            if ((_PS_VERSION_ < '1.6.0.0')) {
+                $this->context->controller->addCSS($this->_path . 'views/css/admin-15.css');
+            }
+            $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
             if (Tools::getValue('view') == 'settings_dp') {
                 $this->context->controller->addJS($this->_path . 'views/js/dp_admin_configure.js');
             } else {
@@ -2347,13 +2351,7 @@ class DhlDp extends Module
                     }
                     $this->context->controller->addJS($this->_path . 'views/js/admin_orders.js');
                 } else {
-                    if ((_PS_VERSION_ < '1.6.0.0')) {
-                        $this->context->controller->addCSS($this->_path . 'views/css/admin-15.css');
-                    }
-                    $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
                     $this->context->controller->addJqueryPlugin(['idTabs', 'select2']);
-
-
                     if (version_compare(_PS_VERSION_, '1.6', '<')) {
                         $this->context->controller->addJS($this->_path . 'views/js/jquery.validate.js');
                     } else {

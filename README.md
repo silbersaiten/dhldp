@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.1.2 (15.01.2026)
+* Deutsche Post INTERNETMARKE to REST API
+
 #### 3.1.1 (11.12.2025)
 * Fixed `dhldp_translation`, transform to object
 
