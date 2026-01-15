@@ -15,7 +15,7 @@ require_once(dirname(__FILE__) . '/DHLDPRestClient.php');
 
 class DPRestApi
 {
-    public static $endpoint_live = 'https://internetmarke.deutschepost.de/internetmarke-api/api';
+    public static $endpoint_live = 'https://api-eu.dhl.com/post/de/shipping/imark';
     public static $tracking_url = 'https://www.deutschepost.de/sendung/simpleQuery.html?form.sendungsnummer=[tracking_number]';
     public static $ppl_update_csv = 'https://prestamodule.silberserver.de/dhl/ppl57.csv';
 
