@@ -343,7 +343,7 @@ class DPRestApi
         return $sender;
     }
 
-    public function authenticateUser($mode, $partner_id, $key_phase, $api_key, $username, $password)
+    public function authenticateUser($mode, $partner_id, $key_phase, $api_key, $username, $password, $id_shop = null)
     {
         if ($this->user_token != false) {
             return $this->user_token;
@@ -352,9 +352,20 @@ class DPRestApi
         $this->errors = array();
         $headers = $this->getRestHeaders($partner_id, $key_phase, $api_key);
         $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        $client_id = getenv('DHLDP_DP_CLIENT_ID');
+        if (!$client_id) {
+            $client_id = Configuration::get('DHLDP_DP_CLIENT_ID', null, null, $id_shop);
+        }
+        $client_secret = getenv('DHLDP_DP_CLIENT_SECRET');
+        if (!$client_secret) {
+            $client_secret = Configuration::get('DHLDP_DP_CLIENT_SECRET', null, null, $id_shop);
+        }
         $payload = array(
+            'grant_type' => 'client_credentials',
             'username' => $username,
             'password' => $password,
+            'client_id' => $client_id,
+            'client_secret' => $client_secret,
         );
 
         $response = $this->request(
@@ -396,7 +407,8 @@ class DPRestApi
                 self::$keyphase,
                 self::$apikey,
                 (Configuration::get('DHLDP_DP_MODE', null, null, $id_shop) == 1) ? Configuration::get('DHLDP_DP_LIVE_USERNAME', null, null, $id_shop) : Configuration::get('DHLDP_DP_SBX_USERNAME', null, null, $id_shop),
-                (Configuration::get('DHLDP_DP_MODE', null, null, $id_shop) == 1) ? Configuration::get('DHLDP_DP_LIVE_PASSWORD', null, null, $id_shop) : Configuration::get('DHLDP_DP_SBX_PASSWORD', null, null, $id_shop)
+                (Configuration::get('DHLDP_DP_MODE', null, null, $id_shop) == 1) ? Configuration::get('DHLDP_DP_LIVE_PASSWORD', null, null, $id_shop) : Configuration::get('DHLDP_DP_SBX_PASSWORD', null, null, $id_shop),
+                $id_shop
             );
 
             if ($this->user_token) {
