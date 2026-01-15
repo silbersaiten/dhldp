@@ -351,6 +351,7 @@ class DPRestApi
 
         $this->errors = array();
         $headers = $this->getRestHeaders($partner_id, $key_phase, $api_key);
+        $headers['Content-Type'] = 'application/x-www-form-urlencoded';
         $payload = array(
             'username' => $username,
             'password' => $password,
@@ -361,7 +362,8 @@ class DPRestApi
             '/user',
             $payload,
             'POST',
-            $headers
+            $headers,
+            false
         );
 
         $token_keys = array('token', 'userToken', 'accessToken', 'access_token');
@@ -462,14 +464,22 @@ class DPRestApi
         );
     }
 
-    private function request($mode, $endpoint, $payload, $method, array $headers)
+    private function request($mode, $endpoint, $payload, $method, array $headers, $encode_json = true)
     {
         $client = new DHLDPRestClient(array(
             'base_url' => self::$endpoint_live,
             'headers' => $headers,
         ));
 
-        $body = $payload !== null ? json_encode($payload) : '';
+        if ($payload === null) {
+            $body = '';
+        } elseif ($encode_json) {
+            $body = json_encode($payload);
+        } elseif (is_array($payload)) {
+            $body = http_build_query($payload);
+        } else {
+            $body = (string) $payload;
+        }
         $response = $client->execute($endpoint, $method, $body, array());
 
         if ($response->error) {
