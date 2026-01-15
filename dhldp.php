@@ -5567,23 +5567,25 @@ class DhlDp extends Module
         $receiver = $this->dp_api->prepareAddress(new Address((int)$id_address));
         $sender = $this->dp_api->getSender($id_shop);
 
-        $positions = new stdClass();
-        $positions->productCode = $product;
-        $positions->address = new stdClass();
-        $positions->address->receiver = $receiver;
-        $positions->address->sender = $sender;
-        $positions->additionalInfo = $additional_info;
-        $positions->voucherLayout = $this->dp_api->voucher_layout;
+        $position = new stdClass();
+        $position->productCode = $product;
+        $position->address = new stdClass();
+        $position->address->receiver = $receiver;
+        $position->address->sender = $sender;
+        $position->additionalInfo = $additional_info;
+        $position->voucherLayout = $this->dp_api->voucher_layout;
         $position_page = 1;
         $position_col = 1;
         $position_row = 1;
 
         if (Configuration::get('DHLDP_DP_LABEL_FORMAT', false, false, $id_shop) == 'pdf') {
-            $positions->position = new stdClass();
-            $positions->position->page = $position_page = $label_position['page'];
-            $positions->position->labelX = $position_col = $label_position['col'];
-            $positions->position->labelY = $position_row = $label_position['row'];
+            $position->position = new stdClass();
+            $position->position->page = $position_page = $label_position['page'];
+            $position->position->labelX = $position_col = $label_position['col'];
+            $position->position->labelY = $position_row = $label_position['row'];
         }
+
+        $positions = array($position);
 
         $product_info = $this->dp_api->getProducts($product);
 
