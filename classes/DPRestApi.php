@@ -359,20 +359,18 @@ class DPRestApi
 
         $response = $this->request(
             $mode,
-            '/authenticate',
+            '/user',
             $payload,
             'POST',
             $headers
         );
 
-        if ($response && isset($response['userToken'])) {
-            $this->user_token = $response['userToken'];
-            return (object) array('userToken' => $this->user_token);
-        }
-
-        if ($response && isset($response['token'])) {
-            $this->user_token = $response['token'];
-            return (object) array('userToken' => $this->user_token);
+        $token_keys = array('token', 'userToken', 'accessToken', 'access_token');
+        foreach ($token_keys as $token_key) {
+            if ($response && isset($response[$token_key])) {
+                $this->user_token = $response[$token_key];
+                return (object) array('userToken' => $this->user_token);
+            }
         }
 
         if (isset($response['error'])) {
@@ -402,10 +400,6 @@ class DPRestApi
 
             if ($this->user_token) {
                 $headers['Authorization'] = 'Bearer ' . $this->user_token;
-                $headers['X-User-Token'] = $this->user_token;
-                if (!isset($params['userToken'])) {
-                    $params['userToken'] = $this->user_token;
-                }
             }
         }
 
@@ -420,7 +414,7 @@ class DPRestApi
                 break;
             case 'retrieveContractProducts':
                 $method = 'GET';
-                $endpoint = '/contract/products';
+                $endpoint = '/products/contract';
                 break;
             case 'createShopOrderId':
                 $endpoint = '/shoppingcart';
