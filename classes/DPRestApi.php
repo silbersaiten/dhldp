@@ -15,7 +15,6 @@ require_once(dirname(__FILE__) . '/DHLDPRestClient.php');
 
 class DPRestApi
 {
-    public static $endpoint_sbx = 'https://internetmarke.deutschepost.de/internetmarke-api/api';
     public static $endpoint_live = 'https://internetmarke.deutschepost.de/internetmarke-api/api';
     public static $tracking_url = 'https://www.deutschepost.de/sendung/simpleQuery.html?form.sendungsnummer=[tracking_number]';
     public static $ppl_update_csv = 'https://prestamodule.silberserver.de/dhl/ppl57.csv';
@@ -463,54 +462,10 @@ class DPRestApi
         );
     }
 
-    private function getBaseEndpoint($mode)
-    {
-        return ($mode == 1) ? self::$endpoint_live : self::$endpoint_sbx;
-    }
-
     private function request($mode, $endpoint, $payload, $method, array $headers)
     {
         $client = new DHLDPRestClient(array(
-            'base_url' => $this->getBaseEndpoint($mode),
-            'headers' => $headers,
-        ));
-
-        $body = $payload !== null ? json_encode($payload) : '';
-        $response = $client->execute($endpoint, $method, $body, array());
-
-        if ($response->error) {
-            $this->errors[] = $response->error;
-            return false;
-        }
-
-        if (!Tools::strlen($response->response)) {
-            return array();
-        }
-
-        $decoded = json_decode($response->response, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            if ($this->shouldRetryWithV1($response->response, $endpoint)) {
-                return $this->retryRequestWithV1($mode, $endpoint, $payload, $method, $headers);
-            }
-            return array('raw' => $response->response);
-        }
-
-        return $decoded;
-    }
-
-    private function shouldRetryWithV1($response_body, $endpoint)
-    {
-        if (Tools::strpos($endpoint, '/v1/') === 0) {
-            return false;
-        }
-
-        return (bool) preg_match('/No service was found/i', $response_body);
-    }
-
-    private function retryRequestWithV1($mode, $endpoint, $payload, $method, array $headers)
-    {
-        $client = new DHLDPRestClient(array(
-            'base_url' => $this->getBaseEndpoint($mode) . '/v1',
+            'base_url' => self::$endpoint_live,
             'headers' => $headers,
         ));
 
