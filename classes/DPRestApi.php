@@ -21,7 +21,7 @@ class DPRestApi
 
     public static $products_filename = 'data/ppl.csv';
     public $ppl = 0;
-    public $voucher_layout = 'AddressZone';
+    public $voucher_layout = 'ADDRESS_ZONE';
 
     public static $partnerid = 'ASNPR';
     public static $apikey = 'nVgwguea8TxFXw8B02GI6uTzY060xW9I';
@@ -225,121 +225,36 @@ class DPRestApi
         return $formats;
     }
 
-    public function prepareAddress(Address $address)
+    public function getReciver(Address $address)
     {
-        $country_and_state = Address::getCountryAndState($address->id);
-
-        if ($country_and_state) {
-            $country = new Country((int)$country_and_state['id_country']);
-            $state = $country_and_state['id_state'] ? new State((int)$country_and_state['id_state']) : false;
-
-            $additional = $address->address2;
-
-            $matches = array();
-            preg_match(
-                '/^(?P<streetname>[^\d]+) (?P<streetnumber>([ \/0-9-])+.?)$/',
-                trim($address->address1),
-                $matches
-            );
-            if (!count($matches)) {
-                preg_match(
-                    '/^(?P<streetnumber>[ \/0-9-]+.?) (?P<streetname>[^\d]+.?)$/',
-                    trim($address->address1),
-                    $matches
-                );
-                if (!count($matches)) {
-                    preg_match(
-                        '/(?P<streetnumber>[ \/0-9-]+.?) (?P<streetname>[^\d]+.?)/',
-                        trim($address->address1),
-                        $matches
-                    );
-                    if (!count($matches)) {
-                        $street_name = $address->address1;
-                        preg_match(
-                            '/(?P<streetnumber>[ \/0-9-]+.?)/',
-                            trim($additional),
-                            $matches
-                        );
-                        if (isset($matches['streetnumber'])) {
-                            $street_number = $matches['streetnumber'];
-                            $additional = str_replace($matches['streetnumber'], '', $additional);
-                        } else {
-                            $street_number = '';
-                        }
-                    } else {
-                        $street_name = trim($matches['streetname']);
-                        $street_number = trim($matches['streetnumber']);
-                    }
-                } else {
-                    $street_name = trim($matches['streetname']);
-                    $street_number = trim($matches['streetnumber']);
-                }
-            } else {
-                $street_name = trim($matches['streetname']);
-                $street_number = trim($matches['streetnumber']);
-            }
-
+        if (Validate::isLoadedObject($address)) {
+            $country = new Country($address->id_country);
             $receiver = new stdClass();
-            $receiver->name = new stdClass();
-            if ($address->company != '') {
-                $receiver->name->companyName = new stdClass();
-                $receiver->name->companyName->company = $address->company; // max 50
-                $receiver->name->companyName->personName = new stdClass();
-                $receiver->name->companyName->personName->salutation = ''; //max 10
-                $receiver->name->companyName->personName->title = ''; //max 10
-                $receiver->name->companyName->personName->firstname = $address->firstname; //max 35
-                $receiver->name->companyName->personName->lastname = $address->lastname; //max 35
-            } else {
-                $receiver->name->personName = new stdClass();
-                $receiver->name->personName->salutation = ''; //max 10
-                $receiver->name->personName->title = ''; //max 10
-                $receiver->name->personName->firstname = $address->firstname; //max 35
-                $receiver->name->personName->lastname = $address->lastname; //max 35
+            $receiver->name = substr($address->firstname . ' ' . $address->lastname, 0, 50);
+            $receiver->additionalName = substr($address->company, 0, 40);
+            $receiver->addressLine1 = substr($address->address1, 0, 50);
+            if (strlen($address->address2)) {
+                $receiver->addressLine2 = substr($address->address2, 0, 60);
             }
-
-            $receiver->address = new stdClass();
-            $receiver->address->street = $street_name; // max 50
-            $receiver->address->houseNo = $street_number; //max 10
-            $receiver->address->additional = (($state != false) ? $state->iso_code . ' ' : '') . $additional;//max 50
-            $receiver->address->zip = $address->postcode; // max 10
-            $receiver->address->city = $address->city; // max 35 *
-            $receiver->address->country = $this->getCountries(Tools::strtoupper($country->iso_code)); //iso 3 letters *
-
+            $receiver->postalCode = $address->postcode;
+            $receiver->city = $address->city;
+            $receiver->country = $this->getCountries(Tools::strtoupper($country->iso_code));
             return $receiver;
         }
-
         return false;
     }
 
     public function getSender($id_shop)
     {
         $sender = new stdClass();
-        $sender->name = new stdClass();
-        if ((int)Configuration::get('DHLDP_DP_NAME') == 1) {
-            $sender->name->companyName = new stdClass();
-            $sender->name->companyName->company = Configuration::get('DHLDP_DP_COMPANY', null, null, $id_shop); // max 50
-            $sender->name->companyName->personName = new stdClass();
-            $sender->name->companyName->personName->salutation = Configuration::get('DHLDP_DP_SALUTATION', null, null, $id_shop); //max 10
-            $sender->name->companyName->personName->title = Configuration::get('DHLDP_DP_TITLE', null, null, $id_shop); //max 10
-            $sender->name->companyName->personName->firstname = Configuration::get('DHLDP_DP_FIRSTNAME', null, null, $id_shop); //max 35
-            $sender->name->companyName->personName->lastname = Configuration::get('DHLDP_DP_LASTNAME', null, null, $id_shop); //max 35
-        } else {
-            $sender->name->personName = new stdClass();
-            $sender->name->personName->salutation = Configuration::get('DHLDP_DP_SALUTATION', null, null, $id_shop); //max 10
-            $sender->name->personName->title = Configuration::get('DHLDP_DP_TITLE', null, null, $id_shop); //max 10
-            $sender->name->personName->firstname = Configuration::get('DHLDP_DP_FIRSTNAME', null, null, $id_shop); //max 35
-            $sender->name->personName->lastname = Configuration::get('DHLDP_DP_LASTNAME', null, null, $id_shop); //max 35
-        }
-
-        $sender->address = new stdClass();
-        $sender->address->street = Configuration::get('DHLDP_DP_STREET', null, null, $id_shop); // max 50
-        $sender->address->houseNo = Configuration::get('DHLDP_DP_HOUSENO', null, null, $id_shop); //max 10
-        $sender->address->additional = Configuration::get('DHLDP_DP_ADDITIONAL', null, null, $id_shop);//max 50
-        $sender->address->zip = Configuration::get('DHLDP_DP_ZIP', null, null, $id_shop); // max 10
-        $sender->address->city = Configuration::get('DHLDP_DP_CITY', null, null, $id_shop); // max 35 *
+        $sender->name = substr(Configuration::get('DHLDP_DP_FIRSTNAME', null, null, $id_shop) . ' ' . Configuration::get('DHLDP_DP_LASTNAME', null, null, $id_shop), 0, 50);
+        $sender->additionalName = substr(Configuration::get('DHLDP_DP_COMPANY', null, null, $id_shop), 0, 40);
+//        $sender->addressLine1 = Configuration::get('DHLDP_DP_STREET', null, null, $id_shop) . ' ' . Configuration::get('DHLDP_DP_HOUSENO', null, null, $id_shop);
+        $sender->addressLine1 = substr(Configuration::get('DHLDP_DP_ADDITIONAL', null, null, $id_shop), 0, 50);
+        $sender->postalCode = Configuration::get('DHLDP_DP_ZIP', null, null, $id_shop);
+        $sender->city = Configuration::get('DHLDP_DP_CITY', null, null, $id_shop);
         $country = new Country((int)Configuration::get('DHLDP_DP_COUNTRY', null, null, $id_shop));
-        $sender->address->country = $this->getCountries(Tools::strtoupper($country->iso_code)); //iso 3 letters *
-
+        $sender->country = $this->getCountries(Tools::strtoupper($country->iso_code));
         return $sender;
     }
 

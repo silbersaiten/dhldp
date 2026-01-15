@@ -1354,8 +1354,7 @@ class DhlDp extends Module
                     $product,
                     $additional_info,
                     $label_position,
-                    $id_order_carrier,
-                    (Configuration::get('DHLDP_DP_REF_NUMBER', null, null, $order->id_shop) ? $order->id : $order->reference)
+                    $id_order_carrier
                 );
 
 
@@ -5561,19 +5560,19 @@ class DhlDp extends Module
         return [];
     }
 
-    public function createDPDeliveryLabel($id_shop, $id_address, $product, $additional_info, $label_position, $id_order_carrier, $reference_number)
+    public function createDPDeliveryLabel($id_shop, $id_address, $product, $additional_info, $label_position, $id_order_carrier)
     {
-        unset($reference_number);
-        $receiver = $this->dp_api->prepareAddress(new Address((int)$id_address));
         $sender = $this->dp_api->getSender($id_shop);
+        $receiver = $this->dp_api->getReciver(new Address((int)$id_address));
 
         $position = new stdClass();
         $position->productCode = $product;
         $position->address = new stdClass();
-        $position->address->receiver = $receiver;
         $position->address->sender = $sender;
+        $position->address->receiver = $receiver;
         $position->additionalInfo = $additional_info;
         $position->voucherLayout = $this->dp_api->voucher_layout;
+        $position->positionType = 'AppShoppingCartPDFPosition';
         $position_page = 1;
         $position_col = 1;
         $position_row = 1;
