@@ -4919,7 +4919,6 @@ class DhlDp extends Module
             }
 
             if (count($form_errors) == 0) {
-
                 $check_client = $this->dp_api->authenticateUser(
                     $deutschepost_mode,
                     DPRestApi::$partnerid,
@@ -5606,12 +5605,13 @@ class DhlDp extends Module
                     'checkoutShoppingCartPDF',
                     array(
                         //'ppl' => $this->dp_api->ppl,
+                        'type' => 'AppShoppingCartPDFRequest',
                         'shopOrderId' => $shop_order_id,
-                        'positions' => $positions,
                         'total' => $total_eurocent,
                         'createManifest' => (bool)Configuration::get('DHLDP_DP_CREATE_MANIFEST', false, false, $id_shop),
                         'createShippingList' => (int)Configuration::get('DHLDP_DP_CREATE_SHIPLIST', false, false, $id_shop),
                         'pageFormatId' => ($page_format_id == 0) ? 1 : $page_format_id,
+                        'positions' => $positions,
                     ),
                     $id_shop,
                     true
@@ -5621,11 +5621,12 @@ class DhlDp extends Module
                     'checkoutShoppingCartPNG',
                     array(
                         //'ppl' => $this->dp_api->ppl,
+                        'type' => 'AppShoppingCartPNGRequest',
                         'shopOrderId' => $shop_order_id,
-                        'positions' => $positions,
                         'total' => $total_eurocent,
                         'createManifest' => (bool)Configuration::get('DHLDP_DP_CREATE_MANIFEST', false, false, $id_shop),
                         'createShippingList' => (int)Configuration::get('DHLDP_DP_CREATE_SHIPLIST', false, false, $id_shop),
+                        'positions' => $positions,
                     ),
                     $id_shop,
                     true

@@ -353,9 +353,6 @@ class DPRestApi
         $headers = $this->getRestHeaders($partner_id, $key_phase, $api_key);
         $headers['Content-Type'] = 'application/x-www-form-urlencoded';
         $client_id = getenv('DHLDP_DP_CLIENT_ID');
-        if (!$client_id) {
-            $client_id = Configuration::get('DHLDP_DP_CLIENT_ID', null, null, $id_shop);
-        }
         $client_secret = getenv('DHLDP_DP_CLIENT_SECRET');
         if (!$client_secret) {
             $client_secret = Configuration::get('DHLDP_DP_CLIENT_SECRET', null, null, $id_shop);
@@ -418,7 +415,7 @@ class DPRestApi
 
         $method = 'POST';
         $endpoint = '/' . $function;
-        $query = array();
+        $query = [];
 
         switch ($function) {
             case 'retrievePageFormats':
@@ -430,16 +427,16 @@ class DPRestApi
                 $endpoint = '/products/contract';
                 break;
             case 'createShopOrderId':
-                $endpoint = '/shoppingcart';
-                $params = array();
+                $endpoint = 'app/shoppingcart';
+                $params = [];
                 break;
             case 'checkoutShoppingCartPDF':
-                $endpoint = '/shoppingcart/checkout';
-                $query = array('format' => 'PDF');
+                $endpoint = 'app/shoppingcart/pdf';
+                $query = [];
                 break;
             case 'checkoutShoppingCartPNG':
-                $endpoint = '/shoppingcart/checkout';
-                $query = array('format' => 'PNG');
+                $endpoint = 'app/shoppingcart/png';
+                $query = [];
                 break;
         }
 
