@@ -27,7 +27,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     public function initContent()
     {
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->displayInformation($this->l('You can only display the page in a shop context.'));
+            $this->displayInformation($this->module->l('You can only display the page in a shop context.'));
             return;
         }
 
@@ -190,10 +190,10 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 $inputs[] = [
                     'type' => 'text',
                     'name' => 'DHLDP_DHL_' . strtoupper($alias) . '_' . strtoupper($param),
-                    'label' => $this->l("Default {$options['label']} for {$alias}"),
-                    //'desc'     => $this->l("Used when no {$options['label']} is defined for the order items."),
+                    'label' => $this->module->l("Default {$options['label']} for {$alias}"),
+                    //'desc'     => $this->module->l("Used when no {$options['label']} is defined for the order items."),
                     'maxlength' => 8,
-                    'suffix' => $this->l($options['suffix']),
+                    'suffix' => $this->module->l($options['suffix']),
                     'class' => 'fixed-width-sm',
                 ];
             }
@@ -206,51 +206,51 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     'form' => array(
                         'id_form' => 'dhl_global_settings',
                         'legend' => array(
-                            'title' => $this->l('Global settings'),
+                            'title' => $this->module->l('Global settings'),
                             'icon' => 'icon-circle',
                         ),
-                        'description' => $this->l('Please select mode and fill form with all relevant information regarding authentication in modes.'),
+                        'description' => $this->module->l('Please select mode and fill form with all relevant information regarding authentication in modes.'),
                         'input' => array(
                             array(
                                 'name' => 'DHLDP_DHL_MODE',
                                 'type' => 'radio',
-                                'label' => $this->l('Mode'),
-                                'desc' => $this->l('Select "Sandbox" for testing'),
+                                'label' => $this->module->l('Mode'),
+                                'desc' => $this->module->l('Select "Sandbox" for testing'),
                                 'class' => 't',
                                 'values' => array(
                                     array(
                                         'id' => 'dhl_mode_live',
                                         'value' => 1,
-                                        'label' => $this->l('Live')
+                                        'label' => $this->module->l('Live')
                                     ),
                                     array(
                                         'id' => 'dhl_mode_sbx',
                                         'value' => 0,
-                                        'label' => $this->l('Sandbox')
+                                        'label' => $this->module->l('Sandbox')
                                     ),
                                 ),
                             ),
                             array(
                                 'name' => 'DHLDP_DHL_LIVE_USER',
                                 'type' => 'text',
-                                'label' => $this->l('Username'),
-                                'desc' => $this->l('"Live" username for user authentication for business customer shipping API'),
+                                'label' => $this->module->l('Username'),
+                                'desc' => $this->module->l('"Live" username for user authentication for business customer shipping API'),
                                 'required' => true,
                                 'form_group_class' => 'dhl_authdata_live'
                             ),
                             array(
                                 'name' => 'DHLDP_DHL_LIVE_SIGN',
                                 'type' => 'text',
-                                'label' => $this->l('Signature'),
-                                'desc' => $this->l('"Live" signature for user authentication for business customer shipping API'),
+                                'label' => $this->module->l('Signature'),
+                                'desc' => $this->module->l('"Live" signature for user authentication for business customer shipping API'),
                                 'required' => true,
                                 'form_group_class' => 'dhl_authdata_live'
                             ),
                             array(
                                 'name' => 'DHLDP_DHL_LIVE_EKP',
                                 'type' => 'text',
-                                'label' => $this->l('EKP'),
-                                'desc' => $this->l('"Live" DHL customer number'),
+                                'label' => $this->module->l('EKP'),
+                                'desc' => $this->module->l('"Live" DHL customer number'),
                                 'required' => true,
                                 'form_group_class' => 'dhl_authdata_live'
                             ),
@@ -262,9 +262,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'name' => 'DHLDP_DHL_LOG',
                                 'type' => 'radio',
-                                'label' => $this->l('Enable Log'),
-                                'desc' => $this->l('Logs of actions in') . ' ' . DIRECTORY_SEPARATOR . 'logs ' .
-                                    $this->l('directory. Please notice: logs information can take a lot of disk space after a time.'),
+                                'label' => $this->module->l('Enable Log'),
+                                'desc' => $this->module->l('Logs of actions in') . ' ' . DIRECTORY_SEPARATOR . 'logs ' .
+                                    $this->module->l('directory. Please notice: logs information can take a lot of disk space after a time.'),
                                 'class' => 't',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -272,12 +272,12 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                                     array(
                                         'id' => 'log_yes',
                                         'value' => 1,
-                                        'label' => $this->l('Yes')
+                                        'label' => $this->module->l('Yes')
                                     ),
                                     array(
                                         'id' => 'log_no',
                                         'value' => 0,
-                                        'label' => $this->l('No')
+                                        'label' => $this->module->l('No')
                                     ),
                                 ),
                             ),
@@ -287,18 +287,18 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             ),
                             array(
                                 'type' => 'free',
-                                'label' => $this->l('Carriers'),
+                                'label' => $this->module->l('Carriers'),
                                 'name' => 'carrier_list',
                             ),
                             array(
                                 'type' => 'free',
-                                'label' => $this->l('New carrier'),
+                                'label' => $this->module->l('New carrier'),
                                 'name' => 'add_carrier',
-                                'desc' => $this->l('If you do not have a carrier'),
+                                'desc' => $this->module->l('If you do not have a carrier'),
                             ),
                         ),
                         'submit' => array(
-                            'title' => $this->l('Save'),
+                            'title' => $this->module->l('Save'),
                             'name' => 'submitSaveAuthOptions',
                         )
                     )
@@ -307,28 +307,28 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     'form' => array(
                         'id_form' => 'dhl_products',
                         'legend' => array(
-                            'title' => $this->l('DHL products'),
+                            'title' => $this->module->l('DHL products'),
                             'icon' => 'icon-circle',
                         ),
-                        'description' => $this->l('Please enter the last two digits (e.g. 01, 02 or similar) of the settlement numbers. You can find them in your account under Contract data overview.'),
+                        'description' => $this->module->l('Please enter the last two digits (e.g. 01, 02 or similar) of the settlement numbers. You can find them in your account under Contract data overview.'),
                         'input' => array(
                             array(
                                 'name' => 'dhl_products',
                                 'type' => 'free',
-                                'label' => $this->l('DHL Products'),
+                                'label' => $this->module->l('DHL Products'),
                                 'class' => 't',
                             ),
                             array(
                                 'class' => 'fixed-width-xs',
                                 'name' => 'DHLDP_DHL_RETURN_PARTICIPATION',
                                 'type' => 'text',
-                                'label' => $this->l('Participation number for return shipment account number'),
-                                'desc' => $this->l('Max. 2 digits. 01 by default.'),
+                                'label' => $this->module->l('Participation number for return shipment account number'),
+                                'desc' => $this->module->l('Max. 2 digits. 01 by default.'),
                                 'maxlength' => 2
                             ),
                         ),
                         'submit' => array(
-                            'title' => $this->l('Save'),
+                            'title' => $this->module->l('Save'),
                             'name' => 'submitSaveOptions',
                         )
                     )
@@ -336,13 +336,13 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 'form3' => array(
                     'form' => array(
                         'legend' => array(
-                            'title' => $this->l('Miscellaneous settings'),
+                            'title' => $this->module->l('Miscellaneous settings'),
                             'icon' => 'icon-truck'
                         ),
                         'input' => array(
                             array(
                                 'type' => 'radio',
-                                'label' => $this->l('Reference number in label is '),
+                                'label' => $this->module->l('Reference number in label is '),
                                 'name' => 'DHLDP_DHL_REF_NUMBER',
                                 'required' => true,
                                 'class' => 't',
@@ -351,20 +351,20 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                                     array(
                                         'id' => 'order_ref',
                                         'value' => 0,
-                                        'label' => $this->l('Order reference')
+                                        'label' => $this->module->l('Order reference')
                                     ),
                                     array(
                                         'id' => 'order_number',
                                         'value' => 1,
-                                        'label' => $this->l('Order ID')
+                                        'label' => $this->module->l('Order ID')
                                     )
                                 )
                             ),
                             array(
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
                                 'name' => 'DHLDP_DHL_ORDER_WEIGHT',
-                                'label' => $this->l('Enable calculating weight of package'),
-                                'desc' => $this->l('Enable calculating weight of package in according with weight of products in order'),
+                                'label' => $this->module->l('Enable calculating weight of package'),
+                                'desc' => $this->module->l('Enable calculating weight of package in according with weight of products in order'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -382,61 +382,61 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'type' => 'text',
                                 'name' => 'DHLDP_DHL_WEIGHT_RATE',
-                                'label' => sprintf($this->l('Rate of converting shop weight unit in kg. Current shop weight unit is %s'), Configuration::get('PS_WEIGHT_UNIT')),
-                                'desc' => $this->l('Rate of converting shop weight unit in kg. If shop weight unit is gramm(g), then rate have to be 0,001 . If shop weight unit is kilogramm(kg), then rate have to be 1(or empty). If rate is empty then weigth will not be recalculated.'),
+                                'label' => sprintf($this->module->l('Rate of converting shop weight unit in kg. Current shop weight unit is %s'), Configuration::get('PS_WEIGHT_UNIT')),
+                                'desc' => $this->module->l('Rate of converting shop weight unit in kg. If shop weight unit is gramm(g), then rate have to be 0,001 . If shop weight unit is kilogramm(kg), then rate have to be 1(or empty). If rate is empty then weigth will not be recalculated.'),
                             ),
 //                            array(
 //                                'type'     => 'text',
 //                                'name'     => 'DHLDP_DHL_DEFAULT_WEIGHT',
-//                                'label'    => $this->l('Default weight of package'),
-//                                'desc'     => $this->l('If weight of products in order is not filled(sum of product weights is zero), then this default weight will be used'),
+//                                'label'    => $this->module->l('Default weight of package'),
+//                                'desc'     => $this->module->l('If weight of products in order is not filled(sum of product weights is zero), then this default weight will be used'),
 //                                'maxlength' => 8,
-//                                'suffix' => $this->l('kg'),
+//                                'suffix' => $this->module->l('kg'),
 //                                'class' => 'fixed-width-sm'
 //                            ),
                             array(
                                 'type' => 'text',
                                 'name' => 'DHLDP_DHL_PACK_WEIGHT',
-                                'label' => $this->l('Weight of pack'),
-                                'desc' => $this->l('If weight of products in order is filled(sum of product weights is not zero), then weight of pack will be also applied'),
+                                'label' => $this->module->l('Weight of pack'),
+                                'desc' => $this->module->l('If weight of products in order is filled(sum of product weights is not zero), then weight of pack will be also applied'),
                                 'maxlength' => 8,
-                                'suffix' => $this->l('kg'),
+                                'suffix' => $this->module->l('kg'),
                                 'class' => 'fixed-width-sm'
                             ),
                             array(
                                 'type' => 'free',
-                                'label' => $this->l('DHL Product dimensions'),
+                                'label' => $this->module->l('DHL Product dimensions'),
                                 'name' => 'dhl-product-dimensions',
                             ),
 //                            array(
 //                                'type'     => 'text',
 //                                'name'     => 'DHLDP_DHL_DEFAULT_LENGTH',
-//                                'label'    => $this->l('Default length of package'),
+//                                'label'    => $this->module->l('Default length of package'),
 //                                'maxlength' => 8,
-//                                'suffix' => $this->l('cm'),
+//                                'suffix' => $this->module->l('cm'),
 //                                'class' => 'fixed-width-sm'
 //                            ),
 //                            array(
 //                                'type'     => 'text',
 //                                'name'     => 'DHLDP_DHL_DEFAULT_WIDTH',
-//                                'label'    => $this->l('Default width of package'),
+//                                'label'    => $this->module->l('Default width of package'),
 //                                'maxlength' => 8,
-//                                'suffix' => $this->l('cm'),
+//                                'suffix' => $this->module->l('cm'),
 //                                'class' => 'fixed-width-sm'
 //                            ),
 //                            array(
 //                                'type'     => 'text',
 //                                'name'     => 'DHLDP_DHL_DEFAULT_HEIGHT',
-//                                'label'    => $this->l('Default height of package'),
+//                                'label'    => $this->module->l('Default height of package'),
 //                                'maxlength' => 8,
-//                                'suffix' => $this->l('cm'),
+//                                'suffix' => $this->module->l('cm'),
 //                                'class' => 'fixed-width-sm'
 //                            ),
                             array(
                                 'type' => 'select',
                                 'name' => 'DHLDP_DHL_AGE_CHECK',
-                                'label' => $this->l('Select default age for age checking '),
-                                'desc' => $this->l('The visual check of age service ensures in an uncomplicated and convenient way that your parcels are not delivered to minors. The service takes care of particular aspects of the protection of minors, e.g., when sending alcoholic drinks, CDs/DVDs with an age limit, PC and console games, or medicines requiring a doctor prescription'),
+                                'label' => $this->module->l('Select default age for age checking '),
+                                'desc' => $this->module->l('The visual check of age service ensures in an uncomplicated and convenient way that your parcels are not delivered to minors. The service takes care of particular aspects of the protection of minors, e.g., when sending alcoholic drinks, CDs/DVDs with an age limit, PC and console games, or medicines requiring a doctor prescription'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'disabled' => false,
                                 'options' => array(
@@ -444,7 +444,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                                         array(
                                             array(
                                                 'value' => '',
-                                                'name' => $this->l('-- Do not check --')
+                                                'name' => $this->module->l('-- Do not check --')
                                             ),
                                         ),
                                         $vcoa_options
@@ -456,8 +456,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
                                 'name' => 'DHLDP_DHL_PFPS',
-                                'label' => $this->l('Enable DHL Postfiliales and DHL Packstations'),
-                                'desc' => $this->l('Including extension for addresses of customer'),
+                                'label' => $this->module->l('Enable DHL Postfiliales and DHL Packstations'),
+                                'desc' => $this->module->l('Including extension for addresses of customer'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -475,7 +475,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
                                 'name' => 'DHLDP_DHL_PFPS_MAP',
-                                'label' => $this->l('Show google map'),
+                                'label' => $this->module->l('Show google map'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -494,14 +494,14 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'type' => 'text',
                                 'name' => 'DHLDP_DHL_GOOGLEMAPAPIKEY',
-                                'label' => $this->l('Google Map API key'),
-                                'desc' => $this->l('Google API key is used for showing map with locations of DHL Postfiliales and DHL Packstations. It is required if you set enabled DHL Postfiliales and DHL Packstations.'),
+                                'label' => $this->module->l('Google Map API key'),
+                                'desc' => $this->module->l('Google API key is used for showing map with locations of DHL Postfiliales and DHL Packstations. It is required if you set enabled DHL Postfiliales and DHL Packstations.'),
                                 'form_group_class' => 'dhl_googlemapapikey'
                             ),
                             array(
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
                                 'name' => 'DHLDP_DHL_INTRANSIT_MAIL',
-                                'label' => $this->l('Enable sending "Package in transit" mail after generating label'),
+                                'label' => $this->module->l('Enable sending "Package in transit" mail after generating label'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -518,15 +518,15 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             ),
                             array(
                                 'type' => 'select',
-                                'label' => $this->l('Enable updating order status'),
+                                'label' => $this->module->l('Enable updating order status'),
                                 'name' => 'DHLDP_DHL_CHANGE_OS',
-                                'desc' => $this->l('Order status will be changed "Shipped" automatically after creating DHL label'),
+                                'desc' => $this->module->l('Order status will be changed "Shipped" automatically after creating DHL label'),
                                 'options' => array(
                                     'query' => array_merge(
                                         array(
                                             array(
                                                 'id_order_state' => '',
-                                                'name' => $this->l('-- Do not change --')
+                                                'name' => $this->module->l('-- Do not change --')
                                             )
                                         ),
                                         $this->module->getShippedOrderStates()
@@ -537,15 +537,15 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             ),
                             /*array(
                                 'type'    => 'select',
-                                'label'   => $this->l('Enable updating order status, if shipment has been delivered'),
+                                'label'   => $this->module->l('Enable updating order status, if shipment has been delivered'),
                                 'name'    => 'DHLDP_DHL_CHANGE_OS_DELIVERED',
-                                'desc'    => sprintf($this->l('Status of shipment will be checked if you get tracking data on DHL by clicking on "Update tracking data" button of package or you can use cron job. For example, this cron job will get tracking data at 1:00am: 0 1 * * * php -f %s'), $this->getLocalPath() . 'cron_track.php secure_key=' . Configuration::get('DHLDP_DHL_SECURE_KEY').' id_shop='.$this->context->shop->id),
+                                'desc'    => sprintf($this->module->l('Status of shipment will be checked if you get tracking data on DHL by clicking on "Update tracking data" button of package or you can use cron job. For example, this cron job will get tracking data at 1:00am: 0 1 * * * php -f %s'), $this->getLocalPath() . 'cron_track.php secure_key=' . Configuration::get('DHLDP_DHL_SECURE_KEY').' id_shop='.$this->context->shop->id),
                                 'options' => array(
                                     'query' => array_merge(
                                         array(
                                             array(
                                                 'id_order_state' => '',
-                                                'name'           => $this->l('-- Do not change --')
+                                                'name'           => $this->module->l('-- Do not change --')
                                             )
                                         ),
                                         $this->getShippedOrderStates()
@@ -559,14 +559,14 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'name' => 'DHLDP_DHL_SECURE_KEY',
                                 'type' => 'text',
-                                'label' => $this->l('Secure key for running cron job task'),
+                                'label' => $this->module->l('Secure key for running cron job task'),
                                 'form_group_class' => 'dhlp_new_release'
                             ),*/
                             array(
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
                                 'name' => 'DHLDP_DHL_CREATE_MANIFEST_IN_ORDER',
-                                'label' => $this->l('Enable manifest creation in order.'),
-                                'desc' => $this->l('If you enable it, the order will have a button to create a manifest in the order.'),
+                                'label' => $this->module->l('Enable manifest creation in order.'),
+                                'desc' => $this->module->l('If you enable it, the order will have a button to create a manifest in the order.'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -584,8 +584,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
                                 'name' => 'DHLDP_DHL_CONFIRMATION_PRIVATE',
-                                'label' => $this->l('Enable customer confirmation for permission transferring private information to DHL service'),
-                                'desc' => $this->l('If you are enable it, then shop will ask customer permission for sending e-mail address and phone number to DHL service in frontend. If you disabled it, then e-mail address and phone number will be sent to DHL service by default.'),
+                                'label' => $this->module->l('Enable customer confirmation for permission transferring private information to DHL service'),
+                                'desc' => $this->module->l('If you are enable it, then shop will ask customer permission for sending e-mail address and phone number to DHL service in frontend. If you disabled it, then e-mail address and phone number will be sent to DHL service by default.'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -607,8 +607,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'name' => 'DHLDP_DHL_LABEL_WITH_RETURN',
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
-                                'label' => $this->l('Enable generate label with return label'),
-                                'desc' => $this->l('This option adds enclosed return label to generated label. Your customers receive a fully prepared return label with their delivery. If they choose to send an item back, all they have to do is pack it and affix the label. Supported products: DHL Paket, DHL Paket Austria, DHL Paket Taggleich, DHL Kurier Taggleich, DHL Karier Wunschzeit'),
+                                'label' => $this->module->l('Enable generate label with return label'),
+                                'desc' => $this->module->l('This option adds enclosed return label to generated label. Your customers receive a fully prepared return label with their delivery. If they choose to send an item back, all they have to do is pack it and affix the label. Supported products: DHL Paket, DHL Paket Austria, DHL Paket Taggleich, DHL Kurier Taggleich, DHL Karier Wunschzeit'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -626,8 +626,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'name' => 'DHLDP_DHL_LABEL_IGNORE_WARNING',
                                 'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
-                                'label' => $this->l('Auto generate label with Warning'),
-                                'desc' => $this->l('Enable jobs creation even if a warning appears, if the future is active, create the label immediately without a confirmation step. However, the warning will still be displayed after creation'),
+                                'label' => $this->module->l('Auto generate label with Warning'),
+                                'desc' => $this->module->l('Enable jobs creation even if a warning appears, if the future is active, create the label immediately without a confirmation step. However, the warning will still be displayed after creation'),
                                 'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                                 'is_bool' => true,
                                 'disabled' => false,
@@ -645,14 +645,14 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'name' => 'DHLDP_DHL_LABEL_FORMAT',
                                 'type' => 'select',
-                                'label' => $this->l('Label format'),
+                                'label' => $this->module->l('Label format'),
                                 'disabled' => false,
                                 'options' => array(
                                     'query' => array_merge(
                                         array(
                                             array(
                                                 'id' => '',
-                                                'name' => $this->l('-- By default --')
+                                                'name' => $this->module->l('-- By default --')
                                             )
                                         ),
                                         $this->getAssocArrayOptionsForSelect($this->module->getLabelFormats(), 'name,desc')
@@ -664,14 +664,14 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'name' => 'DHLDP_DHL_RETOURE_LABEL_FORMAT',
                                 'type' => 'select',
-                                'label' => $this->l('Retoure label format'),
+                                'label' => $this->module->l('Retoure label format'),
                                 'disabled' => false,
                                 'options' => array(
                                     'query' => array_merge(
                                         array(
                                             array(
                                                 'id' => '',
-                                                'name' => $this->l('-- By default --')
+                                                'name' => $this->module->l('-- By default --')
                                             )
                                         ),
                                         $this->getAssocArrayOptionsForSelect($this->module->getRetoureLabelFormats(), 'name,desc')
@@ -682,16 +682,16 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             ),
                             array(
                                 'type' => 'text',
-                                'label' => $this->l('E-mail address of HP ePrint printer'),
+                                'label' => $this->module->l('E-mail address of HP ePrint printer'),
                                 'name' => 'DHLDP_DHL_EPRINT_EMAIL',
                                 'required' => false,
                                 'size' => 35,
-                                'desc' => $this->l('Enable sending mail with PDF after generating to HP ePrint printer'),
+                                'desc' => $this->module->l('Enable sending mail with PDF after generating to HP ePrint printer'),
                                 'form_group_class' => 'dhlp_new_release'
                             ),
                         ),
                         'submit' => array(
-                            'title' => $this->l('Save'),
+                            'title' => $this->module->l('Save'),
                             'name' => 'submitSaveOptions',
                         )
                     )
@@ -702,14 +702,14 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $form_fields['form35'] = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->l('Default settings for additional services'),
+                    'title' => $this->module->l('Default settings for additional services'),
                     'icon' => 'icon-truck'
                 ),
                 'input' => array(
                     array(
                         'name' => 'DHLDP_DHL_DEF_PARCEL_ROUT_SERV',
                         'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
-                        'label' => $this->l('Enable \'Parcel outlet routing\' service by default'),
+                        'label' => $this->module->l('Enable \'Parcel outlet routing\' service by default'),
                         'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                         'is_bool' => true,
                         'disabled' => false,
@@ -728,10 +728,10 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_DEF_GOGREEN',
                         'type' => 'switch',
-                        'label' => $this->l('GoGreen'),
+                        'label' => $this->module->l('GoGreen'),
                         'is_bool' => true,
                         'disabled' => false,
-                        'desc' => $this->l('You will make a sustainable contribution towards climate protection by offsetting the CO2 e-emissions generated during the transportation of your items. Extra charge in addition to the price of a parcel.'),
+                        'desc' => $this->module->l('You will make a sustainable contribution towards climate protection by offsetting the CO2 e-emissions generated during the transportation of your items. Extra charge in addition to the price of a parcel.'),
                         'values' => array(
                             array(
                                 'id' => 'DHLDP_DHL_DEF_GOGREEN_on',
@@ -747,7 +747,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_PREMIUM',
                         'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
-                        'label' => $this->l('choosing premium service for \'Warenpost international\''),
+                        'label' => $this->module->l('choosing premium service for \'Warenpost international\''),
                         'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                         'is_bool' => true,
                         'disabled' => false,
@@ -765,7 +765,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     ),
                     array(
                         'type' => 'radio',
-                        'label' => $this->l('Invoice number of export document is'),
+                        'label' => $this->module->l('Invoice number of export document is'),
                         'name' => 'DHLDP_DHL_EXP_INV_NUM',
                         'required' => true,
                         'class' => 't',
@@ -774,17 +774,17 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             array(
                                 'id' => 'expinvnum_nothing',
                                 'value' => 0,
-                                'label' => $this->l('Nothing')
+                                'label' => $this->module->l('Nothing')
                             ),
                             array(
                                 'id' => 'expinvnum_orderref',
                                 'value' => 1,
-                                'label' => $this->l('Order reference')
+                                'label' => $this->module->l('Order reference')
                             ),
                             array(
                                 'id' => 'expinvnum_invoicenumber',
                                 'value' => 2,
-                                'label' => $this->l('Invoice number')
+                                'label' => $this->module->l('Invoice number')
                             ),
                         ),
                         'form_group_class' => 'dhlp_new_release'
@@ -792,27 +792,27 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM',
                         'type' => 'text',
-                        'label' => $this->l('Default customs tariff number of products'),
+                        'label' => $this->module->l('Default customs tariff number of products'),
                         'form_group_class' => 'dhlp_new_release',
                         'maxlength' => 11
                     ),
                     array(
                         'name' => 'DHLDP_DHL_DEF_PLACE_OF_COMMITAL',
                         'type' => 'text',
-                        'label' => $this->l('Default place of committal'),
+                        'label' => $this->module->l('Default place of committal'),
                         'form_group_class' => 'dhlp_new_release',
                         'maxlength' => 35
                     ),
                     array(
                         'name' => 'DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES',
                         'type' => 'text',
-                        'label' => $this->l('Default additional custom fees'),
+                        'label' => $this->module->l('Default additional custom fees'),
                         'form_group_class' => 'dhlp_new_release',
-                        'desc' => $this->l('Enter the default amount for additional custom fees.'),
+                        'desc' => $this->module->l('Enter the default amount for additional custom fees.'),
                     ),
                 ),
                 'submit' => array(
-                    'title' => $this->l('Save'),
+                    'title' => $this->module->l('Save'),
                     'name' => 'submitSaveOptions',
                 )
             )
@@ -821,16 +821,16 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $form_fields['form4'] = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->l('DHL Retoure settings and additional settings for Merchandise return (RMA)'),
+                    'title' => $this->module->l('DHL Retoure settings and additional settings for Merchandise return (RMA)'),
                     'icon' => 'icon-truck'
                 ),
-                'description' => $this->l('If you enable returns in shop on "Sell/Customer service/Merchandise returns/Merchandise return (RMA) options/Enable returns", then you will possibility to pass Return Labels automatically.'),
+                'description' => $this->module->l('If you enable returns in shop on "Sell/Customer service/Merchandise returns/Merchandise return (RMA) options/Enable returns", then you will possibility to pass Return Labels automatically.'),
                 'input' => array(
                     array(
                         'name' => 'DHLDP_DHL_RETURNS_EXTEND',
                         'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
-                        'label' => $this->l('Enable extending management of returns in shop'),
-                        'desc' => $this->l('Enable sending Return label on return request of customer'),
+                        'label' => $this->module->l('Enable extending management of returns in shop'),
+                        'desc' => $this->module->l('Enable sending Return label on return request of customer'),
                         'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                         'is_bool' => true,
                         'disabled' => !Configuration::get('PS_ORDER_RETURN'),
@@ -849,8 +849,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_RETURNS_IMMED',
                         'type' => (_PS_VERSION_ < '1.6.0.0') ? 'radio' : 'switch',
-                        'label' => $this->l('Enable sending Return Label immediately'),
-                        'desc' => $this->l('Enable sending Return label on return request of customer immediately without approving by shop administrator'),
+                        'label' => $this->module->l('Enable sending Return Label immediately'),
+                        'desc' => $this->module->l('Enable sending Return label on return request of customer immediately without approving by shop administrator'),
                         'class' => (_PS_VERSION_ < '1.6.0.0') ? 't' : '',
                         'is_bool' => true,
                         'disabled' => !Configuration::get('PS_ORDER_RETURN'),
@@ -868,9 +868,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     ),
                     array(
                         'type' => 'select',
-                        'label' => $this->l('Countries'),
+                        'label' => $this->module->l('Countries'),
                         'name' => 'DHLDP_DHL_RA_COUNTRIES',
-                        'desc' => $this->l('Enable creating Return label for countries of sender address'),
+                        'desc' => $this->module->l('Enable creating Return label for countries of sender address'),
                         'required' => true,
                         'multiple' => true,
                         'form_group_class' => 'hide dhldp_dhl_ra',
@@ -883,7 +883,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     ),
                 ),
                 'submit' => array(
-                    'title' => $this->l('Save'),
+                    'title' => $this->module->l('Save'),
                     'name' => 'submitSaveOptions',
                 )
             )
@@ -894,22 +894,22 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             'form' => array(
                 'id_form' => 'dhl_address',
                 'legend' => array(
-                    'title' => $this->l('Address'),
+                    'title' => $this->module->l('Address'),
                     'icon' => 'icon-circle',
                 ),
-                'description' => $this->l('Please enter address of shop'),
+                'description' => $this->module->l('Please enter address of shop'),
                 'input' => array(
                     array(
                         'type' => 'select',
-                        'label' => $this->l('Shipper address'),
+                        'label' => $this->module->l('Shipper address'),
                         'name' => 'DHLDP_DHL_SHIPPER_TYPE',
-                        'desc' => $this->l('You have possibility enter shipper address or use shipper reference (valid shipper reference from your GKP) to use address from GKP. 
+                        'desc' => $this->module->l('You have possibility enter shipper address or use shipper reference (valid shipper reference from your GKP) to use address from GKP. 
                         If you will use shipper reference, then you will get possibility to set company logo from GKP on shipment label.'),
                         'required' => true,
                         'options' => array(
                             'query' => array(
-                                array('code' => 0, 'name' => $this->l('Fill shipper address')),
-                                array('code' => 1, 'name' => $this->l('Get shipper address from GKP by reference'))
+                                array('code' => 0, 'name' => $this->module->l('Fill shipper address')),
+                                array('code' => 1, 'name' => $this->module->l('Get shipper address from GKP by reference'))
                             ),
                             'id' => 'code',
                             'name' => 'name'
@@ -918,8 +918,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_COMPANY_NAME_1',
                         'type' => 'text',
-                        'label' => $this->l('Company'),
-                        'desc' => $this->l('Max. 35 characters'),
+                        'label' => $this->module->l('Company'),
+                        'desc' => $this->module->l('Max. 35 characters'),
                         'required' => true,
                         'maxlength' => 35,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -927,8 +927,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_COMPANY_NAME_2',
                         'type' => 'text',
-                        'label' => $this->l('Company 2'),
-                        'desc' => $this->l('Max. 35 characters'),
+                        'label' => $this->module->l('Company 2'),
+                        'desc' => $this->module->l('Max. 35 characters'),
                         'required' => true,
                         'maxlength' => 35,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -936,8 +936,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_CONTACT_PERSON',
                         'type' => 'text',
-                        'label' => $this->l('Contact person'),
-                        'desc' => $this->l('Max. 50 characters'),
+                        'label' => $this->module->l('Contact person'),
+                        'desc' => $this->module->l('Max. 50 characters'),
                         'required' => false,
                         'maxlength' => 50,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -945,8 +945,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_STREET_NAME',
                         'type' => 'text',
-                        'label' => $this->l('Street'),
-                        'desc' => $this->l('Max. 35 characters'),
+                        'label' => $this->module->l('Street'),
+                        'desc' => $this->module->l('Max. 35 characters'),
                         'required' => true,
                         'maxlength' => 35,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -954,8 +954,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_STREET_NUMBER',
                         'type' => 'text',
-                        'label' => $this->l('House number'),
-                        'desc' => $this->l('Max. 5 characters'),
+                        'label' => $this->module->l('House number'),
+                        'desc' => $this->module->l('Max. 5 characters'),
                         'required' => true,
                         'maxlength' => 5,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -963,8 +963,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_ZIP',
                         'type' => 'text',
-                        'label' => $this->l('Postcode'),
-                        'desc' => $this->l('Max. 10 characters'),
+                        'label' => $this->module->l('Postcode'),
+                        'desc' => $this->module->l('Max. 10 characters'),
                         'required' => true,
                         'maxlength' => 10,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -972,8 +972,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_CITY',
                         'type' => 'text',
-                        'label' => $this->l('City'),
-                        'desc' => $this->l('Max. 35 characters'),
+                        'label' => $this->module->l('City'),
+                        'desc' => $this->module->l('Max. 35 characters'),
                         'required' => true,
                         'maxlength' => 35,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -981,15 +981,15 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_COUNTRY',
                         'type' => 'free',
-                        'label' => $this->l('Country'),
+                        'label' => $this->module->l('Country'),
                         'disabled' => true,
                         'form_group_class' => 'dhl_shipper_by_address'
                     ),
                     array(
                         'name' => 'DHLDP_DHL_STATE',
                         'type' => 'text',
-                        'label' => $this->l('State'),
-                        'desc' => $this->l('Max. 30 characters'),
+                        'label' => $this->module->l('State'),
+                        'desc' => $this->module->l('Max. 30 characters'),
                         'required' => false,
                         'maxlength' => 30,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -997,8 +997,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_PHONE',
                         'type' => 'text',
-                        'label' => $this->l('Phone'),
-                        'desc' => $this->l('Max. 20 characters'),
+                        'label' => $this->module->l('Phone'),
+                        'desc' => $this->module->l('Max. 20 characters'),
                         'required' => true,
                         'maxlength' => 20,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -1006,8 +1006,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_EMAIL',
                         'type' => 'text',
-                        'label' => $this->l('E-mail'),
-                        'desc' => $this->l('Max. 70 characters'),
+                        'label' => $this->module->l('E-mail'),
+                        'desc' => $this->module->l('Max. 70 characters'),
                         'required' => true,
                         'maxlength' => 70,
                         'form_group_class' => 'dhl_shipper_by_address'
@@ -1015,15 +1015,15 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     array(
                         'name' => 'DHLDP_DHL_REFERENCE',
                         'type' => 'text',
-                        'label' => $this->l('Shipper reference'),
-                        'desc' => $this->l('Max. 50 characters. Contains a reference to the Shipper data configured in GKP.'),
+                        'label' => $this->module->l('Shipper reference'),
+                        'desc' => $this->module->l('Max. 50 characters. Contains a reference to the Shipper data configured in GKP.'),
                         'required' => true,
                         'maxlength' => 50,
                         'form_group_class' => 'dhl_shipper_by_reference'
                     ),
                 ),
                 'submit' => array(
-                    'title' => $this->l('Save'),
+                    'title' => $this->module->l('Save'),
                     'name' => 'submitSaveOptions',
                 )
             )
@@ -1033,63 +1033,63 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             'form' => array(
                 'id_form' => 'dhl_bankdata',
                 'legend' => array(
-                    'title' => $this->l('Bank data'),
+                    'title' => $this->module->l('Bank data'),
                     'icon' => 'icon-circle',
                 ),
-                'description' => $this->l('Bank data can be provided here for different purposes. E.g. if COD is booked as service, bank data must be provided by DHL customer (mandatory server logic). The collected money will be transferred to specified bank account.'),
+                'description' => $this->module->l('Bank data can be provided here for different purposes. E.g. if COD is booked as service, bank data must be provided by DHL customer (mandatory server logic). The collected money will be transferred to specified bank account.'),
                 'input' => array(
                     array(
                         'name' => 'DHLDP_DHL_ACCOUNT_OWNER',
                         'type' => 'text',
-                        'label' => $this->l('Account owner'),
-                        'desc' => $this->l('Max. 30 characters'),
+                        'label' => $this->module->l('Account owner'),
+                        'desc' => $this->module->l('Max. 30 characters'),
                         'required' => false,
                         'maxlength' => 30,
                     ),
                     array(
                         'name' => 'DHLDP_DHL_BANK_NAME',
                         'type' => 'text',
-                        'label' => $this->l('Bank name'),
-                        'desc' => $this->l('Max. 30 characters'),
+                        'label' => $this->module->l('Bank name'),
+                        'desc' => $this->module->l('Max. 30 characters'),
                         'required' => false,
                         'maxlength' => 30,
                     ),
                     array(
                         'name' => 'DHLDP_DHL_IBAN',
                         'type' => 'text',
-                        'label' => $this->l('IBAN'),
-                        'desc' => $this->l('Max. 34 characters'),
+                        'label' => $this->module->l('IBAN'),
+                        'desc' => $this->module->l('Max. 34 characters'),
                         'required' => false,
                         'maxlength' => 34,
                     ),
                     array(
                         'name' => 'DHLDP_DHL_BIC',
                         'type' => 'text',
-                        'label' => $this->l('BIC'),
-                        'desc' => $this->l('Max. 11 characters'),
+                        'label' => $this->module->l('BIC'),
+                        'desc' => $this->module->l('Max. 11 characters'),
                         'required' => false,
                         'maxlength' => 11,
                     ),
                     array(
                         'name' => 'DHLDP_DHL_NOTE',
                         'type' => 'text',
-                        'label' => $this->l('Note'),
-                        'desc' => $this->l('Max. 35 characters. Use [order_reference_number] in note for adding Order ID or Order Reference in according with "Reference number in label is" setting. Example, "Bestellnummer [order_reference_number]" will add "Bestellnummer KHWLILZLL" in note.'),
+                        'label' => $this->module->l('Note'),
+                        'desc' => $this->module->l('Max. 35 characters. Use [order_reference_number] in note for adding Order ID or Order Reference in according with "Reference number in label is" setting. Example, "Bestellnummer [order_reference_number]" will add "Bestellnummer KHWLILZLL" in note.'),
                         'required' => false,
                         'maxlength' => 35,
                     ),
                     array(
                         'name' => 'DHLDP_DHL_NOTE2',
                         'type' => 'text',
-                        'label' => $this->l('Note 2'),
-                        'desc' => $this->l('Max. 35 characters. Use [order_reference_number] in note for adding Order ID or Order Reference in according with "Reference number in label is" setting. Example, "Bestellnummer [order_reference_number]" will add "Bestellnummer KHWLILZLL" in note.'),
+                        'label' => $this->module->l('Note 2'),
+                        'desc' => $this->module->l('Max. 35 characters. Use [order_reference_number] in note for adding Order ID or Order Reference in according with "Reference number in label is" setting. Example, "Bestellnummer [order_reference_number]" will add "Bestellnummer KHWLILZLL" in note.'),
                         'required' => false,
                         'maxlength' => 35,
                         'form_group_class' => 'dhlp_new_release'
                     ),
                 ),
                 'submit' => array(
-                    'title' => $this->l('Save'),
+                    'title' => $this->module->l('Save'),
                     'name' => 'submitSaveOptions',
                 )
             )
@@ -1228,21 +1228,21 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     'form' => array(
                         'id_form' => 'dhldp_init_settings',
                         'legend' => array(
-                            'title' => $this->l('DHL init settings'),
+                            'title' => $this->module->l('DHL init settings'),
                             'icon' => 'icon-circle',
                         ),
-                        'description' => $this->l('Please select shipper country and version of DHL API.'),
+                        'description' => $this->module->l('Please select shipper country and version of DHL API.'),
                         'input' => array(
                             array(
                                 'name' => 'DHLDP_DHL_COUNTRY',
                                 'type' => 'select',
-                                'label' => $this->l('Country'),
+                                'label' => $this->module->l('Country'),
                                 'required' => true,
                                 'options' => $shipper_country_options
                             ),
                         ),
                         'submit' => array(
-                            'title' => $this->l('Save'),
+                            'title' => $this->module->l('Save'),
                             'name' => 'submitSaveOptions',
                         )
                     )

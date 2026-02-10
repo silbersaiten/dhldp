@@ -19,7 +19,7 @@ function upgrade_module_3_2_0($object)
 {
     $tabs = array(
         array('class' => 'AdminDhldpSettingsDhl', 'name' => 'DHL settings', 'parent' => 'AdminParentShipping', 'active' => true),
-        array('class' => 'AdminDhldpSettingsDp', 'name' => 'DHL Deutschepost settings', 'parent' => 'AdminParentShipping', 'active' => true),
+        array('class' => 'AdminDhldpSettingsDp', 'name' => 'DHL DP settings', 'parent' => 'AdminParentShipping', 'active' => true),
         array('class' => 'AdminDhldpInformation', 'name' => 'DHL Information', 'parent' => 'AdminParentShipping', 'active' => true),
     );
 
@@ -30,6 +30,5 @@ function upgrade_module_3_2_0($object)
             $return &= $object->installTab($tab['class'], $tab['name'], $tab['parent'], $tab['active']);
         }
     }
-
     return (bool)$return;
 }
