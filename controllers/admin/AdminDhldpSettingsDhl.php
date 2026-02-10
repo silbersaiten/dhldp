@@ -141,7 +141,12 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/dhl-shipper-country.tpl'
         );
         $helper->fields_value['DHLDP_DHL_LIVE_SIGN'] = str_repeat('*', mb_strlen(Configuration::get('DHLDP_DHL_LIVE_SIGN')));
-        return $helper->generateForm($this->getFormFieldsDHLSettings());
+        $forms = array();
+        foreach ($this->getFormFieldsDHLSettings() as $form_field) {
+            $forms[] = $helper->generateForm(array($form_field));
+        }
+
+        return implode('', $forms);
     }
     protected function getFormFieldsDHLSettings()
     {
