@@ -2463,6 +2463,10 @@ class DhlDp extends Module
         }
         $view_mode = Tools::getValue('view');
 
+        if (empty($view_mode)) {
+            Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpInformation'));
+        }
+
 
         switch ($view_mode) {
             case 'generateLabels':
