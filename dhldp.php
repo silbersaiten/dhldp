@@ -2463,11 +2463,6 @@ class DhlDp extends Module
         }
         $view_mode = Tools::getValue('view');
 
-        if (empty($view_mode)) {
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpInformation'));
-        }
-
-
         switch ($view_mode) {
             case 'generateLabels':
                 if (Tools::isSubmit('generateMultipleLabels') || Tools::isSubmit('generateMultipleLabelsWithReturn')) {
@@ -2501,9 +2496,6 @@ class DhlDp extends Module
 
                 $html .= $this->context->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/order-list.tpl');
                 break;
-            case 'information':
-                $html .= $this->displayInfo();
-                break;
             case 'changelog':
                 $changelog_file = dirname(__FILE__) . '/Readme.md';
                 if (file_exists($changelog_file)) {
@@ -2519,9 +2511,9 @@ class DhlDp extends Module
                 $html .= $this->displayFormDPSettings();
                 break;
             default:
-                $html .= $this->postProcess();
-                $html .= $this->displayFormDHLSettings();
-
+//                $html .= $this->postProcess();
+//                $html .= $this->displayFormDHLSettings();
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpInformation'));
                 break;
         }
 
@@ -3050,20 +3042,6 @@ class DhlDp extends Module
             );
         }
         return count($orders) ? $orders : false;
-    }
-
-    public function displayInfo()
-    {
-        $this->smarty->assign(
-            array(
-                '_path' => $this->_path,
-                'displayName' => $this->displayName,
-                'author' => $this->author,
-                'description' => $this->description,
-            )
-        );
-
-        return $this->display(__FILE__, 'views/templates/admin/info.tpl');
     }
 
     public function displayChangelog($file)

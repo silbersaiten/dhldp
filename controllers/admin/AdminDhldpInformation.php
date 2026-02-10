@@ -1,6 +1,14 @@
 <?php
 /**
  * DHL Deutschepost
+ *
+ * @author    silbersaiten <info@silbersaiten.de>
+ * @copyright 2026 silbersaiten
+ * @license   See joined file licence.txt
+ * @category  Module
+ * @support   silbersaiten <support@silbersaiten.de>
+ * @version   3.2.0
+ * @link      https://www.silbersaiten.de
  */
 
 class AdminDhldpInformationController extends ModuleAdminController
@@ -18,13 +26,24 @@ class AdminDhldpInformationController extends ModuleAdminController
 
     public function initContent()
     {
-        parent::initContent();
-
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
             $this->displayInformation($this->l('You can only display the page in a shop context.'));
             return;
         }
+        $this->content .= $this->displayInfo();
+        parent::initContent();
+    }
 
-        $this->content .= $this->module->displayInfo();
+    public function displayInfo()
+    {
+        $this->context->smarty->assign(
+            array(
+                '_path' => $this->module->getPathUri(),
+                'displayName' => $this->module->displayName,
+                'author' => $this->module->author,
+                'description' => $this->module->description,
+            )
+        );
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/info.tpl');
     }
 }

@@ -18,8 +18,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     public function initContent()
     {
-        parent::initContent();
-
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
             $this->displayInformation($this->l('You can only display the page in a shop context.'));
             return;
@@ -27,5 +25,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
         $this->content .= $this->module->postProcess();
         $this->content .= $this->module->displayFormDPSettings();
+        parent::initContent();
     }
 }
