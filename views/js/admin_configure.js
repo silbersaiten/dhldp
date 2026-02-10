@@ -262,7 +262,7 @@ var dhldpAdminConfigure = {
                 return;
             }
 
-            var $panel = $form.closest('.panel');
+            var $panel = $form.find('.panel');
             if (!$panel.length) {
                 return;
             }
