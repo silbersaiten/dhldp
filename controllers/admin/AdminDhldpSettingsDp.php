@@ -32,12 +32,12 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     {
         parent::setMedia($isNewTheme);
 
-        $this->context->controller->addCSS($this->module->_path . 'views/css/admin.css');
-        $this->context->controller->addJS($this->module->_path . 'views/js/dp_admin_configure.js');
+        $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
+        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dp_admin_configure.js');
 
         Media::addJsDef([
             'is177' => $this->module->is177,
-            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
         ]);
     }
 }

@@ -11,6 +11,8 @@
  * @link      https://www.silbersaiten.de
  */
 
+use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
+
 class AdminDhldpSettingsDhlController extends ModuleAdminController
 {
     public function __construct()
@@ -46,18 +48,16 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     {
         parent::setMedia($isNewTheme);
 
-        $this->context->controller->addCSS($this->module->_path . 'views/css/admin.css');
-        $this->context->controller->addJqueryPlugin(['idTabs', 'select2']);
-
-        $this->context->controller->addJqueryPlugin('validate');
+        $this->context->controller->addJqueryPlugin(['idTabs', 'select2', 'validate']);
+        $this->context->controller->addJqueryUI('ui.accordion');
+        $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
         $this->context->controller->addJS(
             _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'
         );
+        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/admin_configure.js');
+        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dhl-product-dimensions.js');
 
-        $this->context->controller->addJS($this->module->_path . 'views/js/admin_configure.js');
-        $this->context->controller->addJS($this->module->_path . 'views/js/dhl-product-dimensions.js');
-
-        $dhl_products = $this->module->dhldp_api_rest->getDefinedProducts('', '', DHLDP::getConfig('DHL_COUNTRY'), DHLDP::getConfig('DHL_API_VERSION'));
+        $dhl_products = $this->module->dhldp_api_rest->getDefinedProducts('', '', Configuration::get('DHLDP_DHL_COUNTRY'), Configuration::get('DHLDP_DHL_API_VERSION'));
         $dhl_products_js = [];
         foreach ($dhl_products as $dhl_product_key => $dhl_product) {
             if ($dhl_product['active'] == true) {
