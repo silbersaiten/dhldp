@@ -329,12 +329,13 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         ),
                         'submit' => array(
                             'title' => $this->module->l('Save'),
-                            'name' => 'submitSaveOptions',
+                            'name' => 'submitSaveProductsOptions',
                         )
                     )
                 ),
                 'form3' => array(
                     'form' => array(
+                        'id_form' => 'dhl_misc_settings',
                         'legend' => array(
                             'title' => $this->module->l('Miscellaneous settings'),
                             'icon' => 'icon-truck'
@@ -692,7 +693,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         ),
                         'submit' => array(
                             'title' => $this->module->l('Save'),
-                            'name' => 'submitSaveOptions',
+                            'name' => 'submitSaveMiscOptions',
                         )
                     )
                 )
@@ -701,6 +702,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
 
         $form_fields['form35'] = array(
             'form' => array(
+                'id_form' => 'dhl_additional_services_defaults',
                 'legend' => array(
                     'title' => $this->module->l('Default settings for additional services'),
                     'icon' => 'icon-truck'
@@ -813,13 +815,14 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 ),
                 'submit' => array(
                     'title' => $this->module->l('Save'),
-                    'name' => 'submitSaveOptions',
+                    'name' => 'submitSaveAdditionalServicesOptions',
                 )
             )
         );
 
         $form_fields['form4'] = array(
             'form' => array(
+                'id_form' => 'dhl_retoure_settings',
                 'legend' => array(
                     'title' => $this->module->l('DHL Retoure settings and additional settings for Merchandise return (RMA)'),
                     'icon' => 'icon-truck'
@@ -884,7 +887,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 ),
                 'submit' => array(
                     'title' => $this->module->l('Save'),
-                    'name' => 'submitSaveOptions',
+                    'name' => 'submitSaveRetoureOptions',
                 )
             )
         );
@@ -1024,7 +1027,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 ),
                 'submit' => array(
                     'title' => $this->module->l('Save'),
-                    'name' => 'submitSaveOptions',
+                    'name' => 'submitSaveAddressOptions',
                 )
             )
         );
@@ -1090,7 +1093,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 ),
                 'submit' => array(
                     'title' => $this->module->l('Save'),
-                    'name' => 'submitSaveOptions',
+                    'name' => 'submitSaveBankOptions',
                 )
             )
         );

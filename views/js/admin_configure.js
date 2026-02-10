@@ -186,6 +186,7 @@ var dhldp_admin_configure = {
             }
         });
         self.initFirstStep();
+        self.initSettingsAccordions();
     },
     addCarrierProducts: function(item_value, item_name) {
         $('.dhl-list-carriers .dhlcp').each(function(index) {
@@ -244,6 +245,56 @@ var dhldp_admin_configure = {
             $('input[name=DHL_LIVE_USER]').parent().prev('label').hide();
             $('input[name=DHL_LIVE_SIGN]').parent().prev('label').hide();
             $('input[name=DHL_LIVE_EKP]').parent().prev('label').hide();
+        }
+    },
+
+    initSettingsAccordions: function() {
+        var accordionSelectors = [
+            '#dhl_global_settings',
+            '#dhl_products',
+            '#dhl_misc_settings',
+            '#dhl_additional_services_defaults',
+            '#dhl_retoure_settings',
+            '#dhl_address',
+            '#dhl_bankdata'
+        ];
+
+        $.each(accordionSelectors, function(index, selector) {
+            var $form = $(selector);
+            if (!$form.length) {
+                return;
+            }
+
+            var $panel = $form.closest('.panel');
+            var $heading = $panel.find('.panel-heading').first();
+            var $body = $panel.find('.form-wrapper, .panel-body').first();
+
+            if (!$heading.length || !$body.length) {
+                return;
+            }
+
+            if (!$heading.hasClass('dhldp-accordion-initialized')) {
+                $heading.addClass('dhldp-accordion-initialized').css('cursor', 'pointer');
+                $body.hide();
+                $heading.on('click', function() {
+                    $('.dhldp-accordion-initialized').not($heading).each(function() {
+                        $(this).closest('.panel').find('.form-wrapper, .panel-body').first().stop(true, true).slideUp(200);
+                    });
+                    $body.stop(true, true).slideToggle(200);
+                });
+            }
+        });
+
+        var $currentForm = $('button[name], input[name][type="submit"]').filter(function() {
+            return $(this).attr('name') && $(this).attr('name').indexOf('submitSave') === 0;
+        }).closest('form').filter(function() {
+            return $(this).find(':focus').length > 0;
+        }).first();
+
+        if ($currentForm.length) {
+            $currentForm.closest('.panel').find('.form-wrapper, .panel-body').first().show();
+        } else {
+            $(accordionSelectors[0]).closest('.panel').find('.form-wrapper, .panel-body').first().show();
         }
     },
     validateForm: function() {
