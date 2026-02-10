@@ -93,6 +93,9 @@ var dhldpAdminConfigure = {
         });
 
         // init dhl products
+        if (defined_dhl_products) {
+            defined_dhl_products = JSON.parse(defined_dhl_products);
+        }
         $.each(defined_dhl_products, function (key, value) {
             $('#dhl-product-name')
                 .append($('<option>', {value: value.code})
