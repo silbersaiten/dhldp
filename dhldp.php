@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.1.2
+ * @version   3.2.0
  * @link      https://www.silbersaiten.de
  */
 
@@ -54,7 +54,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.1.2';
+        $this->version = '3.2.0';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;

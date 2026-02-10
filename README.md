@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.0 (10.02.2026)
+* Added upgrade script with registration of module tabs
+
 #### 3.1.2 (15.01.2026)
 * Deutsche Post INTERNETMARKE to REST API
 
