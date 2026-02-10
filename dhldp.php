@@ -3904,6 +3904,12 @@ class DhlDp extends Module
                 Tools::isSubmit('submitSaveAddressOptions') ||
                 Tools::isSubmit('submitSaveBankOptions') ||
                 Tools::isSubmit('submitSaveOptions');
+            $is_submit_products = Tools::isSubmit('submitSaveProductsOptions') || Tools::isSubmit('submitSaveOptions');
+            $is_submit_misc = Tools::isSubmit('submitSaveMiscOptions') || Tools::isSubmit('submitSaveOptions');
+            $is_submit_additional = Tools::isSubmit('submitSaveAdditionalServicesOptions') || Tools::isSubmit('submitSaveOptions');
+            $is_submit_retoure = Tools::isSubmit('submitSaveRetoureOptions') || Tools::isSubmit('submitSaveOptions');
+            $is_submit_address = Tools::isSubmit('submitSaveAddressOptions') || Tools::isSubmit('submitSaveOptions');
+            $is_submit_bank = Tools::isSubmit('submitSaveBankOptions') || Tools::isSubmit('submitSaveOptions');
 
             if (Tools::isSubmit('submitSaveAuthOptions')) {
                 $dhl_mode = Tools::getValue('DHLDP_DHL_MODE');
@@ -3969,55 +3975,55 @@ class DhlDp extends Module
                     }
                 }
 
-                if (!in_array((int)Tools::getValue('DHLDP_DHL_REF_NUMBER'), array('0', '1'))) {
+                if ($is_submit_misc && !in_array((int)Tools::getValue('DHLDP_DHL_REF_NUMBER'), array('0', '1'))) {
                     $form_errors[] = $this->_errors[] = $this->l('Please select Reference number');
                 }
 
-                if (Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION') != '' && !preg_match('/^[0-9]{2}$/', Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION'))) {
+                if ($is_submit_products && Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION') != '' && !preg_match('/^[0-9]{2}$/', Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION'))) {
                     $form_errors[] = $this->_errors[] = $this->l('Please enter 2 digits participation number for return shipment account number');
                 }
 
-                if (!in_array((int)Tools::getValue('DHLDP_DHL_ORDER_WEIGHT'), array('0', '1'))) {
+                if ($is_submit_misc && !in_array((int)Tools::getValue('DHLDP_DHL_ORDER_WEIGHT'), array('0', '1'))) {
                     $form_errors[] = $this->_errors[] = $this->l('Please select Enable calculating weigth of order');
                 }
 
-                if (trim(Tools::getValue('DHLDP_DHL_WEIGHT_RATE')) != '' && !preg_match('/^[0-9]{1,10}([,.]{1}[0-9]{1,9})?$/', trim(Tools::getValue('DHLDP_DHL_WEIGHT_RATE')))) {
+                if ($is_submit_misc && trim(Tools::getValue('DHLDP_DHL_WEIGHT_RATE')) != '' && !preg_match('/^[0-9]{1,10}([,.]{1}[0-9]{1,9})?$/', trim(Tools::getValue('DHLDP_DHL_WEIGHT_RATE')))) {
                     $form_errors[] = $this->_errors[] = $this->l('Please enter correct weight rate for converting into kg');
                 }
 
-                if (Tools::getValue('DHLDP_DHL_PFPS') == 1 && Tools::getValue('DHLDP_DHL_PFPS_MAP') == 1 && Tools::getValue('DHLDP_DHL_GOOGLEMAPAPIKEY') == '') {
+                if ($is_submit_misc && Tools::getValue('DHLDP_DHL_PFPS') == 1 && Tools::getValue('DHLDP_DHL_PFPS_MAP') == 1 && Tools::getValue('DHLDP_DHL_GOOGLEMAPAPIKEY') == '') {
                     $form_errors[] = $this->_errors[] = $this->l('Please enter Google Map API key');
                 }
 
-                if ((int)Tools::getValue('DHLDP_DHL_RETURNS_EXTEND') == 1 && !count(Tools::getValue('DHLDP_DHL_RA_COUNTRIES', array()))) {
+                if ($is_submit_retoure && (int)Tools::getValue('DHLDP_DHL_RETURNS_EXTEND') == 1 && !count(Tools::getValue('DHLDP_DHL_RA_COUNTRIES', array()))) {
                     $form_errors[] = $this->_errors[] = $this->l('Please select countries for Return label');
                 }
-                if (!in_array((int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM'), array(0, 1, 2))) {
+                if ($is_submit_misc && !in_array((int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM'), array(0, 1, 2))) {
                     $form_errors[] = $this->_errors[] = $this->l('Invalid value of "Invoice number of export document is"');
                 }
-                if ((Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM') != '') && !$this->isValidCustomsTariffNumber(Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM'))) {
+                if ($is_submit_misc && (Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM') != '') && !$this->isValidCustomsTariffNumber(Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM'))) {
                     $form_errors[] = $this->_errors[] = $this->l('Invalid value of Customs tariff number');
                 }
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL')) > 35) {
+                if ($is_submit_misc && Tools::strlen(Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL')) > 35) {
                     $form_errors[] = $this->_errors[] = $this->l('The company name is too long');
                 }
                 $fee = Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES');
-                if (!Validate::isPrice($fee)) {
+                if ($is_submit_misc && !Validate::isPrice($fee)) {
                     $form_errors[] = $this->_errors[] = $this->l('Invalid amount for additional custom fees.');
                 }
-                if (Tools::getValue('DHLDP_DHL_LABEL_FORMAT') != '' && !in_array(Tools::getValue('DHLDP_DHL_LABEL_FORMAT'), array_keys($this->getLabelFormats()))) {
+                if ($is_submit_misc && Tools::getValue('DHLDP_DHL_LABEL_FORMAT') != '' && !in_array(Tools::getValue('DHLDP_DHL_LABEL_FORMAT'), array_keys($this->getLabelFormats()))) {
                     $form_errors[] = $this->_errors[] = $this->l('Invalid label format');
                 }
 
-                if (Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT') != '' && !in_array(Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT'), array_keys($this->getRetoureLabelFormats()))) {
+                if ($is_submit_misc && Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT') != '' && !in_array(Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT'), array_keys($this->getRetoureLabelFormats()))) {
                     $form_errors[] = $this->_errors[] = $this->l('Invalid retoure label format');
                 }
 
-                if (!Tools::isEmpty(Tools::getValue('DHLDP_DHL_EPRINT_EMAIL')) && !Validate::isEmail(Tools::getValue('DHLDP_DHL_EPRINT_EMAIL'))) {
+                if ($is_submit_misc && !Tools::isEmpty(Tools::getValue('DHLDP_DHL_EPRINT_EMAIL')) && !Validate::isEmail(Tools::getValue('DHLDP_DHL_EPRINT_EMAIL'))) {
                     $form_errors[] = $this->_errors[] = $this->l('"E-mail address of HP ePrint printer" is invalid');
                 }
 
-                if (Tools::getValue('DHLDP_DHL_SHIPPER_TYPE') == 0) {
+                if ($is_submit_address && Tools::getValue('DHLDP_DHL_SHIPPER_TYPE') == 0) {
                     if (Tools::strlen(Tools::getValue('DHLDP_DHL_COMPANY_NAME_1')) == 0) {
                         $form_errors[] = $this->_errors[] = $this->l('The company name is required');
                     }
@@ -4072,35 +4078,42 @@ class DhlDp extends Module
                     if (Tools::strlen(Tools::getValue('DHLDP_DHL_EMAIL')) > 70) {
                         $form_errors[] = $this->_errors[] = $this->l('The E-mail is too long');
                     }
-                } else {
+                } elseif ($is_submit_address) {
                     if (Tools::strlen(Tools::getValue('DHLDP_DHL_REFERENCE')) > 50) {
                         $form_errors[] = $this->_errors[] = $this->l('The Shipper reference is too long');
                     }
                 }
 
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_ACCOUNT_OWNER')) > 30) {
+                if ($is_submit_bank && Tools::strlen(Tools::getValue('DHLDP_DHL_ACCOUNT_OWNER')) > 30) {
                     $form_errors[] = $this->_errors[] = $this->l('The Account owner is too long');
                 }
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_BANK_NAME')) > 30) {
+                if ($is_submit_bank && Tools::strlen(Tools::getValue('DHLDP_DHL_BANK_NAME')) > 30) {
                     $form_errors[] = $this->_errors[] = $this->l('The Account number is too long');
                 }
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_IBAN')) > 34) {
+                if ($is_submit_bank && Tools::strlen(Tools::getValue('DHLDP_DHL_IBAN')) > 34) {
                     $form_errors[] = $this->_errors[] = $this->l('The IBAN is too long');
                 }
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_BIC')) > 34) {
+                if ($is_submit_bank && Tools::strlen(Tools::getValue('DHLDP_DHL_BIC')) > 34) {
                     $form_errors[] = $this->_errors[] = $this->l('The BIC is too long');
                 }
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_NOTE')) > 35) {
+                if ($is_submit_bank && Tools::strlen(Tools::getValue('DHLDP_DHL_NOTE')) > 35) {
                     $form_errors[] = $this->_errors[] = $this->l('The Note is too long');
                 }
-                if (Tools::strlen(Tools::getValue('DHLDP_DHL_NOTE2')) > 35) {
+                if ($is_submit_bank && Tools::strlen(Tools::getValue('DHLDP_DHL_NOTE2')) > 35) {
                     $form_errors[] = $this->_errors[] = $this->l('The Note 2 is too long');
                 }
 
                 if (count($form_errors) == 0) {
-                    $result_save =
-                        Configuration::updateValue('DHLDP_DHL_RETURN_PARTICIPATION', Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION', self::getConfig('DHL_RETURN_PARTICIPATION'))) &&
-                        Configuration::updateValue('DHLDP_DHL_PRODUCTS', count($added_dhl_products) ? implode(';', $added_dhl_products) : self::getConfig('DHL_PRODUCTS')) &&
+                    $result_save = true;
+
+                    if ($is_submit_products) {
+                        $result_save = $result_save &&
+                            Configuration::updateValue('DHLDP_DHL_RETURN_PARTICIPATION', Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION', self::getConfig('DHL_RETURN_PARTICIPATION'))) &&
+                            Configuration::updateValue('DHLDP_DHL_PRODUCTS', count($added_dhl_products) ? implode(';', $added_dhl_products) : self::getConfig('DHL_PRODUCTS'));
+                    }
+
+                    if ($is_submit_misc) {
+                        $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_REF_NUMBER', (int)Tools::getValue('DHLDP_DHL_REF_NUMBER', self::getConfig('DHL_REF_NUMBER'))) &&
                         Configuration::updateValue('DHLDP_DHL_ORDER_WEIGHT', (int)Tools::getValue('DHLDP_DHL_ORDER_WEIGHT', self::getConfig('DHL_ORDER_WEIGHT'))) &&
                         Configuration::updateValue('DHLDP_DHL_WEIGHT_RATE', str_replace(',', '.', Tools::getValue('DHLDP_DHL_WEIGHT_RATE', self::getConfig('DHL_WEIGHT_RATE')))) &&
@@ -4127,12 +4140,25 @@ class DhlDp extends Module
                         Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', self::getConfig('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES'))) &&
                         Configuration::updateValue('DHLDP_DHL_LABEL_FORMAT', Tools::getValue('DHLDP_DHL_LABEL_FORMAT', self::getConfig('DHL_LABEL_FORMAT'))) &&
                         Configuration::updateValue('DHLDP_DHL_RETOURE_LABEL_FORMAT', Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT', self::getConfig('DHL_RETOURE_LABEL_FORMAT'))) &&
-                        Configuration::updateValue('DHLDP_DHL_EPRINT_EMAIL', Tools::getValue('DHLDP_DHL_EPRINT_EMAIL', self::getConfig('DHL_EPRINT_EMAIL'))) &&
+                        Configuration::updateValue('DHLDP_DHL_EPRINT_EMAIL', Tools::getValue('DHLDP_DHL_EPRINT_EMAIL', self::getConfig('DHL_EPRINT_EMAIL')));
+                    }
+
+
+                    if ($is_submit_additional) {
+                        $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', (int)Tools::getValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', self::getConfig('DHL_DEF_PARCEL_ROUT_SERV'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN', self::getConfig('DHL_DEF_GOGREEN'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN', self::getConfig('DHL_DEF_GOGREEN')));
+                    }
+
+                    if ($is_submit_retoure) {
+                        $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_RETURNS_EXTEND', (int)Tools::getValue('DHLDP_DHL_RETURNS_EXTEND', (int)self::getConfig('DHL_RETURNS_EXTEND'))) &&
                         Configuration::updateValue('DHLDP_DHL_RETURNS_IMMED', (int)Tools::getValue('DHLDP_DHL_RETURNS_IMMED', (int)self::getConfig('DHL_RETURNS_IMMED'))) &&
-                        Configuration::updateValue('DHLDP_DHL_RA_COUNTRIES', implode(',', Tools::getValue('DHLDP_DHL_RA_COUNTRIES', explode(',', self::getConfig('DHLDP_DHL_RA_COUNTRIES'))))) &&
+                        Configuration::updateValue('DHLDP_DHL_RA_COUNTRIES', implode(',', Tools::getValue('DHLDP_DHL_RA_COUNTRIES', explode(',', self::getConfig('DHLDP_DHL_RA_COUNTRIES')))));
+                    }
+
+                    if ($is_submit_address) {
+                        $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_SHIPPER_TYPE', Tools::getValue('DHLDP_DHL_SHIPPER_TYPE', self::getConfig('DHL_SHIPPER_TYPE'))) &&
                         Configuration::updateValue('DHLDP_DHL_COMPANY_NAME_1', Tools::getValue('DHLDP_DHL_COMPANY_NAME_1', self::getConfig('DHL_COMPANY_NAME_1'))) &&
                         Configuration::updateValue('DHLDP_DHL_COMPANY_NAME_2', Tools::getValue('DHLDP_DHL_COMPANY_NAME_2', self::getConfig('DHL_COMPANY_NAME_2'))) &&
@@ -4144,13 +4170,18 @@ class DhlDp extends Module
                         Configuration::updateValue('DHLDP_DHL_STATE', Tools::getValue('DHLDP_DHL_STATE', self::getConfig('DHL_STATE'))) &&
                         Configuration::updateValue('DHLDP_DHL_PHONE', Tools::getValue('DHLDP_DHL_PHONE', self::getConfig('DHL_PHONE'))) &&
                         Configuration::updateValue('DHLDP_DHL_EMAIL', Tools::getValue('DHLDP_DHL_EMAIL', self::getConfig('DHL_EMAIL'))) &&
-                        Configuration::updateValue('DHLDP_DHL_REFERENCE', (Tools::getValue('DHLDP_DHL_SHIPPER_TYPE', self::getConfig('DHL_SHIPPER_TYPE')) == 0) ? '' : Tools::getValue('DHLDP_DHL_REFERENCE', self::getConfig('DHL_REFERENCE'))) &&
+                        Configuration::updateValue('DHLDP_DHL_REFERENCE', (Tools::getValue('DHLDP_DHL_SHIPPER_TYPE', self::getConfig('DHL_SHIPPER_TYPE')) == 0) ? '' : Tools::getValue('DHLDP_DHL_REFERENCE', self::getConfig('DHL_REFERENCE')));
+                    }
+
+                    if ($is_submit_bank) {
+                        $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_ACCOUNT_OWNER', Tools::getValue('DHLDP_DHL_ACCOUNT_OWNER', self::getConfig('DHL_ACCOUNT_OWNER'))) &&
                         Configuration::updateValue('DHLDP_DHL_BANK_NAME', Tools::getValue('DHLDP_DHL_BANK_NAME', self::getConfig('DHL_BANK_NAME'))) &&
                         Configuration::updateValue('DHLDP_DHL_IBAN', Tools::getValue('DHLDP_DHL_IBAN', self::getConfig('DHL_IBAN'))) &&
                         Configuration::updateValue('DHLDP_DHL_BIC', Tools::getValue('DHLDP_DHL_BIC', self::getConfig('DHL_BIC'))) &&
                         Configuration::updateValue('DHLDP_DHL_NOTE', Tools::getValue('DHLDP_DHL_NOTE', self::getConfig('DHL_NOTE'))) &&
                         Configuration::updateValue('DHLDP_DHL_NOTE2', Tools::getValue('DHLDP_DHL_NOTE2', self::getConfig('DHL_NOTE2')));
+                    }
 
                     if ($result_save == true) {
                         $this->_confirmations[] = $this->l('Settings updated');
