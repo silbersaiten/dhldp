@@ -246,17 +246,17 @@ var dhldpAdminConfigure = {
     },
     initSettingsAccordions: function () {
         var accordionSelectors = [
-            '#dhl_global_settings',
-            '#dhl_products',
-            '#dhl_misc_settings',
-            '#dhl_additional_services_defaults',
-            '#dhl_retoure_settings',
-            '#dhl_address',
-            '#dhl_bankdata'
+            'button[name="submitSaveAuthOptions"]',
+            'button[name="submitSaveProductsOptions"]',
+            'button[name="submitSaveMiscOptions"]',
+            'button[name="submitSaveAdditionalServicesOptions"]',
+            'button[name="submitSaveRetoureOptions"]',
+            'button[name="submitSaveAddressOptions"]',
+            'button[name="submitSaveBankOptions"]'
         ];
 
         $.each(accordionSelectors, function (index, selector) {
-            var $form = $(selector);
+            var $form = $(selector).closest('form');
             if (!$form.length) {
                 return;
             }
@@ -290,7 +290,7 @@ var dhldpAdminConfigure = {
         if ($currentForm.length) {
             $currentForm.closest('.panel').find('.form-wrapper, .panel-body').first().show();
         } else {
-            $(accordionSelectors[0]).closest('.panel').find('.form-wrapper, .panel-body').first().show();
+            $(accordionSelectors[0]).closest('form').closest('.panel').find('.form-wrapper, .panel-body').first().show();
         }
     },
 }
