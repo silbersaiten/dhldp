@@ -1416,7 +1416,7 @@ class DhlDp extends Module
                         'details_link' => $this->getModuleUrl(array('view' => 'labelDetails')),
                         'module_version' => $this->version,
                         'module_name' => $this->displayName,
-                        'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, array(), array()) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+                        'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
                     )
                 );
                 $html .= $this->display(__FILE__, 'dp-admin-carriers.tpl');
@@ -1688,7 +1688,7 @@ class DhlDp extends Module
                         'self' => dirname(__FILE__),
                         'module_version' => $this->version,
                         'module_name' => $this->displayName,
-                        'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, array(), array()) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+                        'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
                     )
                 );
                 if ($this->is177) {
@@ -2342,9 +2342,6 @@ class DhlDp extends Module
                 $this->context->controller->addCSS($this->_path . 'views/css/admin_order_17.css');
             }
         } elseif (Tools::getValue('configure') == $this->name && Tools::getValue('view') == 'generateLabels') {
-            if ((_PS_VERSION_ < '1.6.0.0')) {
-                $this->context->controller->addCSS($this->_path . 'views/css/admin-15.css');
-            }
             $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
             $this->context->controller->addJS($this->_path . 'views/js/jquery.maxlength.min.js');
             if (!$this->is177) {
@@ -2354,7 +2351,7 @@ class DhlDp extends Module
             $this->context->controller->addJS($this->_path . 'views/js/dhl-product-dimensions.js');
         }
         Media::addJsDef([
-            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
         ]);
     }
 
@@ -2445,7 +2442,7 @@ class DhlDp extends Module
                         'shipment_date' => date('Y-m-d'),
                         'is177' => $this->is177,
                         'is16' => $this->is16,
-                        'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, array(), array()) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+                        'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
                     )
                 );
 

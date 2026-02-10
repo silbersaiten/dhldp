@@ -46,21 +46,13 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     {
         parent::setMedia($isNewTheme);
 
-        if ((_PS_VERSION_ < '1.6.0.0')) {
-            $this->context->controller->addCSS($this->module->_path . 'views/css/admin-15.css');
-        }
-
         $this->context->controller->addCSS($this->module->_path . 'views/css/admin.css');
         $this->context->controller->addJqueryPlugin(['idTabs', 'select2']);
 
-        if (version_compare(_PS_VERSION_, '1.6', '<')) {
-            $this->context->controller->addJS($this->module->_path . 'views/js/jquery.validate.js');
-        } else {
-            $this->context->controller->addJqueryPlugin('validate');
-            $this->context->controller->addJS(
-                _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'
-            );
-        }
+        $this->context->controller->addJqueryPlugin('validate');
+        $this->context->controller->addJS(
+            _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'
+        );
 
         $this->context->controller->addJS($this->module->_path . 'views/js/admin_configure.js');
         $this->context->controller->addJS($this->module->_path . 'views/js/dhl-product-dimensions.js');
@@ -87,10 +79,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     'Exists' => $this->module->l('This product already exists in the list')
                 ]
             ),
-            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
         ]);
     }
-
 
     public function displayFormDHLSettings()
     {
