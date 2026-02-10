@@ -24,6 +24,24 @@ class AdminDhldpInformationController extends ModuleAdminController
         parent::__construct();
     }
 
+
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia($isNewTheme);
+
+        if ((_PS_VERSION_ < '1.6.0.0')) {
+            $this->context->controller->addCSS($this->module->_path . 'views/css/admin-15.css');
+        }
+
+        $this->context->controller->addCSS($this->module->_path . 'views/css/admin.css');
+        $this->context->controller->addJS($this->module->_path . 'views/js/dhl-product-dimensions.js');
+
+        Media::addJsDef([
+            'is177' => $this->module->is177,
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+        ]);
+    }
+
     public function initContent()
     {
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {

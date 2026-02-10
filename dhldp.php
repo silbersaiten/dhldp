@@ -2341,56 +2341,18 @@ class DhlDp extends Module
             if ($this->is177) {
                 $this->context->controller->addCSS($this->_path . 'views/css/admin_order_17.css');
             }
-        } elseif (Tools::getValue('configure') == $this->name || in_array(Tools::getValue('controller'), array('AdminDhldpSettingsDhl', 'AdminDhldpSettingsDp', 'AdminDhldpInformation'))) {
+        } elseif (Tools::getValue('configure') == $this->name && Tools::getValue('view') == 'generateLabels') {
             if ((_PS_VERSION_ < '1.6.0.0')) {
                 $this->context->controller->addCSS($this->_path . 'views/css/admin-15.css');
             }
             $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
-            if (Tools::getValue('view') == 'settings_dp' || Tools::getValue('controller') == 'AdminDhldpSettingsDp') {
-                $this->context->controller->addJS($this->_path . 'views/js/dp_admin_configure.js');
-            } else {
-                if (Tools::getValue('view') == 'generateLabels') {
-                    $this->context->controller->addJS($this->_path . 'views/js/jquery.maxlength.min.js');
-                    if (!$this->is177) {
-                        $this->context->controller->addJS($this->_path . 'views/js/popper.min.js');
-                    }
-                    $this->context->controller->addJS($this->_path . 'views/js/admin_orders.js');
-                } else {
-                    $this->context->controller->addJqueryPlugin(['idTabs', 'select2']);
-                    if (version_compare(_PS_VERSION_, '1.6', '<')) {
-                        $this->context->controller->addJS($this->_path . 'views/js/jquery.validate.js');
-                    } else {
-                        $this->context->controller->addJqueryPlugin('validate');
-                        $this->context->controller->addJS(
-                            _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'
-                        );
-                    }
-                    $this->context->controller->addJS($this->_path . 'views/js/admin_configure.js');
-                    $dhl_products = $this->dhldp_api_rest->getDefinedProducts('', '', self::getConfig('DHL_COUNTRY'), self::getConfig('DHL_API_VERSION'));
-                    $dhl_products_js = [];
-                    foreach ($dhl_products as $dhl_product_key => $dhl_product) {
-                        if ($dhl_product['active'] == true) {
-                            $dhl_product_js = new stdClass();
-                            $dhl_product_js->name = $dhl_product['name'];
-                            $dhl_product_js->code = $dhl_product_key;
-                            $dhl_products_js[] = $dhl_product_js;
-                        }
-                    }
-                    Media::addJsDef([
-                        'defined_dhl_api_versions' => json_encode(DHLDPApiRest::$supported_shipper_countries),
-                        'defined_dhl_products' => json_encode($dhl_products_js),
-                        'dhl_translation' => json_encode(
-                            [
-                                'Remove' => $this->l('Remove'),
-                                'ExistsParticipation' => $this->l('Such participation exists for this product'),
-                                'Exists' => $this->l('This product already exists in the list')
-                            ]
-                        ),
-                    ]);
-                }
+            $this->context->controller->addJS($this->_path . 'views/js/jquery.maxlength.min.js');
+            if (!$this->is177) {
+                $this->context->controller->addJS($this->_path . 'views/js/popper.min.js');
             }
+            $this->context->controller->addJS($this->_path . 'views/js/admin_orders.js');
+            $this->context->controller->addJS($this->_path . 'views/js/dhl-product-dimensions.js');
         }
-        $this->context->controller->addJS($this->_path . 'views/js/dhl-product-dimensions.js');
         Media::addJsDef([
             'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
         ]);
