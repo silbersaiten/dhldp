@@ -27,4 +27,21 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $this->content .= $this->module->displayFormDPSettings();
         parent::initContent();
     }
+
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia($isNewTheme);
+
+        if ((_PS_VERSION_ < '1.6.0.0')) {
+            $this->context->controller->addCSS($this->module->_path . 'views/css/admin-15.css');
+        }
+
+        $this->context->controller->addCSS($this->module->_path . 'views/css/admin.css');
+        $this->context->controller->addJS($this->module->_path . 'views/js/dp_admin_configure.js');
+
+        Media::addJsDef([
+            'is177' => $this->module->is177,
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax', false, [], []) . '&token=' . Tools::getAdminTokenLite('AdminDhldpAjax')
+        ]);
+    }
 }
