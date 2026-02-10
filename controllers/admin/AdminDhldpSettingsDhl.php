@@ -49,7 +49,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         parent::setMedia($isNewTheme);
 
         $this->context->controller->addJqueryPlugin(['idTabs', 'select2', 'validate']);
-        $this->context->controller->addJqueryUI('ui.accordion');
+        $this->context->controller->addJqueryUI('ui.tabs');
         $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
         $this->context->controller->addJS(
             _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'

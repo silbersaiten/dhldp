@@ -183,7 +183,7 @@ var dhldpAdminConfigure = {
             }
         });
         self.initFirstStep();
-        self.initSettingsAccordions();
+        self.initSettingsTabs();
     },
     addCarrierProducts: function (item_value, item_name) {
         $('.dhl-list-carriers .dhlcp').each(function (index) {
@@ -244,8 +244,8 @@ var dhldpAdminConfigure = {
             $('input[name=DHL_LIVE_EKP]').parent().prev('label').hide();
         }
     },
-    initSettingsAccordions: function () {
-        var accordionSelectors = [
+    initSettingsTabs: function () {
+        var tabSelectors = [
             'button[name="submitSaveAuthOptions"]',
             'button[name="submitSaveProductsOptions"]',
             'button[name="submitSaveMiscOptions"]',
@@ -255,32 +255,55 @@ var dhldpAdminConfigure = {
             'button[name="submitSaveBankOptions"]'
         ];
 
-        $.each(accordionSelectors, function (index, selector) {
+        var panels = [];
+        $.each(tabSelectors, function (index, selector) {
             var $form = $(selector).closest('form');
             if (!$form.length) {
                 return;
             }
 
             var $panel = $form.closest('.panel');
-            var $heading = $panel.find('.panel-heading').first();
-            var $body = $panel.find('.form-wrapper, .panel-body').first();
-
-            if (!$heading.length || !$body.length) {
+            if (!$panel.length) {
                 return;
             }
 
-            if (!$heading.hasClass('dhldp-accordion-initialized')) {
-                $heading.addClass('dhldp-accordion-initialized').css('cursor', 'pointer');
-                $body.hide();
-                $heading.on('click', function () {
-                    $('.dhldp-accordion-initialized').not($heading).each(function () {
-                        $(this).closest('.panel').find('.form-wrapper, .panel-body').first().stop(true, true).slideUp(200);
-                    });
-                    $body.stop(true, true).slideToggle(200);
-                });
+            var isAdded = false;
+            $.each(panels, function (i, panel) {
+                if (panel[0] === $panel[0]) {
+                    isAdded = true;
+                    return false;
+                }
+            });
+
+            if (!isAdded) {
+                panels.push($panel);
             }
         });
 
+        if (!panels.length) {
+            return;
+        }
+
+        var $firstPanel = panels[0];
+        var $tabsContainer = $('<div id="dhldp-settings-tabs" class="dhldp-settings-tabs"></div>');
+        var $tabsNavigation = $('<ul></ul>');
+
+        $.each(panels, function (index, $panel) {
+            var panelId = 'dhldp-settings-tab-' + index;
+            var title = $.trim($panel.find('.panel-heading').first().text()) || ('Tab ' + (index + 1));
+
+            $panel.attr('id', panelId).addClass('dhldp-settings-tab-panel');
+            $tabsNavigation.append('<li><a href="#' + panelId + '">' + title + '</a></li>');
+        });
+
+        $tabsContainer.append($tabsNavigation);
+        $firstPanel.before($tabsContainer);
+
+        $.each(panels, function (index, $panel) {
+            $tabsContainer.append($panel);
+        });
+
+        var activeIndex = 0;
         var $currentForm = $('button[name], input[name][type="submit"]').filter(function () {
             return $(this).attr('name') && $(this).attr('name').indexOf('submitSave') === 0;
         }).closest('form').filter(function () {
@@ -288,10 +311,18 @@ var dhldpAdminConfigure = {
         }).first();
 
         if ($currentForm.length) {
-            $currentForm.closest('.panel').find('.form-wrapper, .panel-body').first().show();
-        } else {
-            $(accordionSelectors[0]).closest('form').closest('.panel').find('.form-wrapper, .panel-body').first().show();
+            var currentPanel = $currentForm.closest('.panel');
+            $.each(panels, function (index, $panel) {
+                if ($panel[0] === currentPanel[0]) {
+                    activeIndex = index;
+                    return false;
+                }
+            });
         }
+
+        $tabsContainer.tabs({
+            active: activeIndex
+        });
     },
 }
 
