@@ -18,9 +18,9 @@ if (!defined('_PS_VERSION_')) {
 function upgrade_module_3_2_0($object)
 {
     $tabs = array(
-        array('class' => 'AdminDhldpSettingsDhl', 'name' => 'DHL settings', 'parent' => 'AdminDhldpManifest', 'active' => true),
-        array('class' => 'AdminDhldpSettingsDp', 'name' => 'Deutschepost settings', 'parent' => 'AdminDhldpManifest', 'active' => true),
-        array('class' => 'AdminDhldpInformation', 'name' => 'Information', 'parent' => 'AdminDhldpManifest', 'active' => true),
+        array('class' => 'AdminDhldpSettingsDhl', 'name' => 'DHL settings', 'parent' => 'AdminParentShipping', 'active' => true),
+        array('class' => 'AdminDhldpSettingsDp', 'name' => 'DHL Deutschepost settings', 'parent' => 'AdminParentShipping', 'active' => true),
+        array('class' => 'AdminDhldpInformation', 'name' => 'DHL Information', 'parent' => 'AdminParentShipping', 'active' => true),
     );
 
     $return = true;

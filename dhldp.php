@@ -106,10 +106,10 @@ class DhlDp extends Module
         $return = true;
         $return &= parent::install();
         $return &= $this->createDbTables();
-        $return &= $this->installTab('AdminDhldpManifest', 'DHL', 'AdminParentShipping', true);
-        $return &= $this->installTab('AdminDhldpSettingsDhl', 'DHL settings', 'AdminDhldpManifest', true);
-        $return &= $this->installTab('AdminDhldpSettingsDp', 'Deutschepost settings', 'AdminDhldpManifest', true);
-        $return &= $this->installTab('AdminDhldpInformation', 'Information', 'AdminDhldpManifest', true);
+        $return &= $this->installTab('AdminDhldpManifest', 'DHL manifest', 'AdminParentShipping', true);
+        $return &= $this->installTab('AdminDhldpSettingsDhl', 'DHL settings', 'AdminParentShipping', true);
+        $return &= $this->installTab('AdminDhldpSettingsDp', 'DHL Deutschepost settings', 'AdminParentShipping', true);
+        $return &= $this->installTab('AdminDhldpInformation', 'DHL Information', 'AdminParentShipping', true);
         $return &= $this->installTab('AdminDhldpAjax', 'DHL Ajax', 'AdminParentShipping', false);
         $return &= $this->registerHook('displayBackOfficeHeader');
         $return &= $this->registerHook('displayAdminOrder');
