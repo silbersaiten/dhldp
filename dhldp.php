@@ -107,6 +107,9 @@ class DhlDp extends Module
         $return &= parent::install();
         $return &= $this->createDbTables();
         $return &= $this->installTab('AdminDhldpManifest', 'DHL', 'AdminParentShipping', true);
+        $return &= $this->installTab('AdminDhldpSettingsDhl', 'DHL settings', 'AdminDhldpManifest', true);
+        $return &= $this->installTab('AdminDhldpSettingsDp', 'Deutschepost settings', 'AdminDhldpManifest', true);
+        $return &= $this->installTab('AdminDhldpInformation', 'Information', 'AdminDhldpManifest', true);
         $return &= $this->installTab('AdminDhldpAjax', 'DHL Ajax', 'AdminParentShipping', false);
         $return &= $this->registerHook('displayBackOfficeHeader');
         $return &= $this->registerHook('displayAdminOrder');
@@ -138,6 +141,9 @@ class DhlDp extends Module
     public function uninstall()
     {
         $return = true;
+        $return &= $this->uninstallTab('AdminDhldpSettingsDhl');
+        $return &= $this->uninstallTab('AdminDhldpSettingsDp');
+        $return &= $this->uninstallTab('AdminDhldpInformation');
         $return &= $this->uninstallTab('AdminDhldpManifest');
         $return &= $this->uninstallTab('AdminDhldpAjax');
         $return &= $this->removeHook('actionGetIDDeliveryAddressByIDCarrier');
@@ -2335,12 +2341,12 @@ class DhlDp extends Module
             if ($this->is177) {
                 $this->context->controller->addCSS($this->_path . 'views/css/admin_order_17.css');
             }
-        } elseif (Tools::getValue('configure') == $this->name) {
+        } elseif (Tools::getValue('configure') == $this->name || in_array(Tools::getValue('controller'), array('AdminDhldpSettingsDhl', 'AdminDhldpSettingsDp', 'AdminDhldpInformation'))) {
             if ((_PS_VERSION_ < '1.6.0.0')) {
                 $this->context->controller->addCSS($this->_path . 'views/css/admin-15.css');
             }
             $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
-            if (Tools::getValue('view') == 'settings_dp') {
+            if (Tools::getValue('view') == 'settings_dp' || Tools::getValue('controller') == 'AdminDhldpSettingsDp') {
                 $this->context->controller->addJS($this->_path . 'views/js/dp_admin_configure.js');
             } else {
                 if (Tools::getValue('view') == 'generateLabels') {
@@ -2492,8 +2498,6 @@ class DhlDp extends Module
                 $html .= $this->context->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/order-list.tpl');
                 break;
             case 'information':
-                $definition_pages = $this->getDefinitionConfigurePages();
-                $html .= $this->displayMenu($definition_pages);
                 $html .= $this->displayInfo();
                 break;
             case 'changelog':
@@ -2503,20 +2507,14 @@ class DhlDp extends Module
                 }
                 break;
             case 'init_dhl':
-                $definition_pages = $this->getDefinitionConfigurePages();
-                $html .= $this->displayMenu($definition_pages);
                 $html .= $this->postInitDHLProcess();
                 $html .= $this->displayFormInitDHLSettings();
                 break;
             case 'settings_dp':
-                $definition_pages = $this->getDefinitionConfigurePages();
-                $html .= $this->displayMenu($definition_pages);
                 $html .= $this->postProcess();
                 $html .= $this->displayFormDPSettings();
                 break;
             default:
-                $definition_pages = $this->getDefinitionConfigurePages();
-                $html .= $this->displayMenu($definition_pages);
                 $html .= $this->postProcess();
                 $html .= $this->displayFormDHLSettings();
 
@@ -3084,7 +3082,7 @@ class DhlDp extends Module
         }
     }
 
-    protected function displayFormDPSettings()
+    public function displayFormDPSettings()
     {
         $helper = new HelperForm();
 
@@ -3093,9 +3091,9 @@ class DhlDp extends Module
         $helper->id = null;// Tab::getCurrentTabId();
 
         // Helper
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name . '&view=settings_dp';
+        $helper->currentIndex = AdminController::$currentIndex;
         $helper->table = 'dp_configure';
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->token = Tools::getValue('token');
         $helper->module = $this;
         $helper->identifier = null;
         $helper->toolbar_btn = null;
@@ -3177,14 +3175,14 @@ class DhlDp extends Module
         return $helper->generateForm($this->getFormFieldsDPSettings());
     }
 
-    protected function displayFormDHLSettings()
+    public function displayFormDHLSettings()
     {
         $helper = new HelperForm();
         $helper->required = false;
         $helper->id = null;
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex;
         $helper->table = 'DHLDP_dhl_configure';
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->token = Tools::getValue('token');
         $helper->module = $this;
         $helper->identifier = null;
         $helper->toolbar_btn = null;
@@ -3283,7 +3281,7 @@ class DhlDp extends Module
         return $helper->generateForm($this->getFormFieldsDHLSettings());
     }
 
-    protected function displayFormInitDHLSettings()
+    public function displayFormInitDHLSettings()
     {
         $helper = new HelperForm();
 
@@ -3292,9 +3290,9 @@ class DhlDp extends Module
         $helper->id = null; // Tab::getCurrentTabId();
 
         // Helper
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name . '&view=init_dhl';
+        $helper->currentIndex = AdminController::$currentIndex . '&view=init_dhl';
         $helper->table = 'dhldp_ini_configure';
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->token = Tools::getValue('token');
         $helper->module = $this;
         $helper->identifier = null;
         $helper->toolbar_btn = null;
