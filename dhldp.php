@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.0
+ * @version   3.2.1
  * @link      https://www.silbersaiten.de
  */
 
@@ -54,7 +54,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.0';
+        $this->version = '3.2.1';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -111,6 +111,7 @@ class DhlDp extends Module
         $return = true;
         $return &= parent::install();
         $return &= $this->createDbTables();
+        $return &= $this->installTab('AdminDhldp', 'DHL', 'AdminParentShipping', true);
         $return &= $this->installTab('AdminDhldpSettingsDhl', 'DHL settings', 'AdminParentShipping', true);
         $return &= $this->installTab('AdminDhldpSettingsDp', 'DHL DP settings', 'AdminParentShipping', true);
         $return &= $this->installTab('AdminDhldpInformation', 'DHL Information', 'AdminParentShipping', true);
@@ -146,6 +147,7 @@ class DhlDp extends Module
     public function uninstall()
     {
         $return = true;
+        $return &= $this->uninstallTab('AdminDhldp');
         $return &= $this->uninstallTab('AdminDhldpSettingsDhl');
         $return &= $this->uninstallTab('AdminDhldpSettingsDp');
         $return &= $this->uninstallTab('AdminDhldpInformation');
@@ -2541,9 +2543,32 @@ class DhlDp extends Module
 
     public function displayMenu()
     {
+        $currentController = Tools::getValue('controller', '');
+        $menuItems = array(
+            'settings_dhl' => array(
+                'name' => $this->l('DHL settings'),
+                'url' => $this->context->link->getAdminLink('AdminDhldpSettingsDhl'),
+                'icon' => '',
+                'active' => $currentController == 'AdminDhldpSettingsDhl',
+            ),
+            'settings_dp' => array(
+                'name' => $this->l('DHL DP settings'),
+                'url' => $this->context->link->getAdminLink('AdminDhldpSettingsDp'),
+                'icon' => '',
+                'active' => $currentController == 'AdminDhldpSettingsDp',
+            ),
+            'information' => array(
+                'name' => $this->l('Information'),
+                'url' => $this->context->link->getAdminLink('AdminDhldpInformation'),
+                'icon' => '',
+                'active' => $currentController == 'AdminDhldpInformation',
+            ),
+        );
+
         $this->smarty->assign(array(
             'module_version' => $this->version,
             'module_name' => $this->displayName,
+            'menu_items' => $menuItems,
             'changelog' => file_exists(dirname(__FILE__) . '/README.md'),
             '_path' => $this->getPathUri()
         ));
