@@ -112,10 +112,10 @@ class DhlDp extends Module
         $return &= parent::install();
         $return &= $this->createDbTables();
         $return &= $this->installTab('AdminDhldp', 'DHL', 'AdminParentShipping', true);
-        $return &= $this->installTab('AdminDhldpSettingsDhl', 'DHL settings', 'AdminParentShipping', true);
-        $return &= $this->installTab('AdminDhldpSettingsDp', 'DHL DP settings', 'AdminParentShipping', true);
-        $return &= $this->installTab('AdminDhldpInformation', 'DHL Information', 'AdminParentShipping', true);
-        $return &= $this->installTab('AdminDhldpManifest', 'DHL manifest', 'AdminParentShipping', true);
+        $return &= $this->installTab('AdminDhldpSettingsDhl', 'DHL settings', 'AdminParentShipping', false);
+        $return &= $this->installTab('AdminDhldpSettingsDp', 'DHL DP settings', 'AdminParentShipping', false);
+        $return &= $this->installTab('AdminDhldpManifest', 'DHL manifest', 'AdminParentShipping', false);
+        $return &= $this->installTab('AdminDhldpInformation', 'DHL Information', 'AdminParentShipping', false);
         $return &= $this->installTab('AdminDhldpAjax', 'DHL Ajax', 'AdminParentShipping', false);
         $return &= $this->registerHook('displayBackOfficeHeader');
         $return &= $this->registerHook('displayAdminOrder');
@@ -2479,7 +2479,7 @@ class DhlDp extends Module
             default:
 //                $html .= $this->postProcess();
 //                $html .= $this->displayFormDHLSettings();
-                Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpInformation'));
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpSettingsDhl'));
                 break;
         }
 
@@ -2537,6 +2537,7 @@ class DhlDp extends Module
                 'settings_dhl' => array('name' => $this->l('DHL settings'), 'default' => true),
                 'settings_dp' => array('name' => $this->l('Deutschepost settings')),
                 'information' => array('name' => $this->l('Information'), 'icon' => ''),
+                'manifest' => array('name' => $this->l('DHL Manifest'), 'icon' => ''),
             )
         );
     }
@@ -2563,6 +2564,12 @@ class DhlDp extends Module
                 'icon' => '',
                 'active' => $currentController == 'AdminDhldpInformation',
             ),
+            'manifest' => array(
+                'name' => $this->l('DHL Manifest'),
+                'url' => $this->context->link->getAdminLink('AdminDhldpManifest'),
+                'icon' => '',
+                'active' => $currentController == 'AdminDhldpManifest',
+            ),
         );
 
         $this->smarty->assign(array(
@@ -2574,7 +2581,6 @@ class DhlDp extends Module
         ));
         return $this->display(__FILE__, 'views/templates/admin/menu.tpl');
     }
-
 
     public function createDhlLabels($collection, $with_return = false)
     {
