@@ -183,7 +183,7 @@ var dhldpAdminConfigure = {
             }
         });
         self.initFirstStep();
-        self.initSettingsTabs();
+        // self.initSettingsTabs();// does not meet the requirements so disabled
     },
     addCarrierProducts: function (item_value, item_name) {
         $('.dhl-list-carriers .dhlcp').each(function (index) {
