@@ -24,6 +24,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         }
 
         $this->content .= $this->module->postProcess();
+        $this->content .= $this->module->displayMenu();
         $this->content .= $this->module->displayFormDPSettings();
         parent::initContent();
     }

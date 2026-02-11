@@ -30,6 +30,7 @@ class AdminDhldpManifestController extends ModuleAdminController
     public function initContent()
     {
         parent::initContent();
+        $this->content .= $this->module->displayMenu();
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
             $this->displayInformation($this->l('You can only display the page in a shop context.'));
         } else {

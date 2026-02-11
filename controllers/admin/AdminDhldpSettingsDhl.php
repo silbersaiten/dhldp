@@ -44,6 +44,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
 
         $this->postProcess();
         $this->content .= $this->renderMessages();
+        $this->content .= $this->module->displayMenu();
         $this->content .= $this->displayFormDHLSettings();
         parent::initContent();
     }

@@ -2539,27 +2539,14 @@ class DhlDp extends Module
         );
     }
 
-    public function displayMenu($def_pages)
+    public function displayMenu()
     {
-        $menu_items = array();
-        foreach ($def_pages['pages'] as $page_key => $page_item) {
-            $menu_items[$page_key] = array(
-                'name' => $page_item['name'],
-                'icon' => isset($page_item['icon']) ? $page_item['icon'] : '',
-                'url' => $this->getModuleUrl() . '&' . $def_pages['cparam'] . '=' . $page_key,
-                'active' => ((!in_array(Tools::getValue($def_pages['cparam']), array_keys($def_pages['pages'])) && isset($page_item['default']) && $page_item['default'] == true) || Tools::getValue($def_pages['cparam']) == $page_key) ? true : false
-            );
-        }
-
         $this->smarty->assign(array(
-            'menu_items' => $menu_items,
             'module_version' => $this->version,
             'module_name' => $this->displayName,
-            'changelog' => file_exists(dirname(__FILE__) . '/Readme.md'),
-            'changelog_path' => $this->getModuleUrl() . '&' . $def_pages['cparam'] . '=changelog',
-            '_path' => $this->_path
+            'changelog' => file_exists(dirname(__FILE__) . '/README.md'),
+            '_path' => $this->getPathUri()
         ));
-
         return $this->display(__FILE__, 'views/templates/admin/menu.tpl');
     }
 

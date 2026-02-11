@@ -29,12 +29,8 @@ class AdminDhldpInformationController extends ModuleAdminController
     {
         parent::setMedia($isNewTheme);
 
-        if ((_PS_VERSION_ < '1.6.0.0')) {
-            $this->context->controller->addCSS($this->module->_path . 'views/css/admin-15.css');
-        }
-
-        $this->context->controller->addCSS($this->module->_path . 'views/css/admin.css');
-        $this->context->controller->addJS($this->module->_path . 'views/js/dhl-product-dimensions.js');
+        $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
+        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dhl-product-dimensions.js');
 
         Media::addJsDef([
             'is177' => $this->module->is177,
@@ -48,6 +44,7 @@ class AdminDhldpInformationController extends ModuleAdminController
             $this->displayInformation($this->l('You can only display the page in a shop context.'));
             return;
         }
+        $this->content .= $this->module->displayMenu();
         $this->content .= $this->displayInfo();
         parent::initContent();
     }
