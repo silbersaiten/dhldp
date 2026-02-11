@@ -53,3 +53,6 @@ ul.dhl-tabs li {
 .menu-dhldp {
     background-color: white;
 }
+#defaultLength {
+    padding: 8px 8px;
+}
