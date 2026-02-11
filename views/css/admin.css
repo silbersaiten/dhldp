@@ -74,3 +74,7 @@ ul.dhl-tabs li {
 #dhldp-settings-tabs .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
     border-top-left-radius: 0;
 }
+#dhldp-settings-tabs .ui-widget-header {
+    background: #ffffff;
+    border: 0;
+}
