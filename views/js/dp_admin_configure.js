@@ -11,6 +11,7 @@
  */
 
 var dp_admin_configure = {
+    tabsInstance: 0,
     init: function() {
         var self = this;
 
@@ -57,7 +58,7 @@ var dp_admin_configure = {
                     return false;
                 }
             });
-console.log($panel)
+
             if (!isAdded) {
                 panels.push($panel);
             }
@@ -67,11 +68,14 @@ console.log($panel)
             return;
         }
 
-        var $tabsContainer = $('<div id="dhldp-settings-tabs" class="dhldp-settings-tabs"></div>');
+        var instanceId = dp_admin_configure.tabsInstance;
+        dp_admin_configure.tabsInstance += 1;
+
+        var $tabsContainer = $('<div id="dhldp-settings-tabs-dp-' + instanceId + '" class="dhldp-settings-tabs"></div>');
         var $tabsNavigation = $('<ul></ul>');
 
         $.each(panels, function (index, $panel) {
-            var panelId = 'dhldp-dp-settings-tab-' + index;
+            var panelId = 'dhldp-dp-settings-tab-' + instanceId + '-' + index;
             var title = $.trim($panel.find('.panel-heading').first().text()) || ('Tab ' + (index + 1));
 
             $panel.attr('id', panelId).addClass('dhldp-settings-tab-panel');
