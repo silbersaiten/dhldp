@@ -2,39 +2,36 @@
  * DHL Deutschepost
  *
  * @author    silbersaiten <info@silbersaiten.de>
- * @copyright 2020 silbersaiten
+ * @copyright 2026 silbersaiten
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   1.0.0
- * @link      http://www.silbersaiten.de
+ * @version   3.2.0
+ * @link      https://www.silbersaiten.de
  */
 
-var dp_admin_configure = {
-    tabsInstance: 0,
-    init: function() {
+var dpAdminConfigure = {
+    init: function () {
         var self = this;
 
-        if ($('#dp_sender_person').is(':checked'))
+        if ($('#dp_sender_person').is(':checked')) {
             self.showPerson();
-
-        if ($('#dp_sender_company').is(':checked'))
+        }
+        if ($('#dp_sender_company').is(':checked')) {
             self.showCompany();
-
-        $('#dp_sender_person').click(function(){
+        }
+        $('#dp_sender_person').click(function () {
             self.showPerson();
         });
-        $('#dp_sender_company').click(function(){
+        $('#dp_sender_company').click(function () {
             self.showCompany();
         });
-
         self.initSettingsTabs();
-
     },
-    showCompany: function() {
+    showCompany: function () {
         $('.dp_company').slideDown('slow');
     },
-    showPerson: function() {
+    showPerson: function () {
         $('.dp_company').hide();
     },
     initSettingsTabs: function () {
@@ -68,14 +65,11 @@ var dp_admin_configure = {
             return;
         }
 
-        var instanceId = dp_admin_configure.tabsInstance;
-        dp_admin_configure.tabsInstance += 1;
-
-        var $tabsContainer = $('<div id="dhldp-settings-tabs-dp-' + instanceId + '" class="dhldp-settings-tabs"></div>');
+        var $tabsContainer = $('<div id="dhldp-settings-tabs-dp" class="dhldp-settings-tabs"></div>');
         var $tabsNavigation = $('<ul></ul>');
 
         $.each(panels, function (index, $panel) {
-            var panelId = 'dhldp-dp-settings-tab-' + instanceId + '-' + index;
+            var panelId = 'dhldp-dp-settings-tab-' + index;
             var title = $.trim($panel.find('.panel-heading').first().text()) || ('Tab ' + (index + 1));
 
             $panel.attr('id', panelId).addClass('dhldp-settings-tab-panel');
@@ -95,6 +89,6 @@ var dp_admin_configure = {
     }
 }
 
-$(function(){
-    dp_admin_configure.init();
-})
+$(function () {
+    dpAdminConfigure.init();
+});
