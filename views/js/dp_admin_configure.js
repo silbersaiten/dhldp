@@ -27,12 +27,67 @@ var dp_admin_configure = {
             self.showCompany();
         });
 
+        self.initSettingsTabs();
+
     },
     showCompany: function() {
         $('.dp_company').slideDown('slow');
     },
     showPerson: function() {
         $('.dp_company').hide();
+    },
+    initSettingsTabs: function () {
+        var panels = [];
+
+        $('button[name="submitSaveDPOptions"]').each(function () {
+            var $form = $(this).closest('form');
+            if (!$form.length) {
+                return;
+            }
+
+            var $panel = $form.find('.panel');
+            if (!$panel.length) {
+                return;
+            }
+
+            var isAdded = false;
+            $.each(panels, function (index, panel) {
+                if (panel[0] === $panel[0]) {
+                    isAdded = true;
+                    return false;
+                }
+            });
+
+            if (!isAdded) {
+                panels.push($panel);
+            }
+        });
+
+        if (panels.length < 2) {
+            return;
+        }
+
+        var $tabsContainer = $('<div id="dhldp-settings-tabs" class="dhldp-settings-tabs"></div>');
+        var $tabsNavigation = $('<ul></ul>');
+
+        $.each(panels, function (index, $panel) {
+            var panelId = 'dhldp-dp-settings-tab-' + index;
+            var title = $.trim($panel.find('.panel-heading').first().text()) || ('Tab ' + (index + 1));
+
+            $panel.attr('id', panelId).addClass('dhldp-settings-tab-panel');
+            $tabsNavigation.append('<li><a href="#' + panelId + '">' + title + '</a></li>');
+        });
+
+        $tabsContainer.append($tabsNavigation);
+        panels[0].before($tabsContainer);
+
+        $.each(panels, function (index, $panel) {
+            $tabsContainer.append($panel);
+        });
+
+        $tabsContainer.tabs({
+            active: 0
+        });
     }
 }
 
