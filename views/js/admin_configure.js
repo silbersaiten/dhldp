@@ -11,6 +11,7 @@
  */
 
 var dhldpAdminConfigure = {
+    tabsInstance: 0,
     init: function () {
         var self = this;
 
@@ -284,12 +285,19 @@ var dhldpAdminConfigure = {
             return;
         }
 
+        if ($(panels[0]).closest('.dhldp-settings-tabs').length || $(panels[0]).hasClass('dhldp-settings-tab-panel')) {
+            return;
+        }
+
+        var instanceId = dhldpAdminConfigure.tabsInstance;
+        dhldpAdminConfigure.tabsInstance += 1;
+
         var $firstPanel = panels[0];
-        var $tabsContainer = $('<div id="dhldp-settings-tabs" class="dhldp-settings-tabs"></div>');
+        var $tabsContainer = $('<div id="dhldp-settings-tabs-' + instanceId + '" class="dhldp-settings-tabs"></div>');
         var $tabsNavigation = $('<ul></ul>');
 
         $.each(panels, function (index, $panel) {
-            var panelId = 'dhldp-settings-tab-' + index;
+            var panelId = 'dhldp-settings-tab-' + instanceId + '-' + index;
             var title = $.trim($panel.find('.panel-heading').first().text()) || ('Tab ' + (index + 1));
 
             $panel.attr('id', panelId).addClass('dhldp-settings-tab-panel');
