@@ -33,6 +33,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     {
         parent::setMedia($isNewTheme);
 
+        $this->context->controller->addJqueryUI('ui.tabs');
         $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
         $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dp_admin_configure.js');
 

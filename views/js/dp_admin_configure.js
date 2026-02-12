@@ -57,13 +57,13 @@ var dp_admin_configure = {
                     return false;
                 }
             });
-
+console.log($panel)
             if (!isAdded) {
                 panels.push($panel);
             }
         });
 
-        if (panels.length < 2) {
+        if (!panels.length) {
             return;
         }
 
