@@ -23,11 +23,29 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     public function postProcess()
     {
-        if (!Tools::isSubmit('submitSaveDPOptions')) {
+        $is_global_submit = Tools::isSubmit('submitSaveDPOptionsGlobal') || Tools::isSubmit('submitSaveDPOptions');
+        $is_address_submit = Tools::isSubmit('submitSaveDPAddressOptions');
+
+        if (!$is_global_submit && !$is_address_submit) {
             return;
         }
 
         $form_errors = array();
+        if ($is_global_submit) {
+            $this->processGlobalSettings($form_errors);
+        }
+
+        if ($is_address_submit) {
+            $this->processAddressSettings($form_errors);
+        }
+
+        if (count($form_errors) == 0) {
+            $this->module->_confirmations[] = $this->module->l('Settings updated');
+        }
+    }
+
+    protected function processGlobalSettings(&$form_errors)
+    {
         $deutschepost_mode = 1;
         $deutschepost_live_username = Tools::getValue('DHLDP_DP_LIVE_USERNAME');
         $deutschepost_live_password = Tools::getValue('DHLDP_DP_LIVE_PASSWORD');
@@ -86,11 +104,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
             $form_errors[] = $this->module->_errors[] = $this->module->l('Please select format of label file');
         }
         $page_formats = json_decode(Configuration::getGlobalValue('DHLDP_DP_PAGE_FORMATS'), true);
-        if (is_array($page_formats)) {
-            $page_formats_keys = array_keys($page_formats, true);
-        } else {
-            $page_formats_keys = array();
-        }
+        $page_formats_keys = is_array($page_formats) ? array_keys($page_formats, true) : array();
         if (count($page_formats_keys) == 0) {
             $page_formats_keys = array(1);
         }
@@ -108,7 +122,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         if (Tools::getValue('DHLDP_DP_LABEL_FORMAT') == 'pdf' && ((int)Tools::getValue('DHLDP_DP_POSITION_COL', 1) < 1)) {
             $form_errors[] = $this->module->_errors[] = $this->module->l('Please specify column on page by positive integer value');
         }
-        if (Tools::getValue('DHLDP_DP_LABEL_FORMAT') == 'pdf') {
+        if (Tools::getValue('DHLDP_DP_LABEL_FORMAT') == 'pdf' && isset($page_formats[$page_format_id])) {
             $page_format = $page_formats[$page_format_id];
             if ((int)Tools::getValue('DHLDP_DP_POSITION_COL', 1) > $page_format['col']) {
                 $form_errors[] = $this->module->_errors[] = $this->module->l('Column of Label position must be maximum') . ' ' . $page_format['col'];
@@ -118,6 +132,26 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
             }
         }
 
+        if (count($form_errors) == 0) {
+            Configuration::updateValue('DHLDP_DP_MODE', (int)$deutschepost_mode);
+            Configuration::updateValue('DHLDP_DP_LIVE_USERNAME', Tools::getValue('DHLDP_DP_LIVE_USERNAME'));
+            Configuration::updateValue('DHLDP_DP_LOG', (int)Tools::getValue('DHLDP_DP_LOG', 0));
+            Configuration::updateValue('DHLDP_DP_CARRIERS', implode(',', $deutschepost_carriers));
+            Configuration::updateValue('DHLDP_DP_REF_NUMBER', (int)Tools::getValue('DHLDP_DP_REF_NUMBER'));
+            Configuration::updateValue('DHLDP_DP_DEF_PRODUCT', (int)Tools::getValue('DHLDP_DP_DEF_PRODUCT', 0));
+            Configuration::updateValue('DHLDP_DP_CHANGE_OS', (int)Tools::getValue('DHLDP_DP_CHANGE_OS', 0));
+            Configuration::updateValue('DHLDP_DP_CREATE_MANIFEST', (int)Tools::getValue('DHLDP_DP_CREATE_MANIFEST'));
+            Configuration::updateValue('DHLDP_DP_CREATE_SHIPLIST', (int)Tools::getValue('DHLDP_DP_CREATE_SHIPLIST'));
+            Configuration::updateValue('DHLDP_DP_LABEL_FORMAT', Tools::getValue('DHLDP_DP_LABEL_FORMAT'));
+            Configuration::updateValue('DHLDP_DP_PAGE_FORMAT', (int)$page_format_id);
+            Configuration::updateValue('DHLDP_DP_POSITION_PAGE', (int)Tools::getValue('DHLDP_DP_POSITION_PAGE', 1));
+            Configuration::updateValue('DHLDP_DP_POSITION_ROW', (int)Tools::getValue('DHLDP_DP_POSITION_ROW', 1));
+            Configuration::updateValue('DHLDP_DP_POSITION_COL', (int)Tools::getValue('DHLDP_DP_POSITION_COL', 1));
+        }
+    }
+
+    protected function processAddressSettings(&$form_errors)
+    {
         if (!in_array((int)Tools::getValue('DHLDP_DP_NAME', 0), array('0', '1'))) {
             $form_errors[] = $this->module->_errors[] = $this->module->l('Please select company or person in address');
         }
@@ -178,35 +212,18 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         }
 
         if (count($form_errors) == 0) {
-            $result_save = Configuration::updateValue('DHLDP_DP_MODE', (int)$deutschepost_mode) &&
-                Configuration::updateValue('DHLDP_DP_LIVE_USERNAME', Tools::getValue('DHLDP_DP_LIVE_USERNAME')) &&
-                Configuration::updateValue('DHLDP_DP_LOG', (int)Tools::getValue('DHLDP_DP_LOG', 0)) &&
-                Configuration::updateValue('DHLDP_DP_CARRIERS', implode(',', $deutschepost_carriers)) &&
-                Configuration::updateValue('DHLDP_DP_REF_NUMBER', (int)Tools::getValue('DHLDP_DP_REF_NUMBER')) &&
-                Configuration::updateValue('DHLDP_DP_DEF_PRODUCT', (int)Tools::getValue('DHLDP_DP_DEF_PRODUCT', 0)) &&
-                Configuration::updateValue('DHLDP_DP_CHANGE_OS', (int)Tools::getValue('DHLDP_DP_CHANGE_OS', 0)) &&
-                Configuration::updateValue('DHLDP_DP_CREATE_MANIFEST', (int)Tools::getValue('DHLDP_DP_CREATE_MANIFEST')) &&
-                Configuration::updateValue('DHLDP_DP_CREATE_SHIPLIST', (int)Tools::getValue('DHLDP_DP_CREATE_SHIPLIST')) &&
-                Configuration::updateValue('DHLDP_DP_LABEL_FORMAT', Tools::getValue('DHLDP_DP_LABEL_FORMAT')) &&
-                Configuration::updateValue('DHLDP_DP_PAGE_FORMAT', (int)$page_format_id) &&
-                Configuration::updateValue('DHLDP_DP_POSITION_PAGE', (int)Tools::getValue('DHLDP_DP_POSITION_PAGE', 1)) &&
-                Configuration::updateValue('DHLDP_DP_POSITION_ROW', (int)Tools::getValue('DHLDP_DP_POSITION_ROW', 1)) &&
-                Configuration::updateValue('DHLDP_DP_POSITION_COL', (int)Tools::getValue('DHLDP_DP_POSITION_COL', 1)) &&
-                Configuration::updateValue('DHLDP_DP_NAME', (int)Tools::getValue('DHLDP_DP_NAME', 0)) &&
-                Configuration::updateValue('DHLDP_DP_COMPANY', Tools::getValue('DHLDP_DP_COMPANY', 0)) &&
-                Configuration::updateValue('DHLDP_DP_SALUTATION', Tools::getValue('DHLDP_DP_SALUTATION', 0)) &&
-                Configuration::updateValue('DHLDP_DP_TITLE', Tools::getValue('DHLDP_DP_TITLE', 0)) &&
-                Configuration::updateValue('DHLDP_DP_FIRSTNAME', Tools::getValue('DHLDP_DP_FIRSTNAME', 0)) &&
-                Configuration::updateValue('DHLDP_DP_LASTNAME', Tools::getValue('DHLDP_DP_LASTNAME', 0)) &&
-                Configuration::updateValue('DHLDP_DP_STREET', Tools::getValue('DHLDP_DP_STREET', 0)) &&
-                Configuration::updateValue('DHLDP_DP_HOUSENO', Tools::getValue('DHLDP_DP_HOUSENO', 0)) &&
-                Configuration::updateValue('DHLDP_DP_ZIP', Tools::getValue('DHLDP_DP_ZIP', 0)) &&
-                Configuration::updateValue('DHLDP_DP_CITY', Tools::getValue('DHLDP_DP_CITY', 0)) &&
-                Configuration::updateValue('DHLDP_DP_COUNTRY', (int)Tools::getValue('DHLDP_DP_COUNTRY', 0)) &&
-                Configuration::updateValue('DHLDP_DP_ADDITIONAL', Tools::getValue('DHLDP_DP_ADDITIONAL', 0));
-            if ($result_save == true) {
-                $this->module->_confirmations[] = $this->module->l('Settings updated');
-            }
+            Configuration::updateValue('DHLDP_DP_NAME', (int)Tools::getValue('DHLDP_DP_NAME', 0));
+            Configuration::updateValue('DHLDP_DP_COMPANY', Tools::getValue('DHLDP_DP_COMPANY', 0));
+            Configuration::updateValue('DHLDP_DP_SALUTATION', Tools::getValue('DHLDP_DP_SALUTATION', 0));
+            Configuration::updateValue('DHLDP_DP_TITLE', Tools::getValue('DHLDP_DP_TITLE', 0));
+            Configuration::updateValue('DHLDP_DP_FIRSTNAME', Tools::getValue('DHLDP_DP_FIRSTNAME', 0));
+            Configuration::updateValue('DHLDP_DP_LASTNAME', Tools::getValue('DHLDP_DP_LASTNAME', 0));
+            Configuration::updateValue('DHLDP_DP_STREET', Tools::getValue('DHLDP_DP_STREET', 0));
+            Configuration::updateValue('DHLDP_DP_HOUSENO', Tools::getValue('DHLDP_DP_HOUSENO', 0));
+            Configuration::updateValue('DHLDP_DP_ZIP', Tools::getValue('DHLDP_DP_ZIP', 0));
+            Configuration::updateValue('DHLDP_DP_CITY', Tools::getValue('DHLDP_DP_CITY', 0));
+            Configuration::updateValue('DHLDP_DP_COUNTRY', (int)Tools::getValue('DHLDP_DP_COUNTRY', 0));
+            Configuration::updateValue('DHLDP_DP_ADDITIONAL', Tools::getValue('DHLDP_DP_ADDITIONAL', 0));
         }
     }
 

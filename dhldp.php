@@ -3419,7 +3419,7 @@ class DhlDp extends Module
                     ),
                     'submit' => array(
                         'title' => $this->l('Save options'),
-                        'name' => 'submitSaveDPOptions',
+                        'name' => 'submitSaveDPOptionsGlobal',
                     )
                 ),
 
@@ -3559,7 +3559,7 @@ class DhlDp extends Module
 
                     'submit' => array(
                         'title' => $this->l('Save options'),
-                        'name' => 'submitSaveDPOptions',
+                        'name' => 'submitSaveDPAddressOptions',
                     )
                 )
             )
