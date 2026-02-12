@@ -11,6 +11,8 @@
  * @link      https://www.silbersaiten.de
  */
 
+//namespace PrestaShop\Module\dhldp\classes;
+
 require_once(dirname(__FILE__) . '/DHLDPRestClient.php');
 
 class DPRestApi

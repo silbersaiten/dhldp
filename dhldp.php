@@ -12,6 +12,7 @@
  */
 
 use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
+//use PrestaShop\Module\dhldp\classes\DPRestApi;
 use PrestaShop\Module\dhldp\classes\DHLTokenManager;
 use PrestaShop\Module\dhldp\Helper\ConfigurationHelperTrait;
 use PrestaShop\Module\dhldp\Service\DHLRestService;
