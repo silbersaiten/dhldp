@@ -338,15 +338,15 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     private function renderDPLogInformation()
     {
-        $this->smarty->assign(array(
+        $this->context->smarty->assign(array(
             'general_log_file_path' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dp&log_file=dp_general',
             'api_log_file_path' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dp&log_file=dp_api',
             'api_log_file_path_clear' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dp&log_file=dp_api_clear',
         ));
-
-        return $this->module->display($this->module->getLocalPath() . $this->module->name . '.php', 'views/templates/admin/log_information.tpl');
+        return $this->context->smarty->fetch(
+            _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/log_information.tpl'
+        );
     }
-
 
     protected function getFormFieldsDPSettings()
     {

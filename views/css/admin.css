@@ -56,25 +56,56 @@ ul.dhl-tabs li {
 #defaultLength {
     padding: 8px 8px;
 }
-#dhldp-settings-tabs .ui-tabs-nav li {
+#dhldp-settings-tabs .ui-tabs-nav li,
+#dhldp-settings-tabs-dp .ui-tabs-nav li {
     background-color: white;
 }
-#content.bootstrap #dhldp-settings-tabs a[href]:not(.breadcrumb a, .dropdown-menu a, table a, [class*="btn"], [class*="dropdown"], [class*="list-group-item"], [class*="kpi-container"], [class*="nav-link"]) {
+#content.bootstrap #dhldp-settings-tabs a[href]:not(.breadcrumb a, .dropdown-menu a, table a, [class*="btn"], [class*="dropdown"], [class*="list-group-item"], [class*="kpi-container"], [class*="nav-link"]),
+#content.bootstrap #dhldp-settings-tabs-dp a[href]:not(.breadcrumb a, .dropdown-menu a, table a, [class*="btn"], [class*="dropdown"], [class*="list-group-item"], [class*="kpi-container"], [class*="nav-link"]) {
     text-decoration: none;
 }
-#dhldp-settings-tabs .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+#dhldp-settings-tabs .ui-corner-all,
+#dhldp-settings-tabs-dp .ui-corner-all,
+#dhldp-settings-tabs .ui-corner-bottom,
+#dhldp-settings-tabs-dp .ui-corner-bottom,
+#dhldp-settings-tabs .ui-corner-right,
+#dhldp-settings-tabs-dp .ui-corner-right,
+#dhldp-settings-tabs .ui-corner-br,
+#dhldp-settings-tabs-dp .ui-corner-br {
     border-bottom-right-radius: 0;
 }
-#dhldp-settings-tabs .ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+#dhldp-settings-tabs .ui-corner-all,
+#dhldp-settings-tabs-dp .ui-corner-all,
+#dhldp-settings-tabs .ui-corner-bottom,
+#dhldp-settings-tabs-dp .ui-corner-bottom,
+#dhldp-settings-tabs .ui-corner-left,
+#dhldp-settings-tabs-dp .ui-corner-left,
+#dhldp-settings-tabs .ui-corner-bl,
+#dhldp-settings-tabs-dp .ui-corner-bl {
     border-bottom-left-radius: 0;
 }
-#dhldp-settings-tabs .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+#dhldp-settings-tabs .ui-corner-all,
+#dhldp-settings-tabs-dp .ui-corner-all,
+#dhldp-settings-tabs .ui-corner-top,
+#dhldp-settings-tabs-dp .ui-corner-top,
+#dhldp-settings-tabs .ui-corner-right,
+#dhldp-settings-tabs-dp .ui-corner-right,
+#dhldp-settings-tabs .ui-corner-tr,
+#dhldp-settings-tabs-dp .ui-corner-tr {
     border-top-right-radius: 0;
 }
-#dhldp-settings-tabs .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+#dhldp-settings-tabs .ui-corner-all,
+#dhldp-settings-tabs-dp .ui-corner-all,
+#dhldp-settings-tabs .ui-corner-top,
+#dhldp-settings-tabs-dp .ui-corner-top,
+#dhldp-settings-tabs .ui-corner-left,
+#dhldp-settings-tabs-dp .ui-corner-left,
+#dhldp-settings-tabs .ui-corner-tl,
+#dhldp-settings-tabs-dp .ui-corner-tl {
     border-top-left-radius: 0;
 }
-#dhldp-settings-tabs .ui-widget-header {
+#dhldp-settings-tabs .ui-widget-header,
+#dhldp-settings-tabs-dp .ui-widget-header {
     background: #ffffff;
     border: 0;
 }
