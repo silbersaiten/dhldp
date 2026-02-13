@@ -38,12 +38,7 @@ var dpAdminConfigure = {
         var panels = [];
 
         $('button[name="submitSaveDPOptionsGlobal"], button[name="submitSaveDPAddressOptions"]').each(function () {
-            var $form = $(this).closest('form');
-            if (!$form.length) {
-                return;
-            }
-
-            var $panel = $form.find('.panel');
+            var $panel = $(this).closest('.panel');
             if (!$panel.length) {
                 return;
             }
