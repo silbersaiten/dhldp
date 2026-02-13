@@ -3,12 +3,12 @@
  * DHL Deutschepost
  *
  * @author    silbersaiten <info@silbersaiten.de>
- * @copyright 2021 silbersaiten
+ * @copyright 2026 silbersaiten
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   1.0.7
- * @link      http://www.silbersaiten.de
+ * @version   3.2.1
+ * @link      https://www.silbersaiten.de
  */
 
 require_once(dirname(__FILE__) . '/../../classes/fpdi/fpdi.php');
@@ -95,31 +95,6 @@ class AdminDhldpManifestController extends ModuleAdminController
                     }
 // Output the merged PDF
                     $pdf->Output('F', 'merged.pdf'); // Save as 'merged.pdf'
-//                    $response = [
-//                        "status" => [
-//                            "title" => "OK",
-//                            "status" => 200,
-//                            "detail" => "Manifest Included",
-//                            "statusCode" => 200
-//                        ],
-//                        "manifestDate" => "2024-10-29",
-//                        "manifest" => [
-//                            [
-//                                "url" => "https://api-sandbox.dhl.com/parcel/de/shipping/v2/labels?token=1OJoa4SJK3lfq8%2BZo%2FbYl%2B2bxHW4EeUwWGaoAEYM9amZLg09hqS3O9PP%2FVa6d8I4esZQP%2BYiXig0DHf2HhzTsg%3 D%3D",
-//                                "fileFormat" => "PDF"
-//                            ],
-//                            [
-//                                "url" => "https://api-sandbox.dhl.com/parcel/de/shipping/v2/labels?token=1OJoa4SJK3lfq8%2BZo%2FbYl%2B2bxHW4EeUwWGaoAEYM9alcr3aEUEwK3u934RR0DmLLesZQP%2BYiXig0DHf2HhzTsg%3D%3D",
-//                                "fileFormat" => "PDF"
-//                            ],
-//                            [
-//                                "url" => "https://api-sandbox.dhl.com/parcel/de/shipping/v2/labels?token=1OJoa4SJK3lfq8%2BZo%2FbYl%2B2bxHW4EeUwWGaoAEYM9akMZ2BdYFiMKWlWSdw07vCresZQP%2BYiXig0DHf2HhzTsg%3D%3 D",
-//                                "fileFormat" => "PDF"
-//                            ]
-//                        ]
-//                    ];
-//                    $response = (object) [
-//                        'status' => (object) [
                     $data = [
                         "manifest" => [
                             [
@@ -189,11 +164,9 @@ class AdminDhldpManifestController extends ModuleAdminController
                         if (property_exists($item, 'b64') && property_exists($item, 'fileFormat') && $item->fileFormat === 'PDF') {
                             // Decode the base64-encoded PDF content
                             $pdfContent = base64_decode($item->b64);
-
                             // Save the decoded content temporarily
                             $tempFile = tempnam(sys_get_temp_dir(), 'pdf') . '.pdf';
                             file_put_contents($tempFile, $pdfContent);
-
                             // Import each page of the PDF and add it to the merged PDF
                             $pageCount = $mergedPdf->setSourceFile($tempFile);
 
@@ -202,7 +175,6 @@ class AdminDhldpManifestController extends ModuleAdminController
                                 $mergedPdf->AddPage();
                                 $mergedPdf->useTemplate($tplId);
                             }
-                            // Clean up temporary file
                             unlink($tempFile);
                         }
                     }
@@ -235,7 +207,6 @@ class AdminDhldpManifestController extends ModuleAdminController
                     $response = json_decode(json_encode($response));
 
                     if (is_object($response) && (isset($response->manifest))) {
-//                    if (is_object($response) && (isset($response->manifestData) || isset($response->ManifestPDFData) || isset($response->ManifestPdfData))) {
                         $file_path = $this->module->getLocalPath() . '/pdfs/manifest' . str_replace('-', '', preg_replace('#[^a-zA-Z0-9\_\-]#', '', Tools::getValue('manifestDate'))) . '.pdf';
                         $f = fopen($file_path, 'wb');
 
