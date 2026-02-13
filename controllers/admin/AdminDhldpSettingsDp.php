@@ -5,6 +5,7 @@
 
 //use PrestaShop\Module\dhldp\classes\DPRestApi;
 require_once(dirname(__FILE__) . '/../../classes/DPRestApi.php');
+
 class AdminDhldpSettingsDpController extends ModuleAdminController
 {
     /** @var DPRestApi */
@@ -262,12 +263,8 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     public function displayFormDPSettings()
     {
         $helper = new HelperForm();
-
-        // Helper Options
         $helper->required = false;
         $helper->id = null;// Tab::getCurrentTabId();
-
-        // Helper
         $helper->currentIndex = AdminController::$currentIndex;
         $helper->table = 'dp_configure';
         $helper->token = Tools::getValue('token');
@@ -279,15 +276,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $helper->show_toolbar = true;
         $helper->toolbar_scroll = false;
         $helper->bootstrap = true;
-
         $helper->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
-
-        if (_PS_VERSION_ < '1.6.0.0') {
-            $helper->show_toolbar = false;
-
-            $helper->title = $this->module->displayName;
-        }
-
         $carriers = Carrier::getCarriers($this->context->language->id, true);
         $option_carriers = array();
         foreach ($carriers as $carrier) {
@@ -307,34 +296,21 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                 'ppl_version' => $this->dp_api->getPPLVersion()
             )
         );
-
-        //$helper->fields_value['DHLDP_DP_MODE'] = Tools::getValue('DHLDP_DP_MODE', Configuration::get('DHLDP_DP_MODE'));
-
         $helper->fields_value['DHLDP_DP_LIVE_USERNAME'] = Tools::getValue('DHLDP_DP_LIVE_USERNAME', Configuration::get('DHLDP_DP_LIVE_USERNAME'));
-//        $helper->fields_value['DHLDP_DP_LIVE_PASSWORD'] = Tools::getValue('DHLDP_DP_LIVE_PASSWORD', Configuration::get('DHLDP_DP_LIVE_PASSWORD'));
         $helper->fields_value['DHLDP_DP_LIVE_PASSWORD'] = str_repeat('*', mb_strlen(Configuration::get('DHLDP_DP_LIVE_PASSWORD')));
-
-        //$helper->fields_value['DHLDP_DP_SBX_USERNAME'] = Tools::getValue('DHLDP_DP_SBX_USERNAME', Configuration::get('DHLDP_DP_SBX_USERNAME'));
-        //$helper->fields_value['DHLDP_DP_SBX_PASSWORD'] = Tools::getValue('DHLDP_DP_SBX_PASSWORD', Configuration::get('DHLDP_'.'DP_SBX_PASSWORD'));
-
         $helper->fields_value['DHLDP_DP_LOG'] = Tools::getValue('DHLDP_DP_LOG', Configuration::get('DHLDP_DP_LOG'));
         $helper->fields_value['log_information'] = $this->renderDPLogInformation();
-
         $helper->fields_value['DHLDP_DP_DEF_PRODUCT'] = Tools::getValue('DHLDP_DP_DEF_PRODUCT', Configuration::get('DHLDP_DP_DEF_PRODUCT'));
         $helper->fields_value['DHLDP_DP_CHANGE_OS'] = Tools::getValue('DHLDP_DP_CHANGE_OS', Configuration::get('DHLDP_DP_CHANGE_OS'));
         $helper->fields_value['DHLDP_DP_REF_NUMBER'] = Tools::getValue('DHLDP_DP_REF_NUMBER', Configuration::get('DHLDP_DP_REF_NUMBER'));
-
         $helper->fields_value['DHLDP_DP_CREATE_MANIFEST'] = (int)Tools::getValue('DHLDP_DP_CREATE_MANIFEST', Configuration::get('DHLDP_DP_CREATE_MANIFEST'));
         $helper->fields_value['DHLDP_DP_CREATE_SHIPLIST'] = (int)Tools::getValue('DHLDP_DP_CREATE_SHIPLIST', Configuration::get('DHLDP_DP_CREATE_SHIPLIST'));
         $helper->fields_value['DHLDP_DP_LABEL_FORMAT'] = Tools::getValue('DHLDP_DP_LABEL_FORMAT', Configuration::get('DHLDP_DP_LABEL_FORMAT'));
-
         $helper->fields_value['retrieve_page_formats'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/dp-retrieve-pageformats.tpl');
         $helper->fields_value['label_position'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/dp-label-position.tpl');
-
         $helper->fields_value['update_ppl'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/dp-update-ppl.tpl');
         $helper->fields_value['add_carrier'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/dp-add-carrier.tpl');
         $helper->fields_value['carrier_list'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/dp-carrier-list.tpl');
-
         $helper->fields_value['DHLDP_DP_NAME'] = Tools::getValue('DHLDP_DP_NAME', Configuration::get('DHLDP_DP_NAME'));
         $helper->fields_value['DHLDP_DP_COMPANY'] = Tools::getValue('DHLDP_DP_COMPANY', Configuration::get('DHLDP_DP_COMPANY'));
         $helper->fields_value['DHLDP_DP_SALUTATION'] = Tools::getValue('DHLDP_DP_SALUTATION', Configuration::get('DHLDP_DP_SALUTATION'));
@@ -382,7 +358,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                             'label' => $this->module->l('Live username'),
                             'desc' => $this->module->l('"Live" username for Authentication'),
                             'required' => true,
-                            //'form_group_class' => 'deutschepost_authdata_live'
                         ),
                         array(
                             'name' => 'DHLDP_DP_LIVE_PASSWORD',
@@ -390,7 +365,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                             'label' => $this->module->l('Live password'),
                             'desc' => $this->module->l('"Live" password for Authentication'),
                             'required' => true,
-                            //'form_group_class' => 'deutschepost_authdata_live'
                         ),
                         array(
                             'name' => 'DHLDP_DP_LOG',
@@ -422,7 +396,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                             'type' => 'free',
                             'label' => $this->module->l('PPL'),
                             'name' => 'update_ppl',
-                            //'desc' => $this->module->l('Please update PPL file and version, if you see "The PPL is invalid!" error message'),
                         ),
                         array(
                             'type' => 'free',
@@ -700,12 +673,8 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                 )
             )
         );
-
         return $form_fields;
     }
-
-
-
 
     protected function renderMessages()
     {
