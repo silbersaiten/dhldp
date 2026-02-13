@@ -12,6 +12,7 @@
  */
 
 use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
+
 //use PrestaShop\Module\dhldp\classes\DPRestApi;
 use PrestaShop\Module\dhldp\classes\DHLTokenManager;
 use PrestaShop\Module\dhldp\Helper\ConfigurationHelperTrait;
@@ -2348,7 +2349,6 @@ class DhlDp extends Module
 
         $tab->id_parent = (int)Tab::getIdFromClassName($parent);
         $tab->module = $this->name;
-
         return $tab->add();
     }
 
@@ -2438,7 +2438,6 @@ class DhlDp extends Module
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpSettingsDhl'));
                 break;
         }
-
         return $html;
     }
 
@@ -2499,7 +2498,6 @@ class DhlDp extends Module
     {
         $general_errors = array();
         $general_confirmations = array();
-
         $error_order_line = array();
         $success_order_line = array();
         $warning_order_line = array();
@@ -2710,11 +2708,9 @@ class DhlDp extends Module
         }
         $this->context->smarty->assign('general_errors', $general_errors);
         $this->context->smarty->assign('general_confirmations', $general_confirmations);
-
         $this->context->smarty->assign('orders_errors', $orders_errors);
         $this->context->smarty->assign('orders_warnings', $orders_warnings);
         $this->context->smarty->assign('orders_confirmations', $orders_confirmations);
-
         $this->context->smarty->assign('success_order_line', $success_order_line);
         $this->context->smarty->assign('warning_order_line', $warning_order_line);
         $this->context->smarty->assign('error_order_line', $error_order_line);
@@ -2866,10 +2862,8 @@ class DhlDp extends Module
                 );
                 $order['show_minimum_age'] = $this->isGermanyAddress($order['id_address_delivery']);
                 $order['labels'] = $this->getLabelData($order['id_order_carrier']);
-
                 $car = new Carrier((int)$order['id_carrier']);
                 $order['carrier_name'] = $car->name;
-
                 $order['selected'] = array();
                 if (is_array($order['labels']) && count($order['labels']) > 0) {
                     $order['selected'] = $order['labels'][count($order['labels']) - 1];
@@ -2882,7 +2876,6 @@ class DhlDp extends Module
                 $package_length = self::getConfig($package_length_key, $order_obj->id_shop);
                 $package_width = self::getConfig($package_width_key, $order_obj->id_shop);
                 $package_height = self::getConfig($package_height_key, $order_obj->id_shop);
-
                 $order['input_default_values'] = array(
                     'weight' => (is_array($carrier_input) && isset($carrier_input[$order['id_order_carrier']]['weight'])) ? $carrier_input[$order['id_order_carrier']]['weight'] :
                         ((isset($order['selected']['packages'][0]['weight'])) ? $order['selected']['packages'][0]['weight'] : $this->getOrderWeight($order_obj, $product_alias)),
@@ -2901,8 +2894,6 @@ class DhlDp extends Module
                     'CheckMinimumAge_MinimumAge' => (is_array($carrier_input) && isset($carrier_input[$order['id_order_carrier']]['CheckMinimumAge_MinimumAge'])) ? $carrier_input[$order['id_order_carrier']]['CheckMinimumAge_MinimumAge'] :
                         ((isset($order['selected']['options_decoded']['CheckMinimumAge']['MinimumAge'])) ? $order['selected']['options_decoded']['CheckMinimumAge']['MinimumAge'] : self::getConfig('DHL_AGE_CHECK', $order_obj->id_shop)),
                 );
-
-
                 $order['address'] = $this->getTemplateVarsForUpdateAddress(
                     $order_obj,
                     $order['id_order_carrier'],
@@ -2949,7 +2940,6 @@ class DhlDp extends Module
 
         return $this->display(__FILE__, 'views/templates/admin/changelog.tpl');
     }
-
 
 
     public function getFormattedAddedDhlProducts($added_dhl_products, $to_country = '', $from_country = '', $api_version = '')
@@ -3037,7 +3027,6 @@ class DhlDp extends Module
     }
 
 
-
     public function postInitDHLProcess()
     {
         if (Tools::isSubmit('submitSaveOptions')) {
@@ -3108,16 +3097,6 @@ class DhlDp extends Module
             }
         }
 
-        /*
-        if (Tools::isSubmit('submitDPUpdatePPL')) {
-            if ($this->dp_api->updatePPL()) {
-                $this->_confirmations[] = $this->l('PPL has been updated successfully');
-            } else {
-                $this->_errors[] = $this->l('PPL update is failed');
-            }
-        }
-        */
-
         if (Tools::isSubmit('submitDPGetProductList')) {
             if ($this->dp_api->getProductList()) {
                 $this->_confirmations[] = $this->l('Product list has been updated successfully');
@@ -3139,11 +3118,6 @@ class DhlDp extends Module
                 $this->_errors[] = $this->l('Page formats retrieving is failed');
             }
         }
-
-
-
-
-        
         return $this->displayMessages();
     }
 
@@ -3257,8 +3231,6 @@ class DhlDp extends Module
         return false;
     }
 
-
-
     public function getDPLabelData($id_order_carrier)
     {
         if (!is_array($id_order_carrier)) {
@@ -3337,7 +3309,6 @@ class DhlDp extends Module
     {
         $sender = $this->dp_api->getSender($id_shop);
         $receiver = $this->dp_api->getReciver(new Address((int)$id_address));
-
         $position = new stdClass();
         $position->productCode = $product;
         $position->address = new stdClass();
@@ -3358,12 +3329,9 @@ class DhlDp extends Module
         }
 
         $positions = array($position);
-
         $product_info = $this->dp_api->getProducts($product);
-
         $total = $product_info['price'];
         $total_eurocent = Tools::ps_round($product_info['price'] * 100);
-
         $response = $this->dp_api->callApi(
             'createShopOrderId',
             array(),
@@ -3452,19 +3420,15 @@ class DhlDp extends Module
 
         if (Validate::isLoadedObject($order_carrier)) {
             $order = new Order((int)$order_carrier->id_order);
-
             $order->shipping_number = $tracking_number;
             $order->update();
-
             $order_carrier->tracking_number = $tracking_number;
 
             if ($order_carrier->update()) {
                 // Send mail to customer
                 $customer = new Customer((int)$order->id_customer);
                 $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
-
                 $tracking_url = str_replace('[tracking_number]', $tracking_number, DPRestApi::$tracking_url);
-
                 $template_vars = array(
                     '{followup}' => $tracking_url,
                     '{firstname}' => $customer->firstname,
@@ -3769,8 +3733,6 @@ class DhlDp extends Module
         }
         return false;
     }
-
-
 
     private function setDeliveredStatusToOrder($id_package)
     {
