@@ -26,13 +26,10 @@ require_once(dirname(__FILE__) . '/classes/DHLDPApiRest.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPLabel.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPPackage.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPOrder.php');
-
 require_once(dirname(__FILE__) . '/classes/Helper/ConfigurationHelperTrait.php');
 require_once(dirname(__FILE__) . '/classes/Service/DHLRestService.php');
-
 require_once(dirname(__FILE__) . '/classes/DPRestApi.php');
 require_once(dirname(__FILE__) . '/classes/DPLabel.php');
-
 require_once(dirname(__FILE__) . '/classes/DHLDPRestClient.php');
 require_once(dirname(__FILE__) . '/classes/Env.php');
 
@@ -157,7 +154,6 @@ class DhlDp extends Module
         $return &= $this->removeHook('actionGetIDDeliveryAddressByIDCarrier');
         $return &= $this->removeHook('actionGetIDOrderStateByIDCarrier');
         $return &= parent::uninstall();
-
         return (bool)$return;
     }
 
@@ -185,7 +181,6 @@ class DhlDp extends Module
     public function createDbTables()
     {
         $return = true;
-
         $return &= (bool)Db::getInstance()->Execute(
             'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'dhldp_label` (
                 `id_dhldp_label` int(11) NOT NULL AUTO_INCREMENT,
@@ -292,7 +287,6 @@ class DhlDp extends Module
                 PRIMARY KEY (`id_dhldp_dp_productlist`)
                 ) ENGINE=' . _MYSQL_ENGINE_ . '  DEFAULT CHARSET=utf8'
         );
-
         return $return;
     }
 
@@ -559,7 +553,6 @@ class DhlDp extends Module
         if (isset($shipment_order['Shipment']['ShipmentDetails'])) {
             $shipment_order['services'] = $this->dhldp_api_rest->getPreparationServices($shipment_order['Shipment']['ShipmentDetails']);
         }
-        //echo '<pre>'.print_r($shipment_order, true).'</pre>'; exit;
 
         $shipment_order_request = array('ShipmentOrder' => $shipment_order);
 
@@ -686,7 +679,6 @@ class DhlDp extends Module
 
                     // mail for return label
                     if (isset($response['returnLabelUrl']) && $response['returnLabelUrl'] != '' && (($pdf_decoded_return = Tools::file_get_contents($response['returnLabelUrl'])) != '')) {
-
                         $file_attachment = array(
                             'return_label' => array(
                                 'content' => $pdf_decoded_return,
@@ -724,7 +716,6 @@ class DhlDp extends Module
                     );
                     $this->updateOrderStatus((int)$id_order_carrier);
                 } else {
-
                     $id_shop = $order->id_shop;
                     if (self::getConfig('DHL_RETURN_MAIL', $id_shop)) {
                         $customer = new Customer((int)$order->id_customer);
@@ -774,7 +765,6 @@ class DhlDp extends Module
             }
             return true;
         }
-
         return false;
     }
 
@@ -790,16 +780,13 @@ class DhlDp extends Module
             if (self::getConfig('DHL_RETURNS_EXTEND', $order->id_shop) &&
                 (self::getConfig('DHL_RETURNS_IMMED', $order->id_shop))) {
                 // restriction - only for germany
-                //if ($this->isGermanyAddress($order->id_address_delivery)) {
                 $order_carriers = $this->filterShipping($order->getShipping(), (int)$order->id_shop);
                 if (is_array($order_carriers) && count($order_carriers) > 0) {
                     // change state
                     $params['orderReturn']->state = 2;
                     $params['orderReturn']->save();
-
                     // mail will be send on hookActionObjectOrderReturnUpdateAfter
                 }
-                //}
             }
         }
     }
@@ -1135,7 +1122,6 @@ class DhlDp extends Module
             );
         } else {
             $combinations = array();
-
             $this->context->smarty->assign(
                 array(
                     'product_link_rewrite' => $product->link_rewrite,
@@ -1149,7 +1135,6 @@ class DhlDp extends Module
         }
 
         $this->context->smarty->assign('show_buttons', (version_compare(_PS_VERSION_, '1.7.0.0') >= 0 ? 0 : 1));
-
         return $this->display(__FILE__, 'admin-products-extra.tpl');
     }
 
@@ -1352,7 +1337,6 @@ class DhlDp extends Module
 
             if (count($form_errors) == 0) {
                 $id_order_carrier = (int)Tools::getValue('id_order_carrier');
-
                 $label_position = array();
                 if ($label_format == 'pdf') {
                     $label_position = array(
@@ -1370,7 +1354,6 @@ class DhlDp extends Module
                     $label_position,
                     $id_order_carrier
                 );
-
 
                 if (!$result) {
                     if (is_array($this->dp_api->errors) && count($this->dp_api->errors) > 0) {
@@ -1465,7 +1448,6 @@ class DhlDp extends Module
         if (Tools::getIsset('doDHLDPDhlManifest')) {
             $dhl_errors = array();
             $dhl_confirmations = array();
-
             $shipment_number = Tools::getValue('shipment_number');
             if ($shipment_number != '') {
                 if (DHLDPLabel::getLabelIDByShipmentNumber($shipment_number) != false) {
@@ -1640,7 +1622,6 @@ class DhlDp extends Module
 
         $shipping = $this->filterShipping($order->getShipping(), $order->id_shop);
         $html = '';
-
         $dhl_products = $this->getFormattedAddedDhlProductsByDeliveryAddress(
             $order->id_address_delivery,
             $order->id_shop
@@ -1649,17 +1630,14 @@ class DhlDp extends Module
         if (is_array($shipping)) {
             foreach ($shipping as $shipping_item) {
                 $labels = $this->getLabelData($shipping_item['id_order_carrier']);
-
                 $car = new Carrier((int)$shipping_item['id_carrier']);
                 $shipping_item['carrier_name'] = $car->name;
-
                 $last_label = array();
                 if (is_array($labels) && count($labels) > 0) {
                     $last_label = $labels[count($labels) - 1];
                 }
 
                 $perm_c = DHLDPOrder::getPermissionForTransferring($order->id_cart);
-
                 $product_alias = str_replace(':', '_', $shipping_item["default_dhl_product_code"]);
                 $package_length_key = 'DHL_' . $product_alias . '_LENGTH';
                 $package_width_key = 'DHL_' . $product_alias . '_WIDTH';
@@ -1667,8 +1645,6 @@ class DhlDp extends Module
                 $package_length = self::getConfig($package_length_key, $order->id_shop);
                 $package_width = self::getConfig($package_width_key, $order->id_shop);
                 $package_height = self::getConfig($package_height_key, $order->id_shop);
-
-
                 $this->context->smarty->assign(
                     array(
                         'module_path' => __PS_BASE_URI__ . 'modules/' . $this->name . '/',
@@ -1890,18 +1866,14 @@ class DhlDp extends Module
         $services_input = Tools::getValue('addit_services');
         $service_input = isset($services_input[$id_order_carrier]) ? $services_input[$id_order_carrier] : array();
 
-        $customer = new Customer($order->id_customer);
-
         return array(
             'id_order_carrier' => $id_order_carrier,
             'show_dhl_additional_services' => isset($service_input['show_dhl_additional_services']) ? $service_input['show_dhl_additional_services'] : '',
-
             'deliverytimeframe_options' => $this->getDeliveryTimeframeOptions(),
             'preferredtime_options' => $this->getPreferredTimeOptions(),
             'shipmenthandling_options' => $this->getShipmentHandlingOptions(),
             'endorsement_options' => $this->getEndorsementOptions('', $this->isDomesticDelivery($order->id_shop, $id_address_delivery)),
             'visualcheckofage_options' => $this->getVisualCheckOfAgeOptions(),
-
             'DayOfDelivery' => isset($service_input['DayOfDelivery']) ? $service_input['DayOfDelivery'] : '',
             'PreferredTime' => isset($service_input['PreferredTime']) ? $service_input['PreferredTime'] : '',
             'ReturnImmediately' => isset($service_input['ReturnImmediately']) ? $service_input['ReturnImmediately'] : '',
@@ -1915,7 +1887,6 @@ class DhlDp extends Module
             'PreferredLocation' => isset($service_input['PreferredLocation']) ? $service_input['PreferredLocation'] : '',
             'PreferredNeighbour' => isset($service_input['PreferredNeighbour']) ? $service_input['PreferredNeighbour'] : '',
             'PreferredDay' => isset($service_input['PreferredDay']) ? $service_input['PreferredDay'] : '',
-//            'GoGreen' => isset($service_input['GoGreen']) ? $service_input['GoGreen'] : '',
             'Perishables' => isset($service_input['Perishables']) ? $service_input['Perishables'] : '',
             'Personally' => isset($service_input['Personally']) ? $service_input['Personally'] : '',
             'NoNeighbourDelivery' => isset($service_input['NoNeighbourDelivery']) ? $service_input['NoNeighbourDelivery'] : '',
@@ -1984,7 +1955,6 @@ class DhlDp extends Module
         return array(
             'id_order_carrier' => $id_order_carrier,
             'show_dhl_export_documents' => isset($doc_input['show_dhl_export_documents']) ? $doc_input['show_dhl_export_documents'] : '',
-
             'exporttype_options' => $this->getExportTypeOptions(),
             'termsoftrade_options' => $this->getTermsOfTradeOptions(),
             'exportdoc_positions' => $exportdoc_positions,
@@ -2074,11 +2044,6 @@ class DhlDp extends Module
     public function getEndorsementOptions($option_key = '', $is_domestic_delivery = null)
     {
         $res = array(
-//            'SOZU' => $this->l('Return immediately'),
-//            'ZWZU' => $this->l('2nd attempt of Delivery'),
-//            'IMMEDIATE' => $this->l('Sending back immediately to sender'),
-//            'AFTER_DEADLINE' => $this->l('Sending back immediately to sender after expiration of time'),
-//            'ABANDONMENT' => $this->l('Abandonment of parcel at the hands of sender (free of charge)'),
             'RETURN' => $this->l('Return immediately'),
             'ABANDON' => $this->l('Abandonment of parcel at the hands of sender (free of charge)'),
         );
@@ -2233,10 +2198,8 @@ class DhlDp extends Module
 
         if (Validate::isLoadedObject($order_carrier)) {
             $order = new Order((int)$order_carrier->id_order);
-
             $order->shipping_number = $tracking_number;
             $order->update();
-
             $order_carrier->tracking_number = $tracking_number;
 
             if ($order_carrier->update()) {
@@ -2289,11 +2252,9 @@ class DhlDp extends Module
                     false,
                     $order->id_shop
                 );
-
                 return true;
             }
         }
-
         return false;
     }
 
@@ -2306,7 +2267,6 @@ class DhlDp extends Module
                 $link .= '&' . $k . '=' . $v;
             }
         }
-
         return $link;
     }
 
@@ -2372,10 +2332,8 @@ class DhlDp extends Module
                 $url .= '&' . $k . '=' . $v;
             }
         }
-
         return $url;
     }
-
 
     public function installTab($tab_class, $tab_name, $parent = 'AdminModules', $active = false)
     {
@@ -2471,61 +2429,16 @@ class DhlDp extends Module
                 break;
             case 'init_dhl':
                 $html .= $this->postInitDHLProcess();
-//                $html .= $this->displayFormInitDHLSettings();
                 break;
             case 'settings_dp':
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpSettingsDp'));
                 break;
             default:
 //                $html .= $this->postProcess();
-//                $html .= $this->displayFormDHLSettings();
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpSettingsDhl'));
                 break;
         }
 
-        $rclient = new DHLDPRestClient(array('savelog_callback' => ''));
-        //
-        /*$res = $rclient->get('https://api-sandbox.dhl.com/location-finder/v1/find-by-address',
-            array(
-                'countryCode' => 'DE',
-                'addressLocality' => 'Bonn',
-                'postalCode' => '53113',
-                'radius' => '2500',
-                'limit' => '20'
-            ),
-            array(
-                'DHL-API-Key' => 'prestashop'
-            )
-        );*/
-
-
-        /*$res = $rclient->get('https://api.dhl.com/location-finder/v1/find-by-address',
-            array(
-                'countryCode' => 'DE',
-                'addressLocality' => 'Hannover',
-                'postalCode' => '30539',
-                'radius' => '5000',
-                'limit' => '100'
-            ),
-            array(
-                'DHL-API-Key' => 'prestashop'
-            )
-        );*/
-
-        //$out = print_r($res->decodeResponse(), true);
-        /*
-        $address = array(
-            'streetAddress' => '', //Tools::getValue('street', '').' '.Tools::getValue('streetNo', ''),
-            'zip' => '30539',
-            'city' => 'Hannover',
-        );
-
-        $out = $this->dhldp_api->getRestPackstations($address);
-        $html .= '<pre>'.print_r($out, true).'</pre>';
-
-        $out = $this->dhldp_api->getRestPostfiliales($address);
-        $html .= '<pre>'.print_r($out, true).'</pre>';
-        */
         return $html;
     }
 
