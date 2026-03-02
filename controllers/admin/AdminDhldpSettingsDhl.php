@@ -32,13 +32,15 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     public function initContent()
     {
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->displayInformation($this->module->l('You can only display the page in a shop context.'));
+            $this->content .= $this->displayInformation($this->module->l('You can only display the page in a shop context.'));
+            parent::initContent();
             return;
         }
 
         if (Tools::getValue('view') === 'init_dhl') {
             $this->content .= $this->module->postInitDHLProcess();
             $this->content .= $this->displayFormInitDHLSettings();
+            parent::initContent();
             return;
         }
 
