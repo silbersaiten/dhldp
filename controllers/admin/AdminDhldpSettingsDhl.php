@@ -11,7 +11,7 @@
  * @link      https://www.silbersaiten.de
  */
 
-//use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
+use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
 
 require_once _PS_MODULE_DIR_ . 'dhldp/classes/DHLDPApiRest.php';
 
