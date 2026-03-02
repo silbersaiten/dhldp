@@ -42,6 +42,8 @@ class DhlDp extends Module
 
     /** @var DHLDPApiRest */
     public $dhldp_api_rest;
+    public $is177;
+    public $is16;
 
     /** @var DPRestApi */
     protected $dp_api;
@@ -2638,7 +2640,11 @@ class DhlDp extends Module
                 $is_return = false;
 
                 $with_warning = (bool)self::getConfig('DHL_LABEL_IGNORE_WARNING', $order->id_shop);
-                $create_label_no_validation = $with_warning ?: ($c['create_label_no_validation'] ?? null);
+                if ($with_warning) {
+                    $create_label_no_validation = isset($c['create_label_no_validation']) ? $c['create_label_no_validation'] : null;
+                } else {
+                    $create_label_no_validation = null;
+                }
 
                 $shipmentReference = (self::getConfig('DHL_REF_NUMBER', $order->id_shop) ? $order->id : $order->reference);
                 if (strlen($shipmentReference) < 8) {

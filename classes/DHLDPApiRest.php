@@ -343,7 +343,7 @@ class DHLDPApiRest
                 $receiver['name2'] = ' ';
             }
 
-            if (preg_match('/^Packstation/', $address->address1) && Tools::strtoupper($country->iso_code) ?? '' == 'DE') {
+            if (preg_match('/^Packstation/', $address->address1) && Tools::strtoupper($country->iso_code) == 'DE') {
                 $receiver['Packstation'] = array(
                     'PackstationNumber' => trim(str_replace('Packstation', '', $address->address1)),
                     'PostNumber' => trim($address->address2),
