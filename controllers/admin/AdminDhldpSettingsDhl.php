@@ -51,44 +51,44 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         parent::initContent();
     }
 
-//    public function setMedia($isNewTheme = false)
-//    {
-//        parent::setMedia($isNewTheme);
-//
-//        $this->context->controller->addJqueryPlugin(['idTabs', 'select2', 'validate']);
-//        $this->context->controller->addJqueryUI('ui.tabs');
-//        $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
-//        $this->context->controller->addJS(
-//            _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'
-//        );
-//        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/admin_configure.js');
-//        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dhl-product-dimensions.js');
-//
-//        $dhl_products = $this->module->dhldp_api_rest->getDefinedProducts('', '', Configuration::get('DHLDP_DHL_COUNTRY'), Configuration::get('DHLDP_DHL_API_VERSION'));
-//        $dhl_products_js = [];
-//        foreach ($dhl_products as $dhl_product_key => $dhl_product) {
-//            if ($dhl_product['active'] == true) {
-//                $dhl_product_js = new stdClass();
-//                $dhl_product_js->name = $dhl_product['name'];
-//                $dhl_product_js->code = $dhl_product_key;
-//                $dhl_products_js[] = $dhl_product_js;
-//            }
-//        }
-//
-//        Media::addJsDef([
-//            'is177' => $this->module->is177,
-//            'defined_dhl_api_versions' => json_encode(DHLDPApiRest::$supported_shipper_countries),
-//            'defined_dhl_products' => json_encode($dhl_products_js),
-//            'dhl_translation' => json_encode(
-//                [
-//                    'Remove' => $this->module->l('Remove'),
-//                    'ExistsParticipation' => $this->module->l('Such participation exists for this product'),
-//                    'Exists' => $this->module->l('This product already exists in the list')
-//                ]
-//            ),
-//            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
-//        ]);
-//    }
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia($isNewTheme);
+
+        $this->context->controller->addJqueryPlugin(['idTabs', 'select2', 'validate']);
+        $this->context->controller->addJqueryUI('ui.tabs');
+        $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
+        $this->context->controller->addJS(
+            _PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js'
+        );
+        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/admin_configure.js');
+        $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dhl-product-dimensions.js');
+
+        $dhl_products = $this->module->dhldp_api_rest->getDefinedProducts('', '', Configuration::get('DHLDP_DHL_COUNTRY'), Configuration::get('DHLDP_DHL_API_VERSION'));
+        $dhl_products_js = [];
+        foreach ($dhl_products as $dhl_product_key => $dhl_product) {
+            if ($dhl_product['active'] == true) {
+                $dhl_product_js = new stdClass();
+                $dhl_product_js->name = $dhl_product['name'];
+                $dhl_product_js->code = $dhl_product_key;
+                $dhl_products_js[] = $dhl_product_js;
+            }
+        }
+
+        Media::addJsDef([
+            'is177' => $this->module->is177,
+            'defined_dhl_api_versions' => json_encode(DHLDPApiRest::$supported_shipper_countries),
+            'defined_dhl_products' => json_encode($dhl_products_js),
+            'dhl_translation' => json_encode(
+                [
+                    'Remove' => $this->module->l('Remove'),
+                    'ExistsParticipation' => $this->module->l('Such participation exists for this product'),
+                    'Exists' => $this->module->l('This product already exists in the list')
+                ]
+            ),
+            'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
+        ]);
+    }
 
     public function postProcess()
     {
