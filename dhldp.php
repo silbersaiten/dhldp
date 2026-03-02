@@ -11,14 +11,6 @@
  * @link      https://www.silbersaiten.de
  */
 
-use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
-
-//use PrestaShop\Module\dhldp\classes\DPRestApi;
-use PrestaShop\Module\dhldp\classes\DHLTokenManager;
-use PrestaShop\Module\dhldp\Helper\ConfigurationHelperTrait;
-use PrestaShop\Module\dhldp\Service\DHLRestService;
-use PrestaShopBundle\Controller\Admin\Sell\Address\AddressController;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -36,11 +28,11 @@ require_once(dirname(__FILE__) . '/classes/Env.php');
 
 class DhlDp extends Module
 {
-    use ConfigurationHelperTrait;
+    use \PrestaShop\Module\dhldp\Helper\ConfigurationHelperTrait;
 
     const DHL_PROFILE = 'STANDARD_GRUPPENPROFIL';
 
-    /** @var DHLDPApiRest */
+    /** @var \PrestaShop\Module\dhldp\classes\DHLDPApiRest */
     public $dhldp_api_rest;
     public $is177;
     public $is16;
@@ -48,7 +40,7 @@ class DhlDp extends Module
     /** @var DPRestApi */
     protected $dp_api;
 
-    /** @var DHLRestService */
+    /** @var \PrestaShop\Module\dhldp\Service\DHLRestService */
     protected $dhl_service;
 
     public function __construct()
@@ -70,8 +62,8 @@ class DhlDp extends Module
 
         new \PrestaShop\Module\dhldp\classes\Env($this->name);
         $this->dp_api = new DPRestApi();
-        $this->dhldp_api_rest = new DHLDPApiRest($this);
-        $this->dhl_service = new DHLRestService($this, $this->dhldp_api_rest);
+        $this->dhldp_api_rest = new \PrestaShop\Module\dhldp\classes\DHLDPApiRest($this);
+        $this->dhl_service = new \PrestaShop\Module\dhldp\Service\DHLRestService($this, $this->dhldp_api_rest);
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->is177 = version_compare(_PS_VERSION_, '1.7.7.0') >= 0 ? 1 : 0;
         $this->is16 = (version_compare(_PS_VERSION_, '1.6.0.0') >= 0 && version_compare(_PS_VERSION_, '1.7.0.0') < 0) ? 1 : 0;
@@ -346,7 +338,7 @@ class DhlDp extends Module
         if (self::getConfig('DHL_MODE', $id_shop) == 1) {
             $ekp = self::getConfig('DHL_LIVE_EKP', $id_shop);
         } else {
-            $ekp = DHLDPApiRest::$dhl_sbx_ekp[$this->dhldp_api_rest->getApiVersion()];
+            $ekp = \PrestaShop\Module\dhldp\classes\DHLDPApiRest::$dhl_sbx_ekp[$this->dhldp_api_rest->getApiVersion()];
         }
 
         $shipment_order = array(
@@ -903,7 +895,7 @@ class DhlDp extends Module
     public function hookDisplayHeader($params)
     {
         // restriction - only for germany
-        if (($this->context->controller instanceof AddressController) &&
+        if (($this->context->controller instanceof \PrestaShopBundle\Controller\Admin\Sell\Address\AddressController) &&
             self::getConfig('DHL_PFPS', $this->context->shop->id)) {
             if (version_compare(_PS_VERSION_, '8.0', '<')) {
                 $this->context->controller->addJquery();
@@ -1235,7 +1227,7 @@ class DhlDp extends Module
                 $selected_values[$selected_value_index]['tracking_url'] = str_replace(
                     '[tracking_number]',
                     $selected_value['shipment_number'],
-                    DHLDPApiRest::$tracking_url
+                    \PrestaShop\Module\dhldp\classes\DHLDPApiRest::$tracking_url
                 );
             }
             return $selected_values;
@@ -2218,7 +2210,7 @@ class DhlDp extends Module
 
                 // Send mail to customer
                 if (self::getConfig('DHL_INTRANSIT_MAIL', $order->id_shop)) {
-                    $tracking_url = str_replace('[tracking_number]', $tracking_number, DHLDPApiRest::$tracking_url);
+                    $tracking_url = str_replace('[tracking_number]', $tracking_number, \PrestaShop\Module\dhldp\classes\DHLDPApiRest::$tracking_url);
 
                     $template_vars = array(
                         '{followup}' => $tracking_url,
@@ -3038,10 +3030,10 @@ class DhlDp extends Module
         if (Tools::isSubmit('submitSaveOptions')) {
             $form_errors = array();
 
-            if (!in_array(Tools::getValue('DHLDP_DHL_COUNTRY'), array_keys(DHLDPApiRest::$supported_shipper_countries))) {
+            if (!in_array(Tools::getValue('DHLDP_DHL_COUNTRY'), array_keys(\PrestaShop\Module\dhldp\classes\DHLDPApiRest::$supported_shipper_countries))) {
                 $form_errors[] = $this->_errors[] = $this->l('Please select supported country');
             }
-            if (!in_array(Tools::getValue('DHLDP_DHL_API_VERSION'), DHLDPApiRest::$supported_shipper_countries[Tools::getValue('DHLDP_DHL_COUNTRY')]['api_versions'])) {
+            if (!in_array(Tools::getValue('DHLDP_DHL_API_VERSION'), \PrestaShop\Module\dhldp\classes\DHLDPApiRest::$supported_shipper_countries[Tools::getValue('DHLDP_DHL_COUNTRY')]['api_versions'])) {
                 $form_errors[] = $this->_errors[] = $this->l('Please select supported API version');
             }
             if (count($form_errors) == 0) {
