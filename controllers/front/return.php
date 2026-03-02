@@ -28,10 +28,15 @@ class DHLDPReturnModuleFrontController extends ModuleFrontController
 
     public function getBreadcrumbLinks()
     {
+        if (version_compare(_PS_VERSION_,  '1.7','<')) {
+            $title = $this->module->l('Merchandise returns');
+        } else {
+            $title = $this->getTranslator()->trans('Merchandise returns', array(), 'Shop.Theme.Customeraccount');
+        }
         $breadcrumb = parent::getBreadcrumbLinks();
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
         $breadcrumb['links'][] = array(
-            'title' => $this->getTranslator()->trans('Merchandise returns', array(), 'Shop.Theme.Customeraccount'),
+            'title' => $title,
             'url' => $this->context->link->getPageLink('order-follow', true),
         );
         return $breadcrumb;

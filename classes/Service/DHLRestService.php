@@ -13,6 +13,8 @@
 
 namespace PrestaShop\Module\dhldp\Service;
 
+require_once __DIR__ . '/../Helper/ConfigurationHelperTrait.php';
+
 use Customer;
 use DHLDPPackage;
 use DHLDPLabel;
