@@ -11,8 +11,6 @@
  * @link      https://www.silbersaiten.de
  */
 
-use PrestaShop\Module\dhldp\classes\DHLDPApiRest;
-
 require_once _PS_MODULE_DIR_ . 'dhldp/classes/DHLDPApiRest.php';
 
 class AdminDhldpSettingsDhlController extends ModuleAdminController
@@ -55,6 +53,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     {
         parent::setMedia($isNewTheme);
 
+        $api_rest_class = $this->getDhlApiRestClass();
+
         $this->context->controller->addJqueryPlugin(['idTabs', 'select2', 'validate']);
         $this->context->controller->addJqueryUI('ui.tabs');
         $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
@@ -77,7 +77,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
 
         Media::addJsDef([
             'is177' => $this->module->is177,
-            'defined_dhl_api_versions' => json_encode(DHLDPApiRest::$supported_shipper_countries),
+            'defined_dhl_api_versions' => json_encode($api_rest_class::$supported_shipper_countries),
             'defined_dhl_products' => json_encode($dhl_products_js),
             'dhl_translation' => json_encode(
                 [
@@ -180,7 +180,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             $added_dhl_products = Tools::getValue('added_dhl_products', []);
 
             if (count($this->dhldpErrors) == 0) {
-                if (in_array(Configuration::get('DHLDP_DHL_API_VERSION'), DHLDPApiRest::getSupportedApiVersions())) {
+                if (in_array(Configuration::get('DHLDP_DHL_API_VERSION'), $this->getDhlApiRestClass()::getSupportedApiVersions())) {
                     $this->module->dhldp_api_rest->setApiVersion(Configuration::get('DHLDP_DHL_API_VERSION'));
                 }
             }
@@ -1507,7 +1507,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             'id' => 'value',
             'name' => 'label'
         );
-        foreach (array_keys(DHLDPApiRest::$supported_shipper_countries) as $iso_code) {
+        foreach (array_keys($this->getDhlApiRestClass()::$supported_shipper_countries) as $iso_code) {
             $shipper_country_options['query'][] = array(
                 'value' => $iso_code,
                 'label' => Country::getNameById($this->context->language->id, Country::getByIso($iso_code))
@@ -1544,9 +1544,21 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     protected function l($str, $class = null, $addslashes = false, $htmlentities = true)
     {
         if (version_compare(_PS_VERSION_,  '1.7','<')) {
-            return $this->l($str);
+            return parent::l($str, $class, $addslashes, $htmlentities);
         } else {
             return $this->trans($str, [], 'Module.Orderedit.Admin');
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDhlApiRestClass()
+    {
+        if (class_exists('PrestaShop\\Module\\dhldp\\classes\\DHLDPApiRest')) {
+            return 'PrestaShop\\Module\\dhldp\\classes\\DHLDPApiRest';
+        }
+
+        return 'DHLDPApiRest';
     }
 }
