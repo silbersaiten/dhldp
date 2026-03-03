@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.1 (03.03.2026)
+* DHL 1.6.1.* compatible
+
 #### 3.2.0 (10.02.2026)
 * Added upgrade script with registration of module tabs
 
