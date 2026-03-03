@@ -422,7 +422,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $helper = new HelperForm();
         $helper->required = false;
         $helper->id = null;
-        $helper->currentIndex = AdminController::$currentIndex;
+        $helper->currentIndex = self::$currentIndex;
         $helper->table = 'DHLDP_dhl_configure';
         $helper->token = Tools::getValue('token');
         $helper->module = $this->module;
@@ -479,10 +479,10 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             array(
                 'carriers' => $option_carriers,
                 'dhl_carriers' => $this->module->getDhlCarriers(true, false),
-                'link' => $this->context->link->getAdminLink(
-                        'AdminCarrierWizard',
-                        false
-                    ) . '&token=' . Tools::getAdminTokenLite('AdminCarrierWizard'),
+                'carrier_wizard_link' => $this->context->link->getAdminLink(
+                    'AdminCarrierWizard',
+                    false
+                ) . '&token=' . Tools::getAdminTokenLite('AdminCarrierWizard'),
                 'added_dhl_products' => $added_dhl_products,
                 'dhl_product_dimensions' => $added_dhl_products
             )
@@ -519,7 +519,6 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         foreach ($this->getFormFieldsDHLSettings() as $form_field) {
             $forms[] = $helper->generateForm(array($form_field));
         }
-
         return implode('', $forms);
     }
 
