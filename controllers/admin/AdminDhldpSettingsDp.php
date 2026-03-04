@@ -11,8 +11,7 @@
  * @link      https://www.silbersaiten.de
  */
 
-//use PrestaShop\Module\dhldp\classes\DPRestApi;
-require_once(dirname(__FILE__) . '/../../classes/DPRestApi.php');
+require_once _PS_MODULE_DIR_ . 'dhldp/classes/DPRestApi.php';
 
 class AdminDhldpSettingsDpController extends ModuleAdminController
 {
@@ -300,7 +299,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                 'page_formats' => $this->dp_api->getPageFormats(),
                 'carriers' => $option_carriers,
                 'dp_carriers' => $this->module->getDPCarriers(true),
-                'link' => $this->context->link->getAdminLink('AdminCarrierWizard', false) . '&token=' . Tools::getAdminTokenLite('AdminCarrierWizard'),
+                'dp_wizard_link' => $this->context->link->getAdminLink('AdminCarrierWizard', false) . '&token=' . Tools::getAdminTokenLite('AdminCarrierWizard'),
                 'ppl_version' => $this->dp_api->getPPLVersion()
             )
         );
