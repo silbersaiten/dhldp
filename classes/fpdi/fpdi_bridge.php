@@ -11,6 +11,14 @@
  * @link      http://www.silbersaiten.de
  */
 
+if (!class_exists('TCPDF')) {
+    if (defined('_PS_TOOL_DIR_') && file_exists(_PS_TOOL_DIR_ . 'tcpdf/tcpdf.php')) {
+        require_once _PS_TOOL_DIR_ . 'tcpdf/tcpdf.php';
+    } elseif (defined('_PS_TCPDF_PATH_') && file_exists(_PS_TCPDF_PATH_ . 'tcpdf.php')) {
+        require_once _PS_TCPDF_PATH_ . 'tcpdf.php';
+    }
+}
+
 class FPDIBridge extends TCPDF
 {
     protected $_tpls = array();
