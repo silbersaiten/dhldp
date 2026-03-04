@@ -28,6 +28,12 @@ class AdminDhldpManifestController extends ModuleAdminController
         $this->display = 'manifest';
     }
 
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia($isNewTheme);
+        $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
+    }
+
     public function initContent()
     {
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
