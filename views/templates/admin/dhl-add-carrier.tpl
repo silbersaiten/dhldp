@@ -10,4 +10,4 @@
 * @link      http://www.silbersaiten.de
 *}
 
-<a href="{$carrier_wizard_link|escape:'htmlAll':'UTF-8'}" class="button btn btn-primary">{l s='Add new carrier' mod='dhldp'}</a>
+<a href="{$carrier_wizard_link|escape:'htmlall':'UTF-8'}" class="button btn btn-primary">{l s='Add new carrier' mod='dhldp'}</a>

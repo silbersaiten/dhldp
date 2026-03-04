@@ -3094,28 +3094,6 @@ class DhlDp extends Module
                 }
             }
         }
-
-        if (Tools::isSubmit('submitDPGetProductList')) {
-            if ($this->dp_api->getProductList()) {
-                $this->_confirmations[] = $this->l('Product list has been updated successfully');
-            } else {
-                $this->_errors[] = $this->l('Product list updating has been failed');
-            }
-
-            if ($this->dp_api->retrieveContractProducts()) {
-                $this->_confirmations[] = $this->l('Contract product list has been updated successfully');
-            } else {
-                $this->_errors[] = $this->l('Contract product list updating has been failed');
-            }
-        }
-
-        if (Tools::isSubmit('submitDPRetrievePageFormats')) {
-            if ($this->dp_api->retrievePageFormats()) {
-                $this->_confirmations[] = $this->l('Page formats has been retrieved successfully');
-            } else {
-                $this->_errors[] = $this->l('Page formats retrieving is failed');
-            }
-        }
         return $this->displayMessages();
     }
 

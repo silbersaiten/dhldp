@@ -64,18 +64,32 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     public function postProcess()
     {
-        $is_global_submit = Tools::isSubmit('submitSaveDPOptionsGlobal');
-        $is_address_submit = Tools::isSubmit('submitSaveDPAddressOptions');
-
-        if (!$is_global_submit && !$is_address_submit) {
-            return;
+        if (Tools::isSubmit('submitDPGetProductList')) {
+            if ($this->dp_api->getProductList()) {
+                $this->dpConfirmations[] = $this->module->l('Product list has been updated successfully');
+            } else {
+                $this->dpErrors[] = $this->module->l('Product list updating has been failed');
+            }
+            if ($this->dp_api->retrieveContractProducts()) {
+                $this->dpConfirmations[] = $this->module->l('Contract product list has been updated successfully');
+            } else {
+                $this->dpErrors[] = $this->module->l('Contract product list updating has been failed');
+            }
         }
 
-        if ($is_global_submit) {
+        if (Tools::isSubmit('submitDPRetrievePageFormats')) {
+            if ($this->dp_api->retrievePageFormats()) {
+                $this->dpConfirmations[] = $this->module->l('Page formats has been retrieved successfully');
+            } else {
+                $this->dpErrors[] = $this->module->l('Page formats retrieving is failed');
+            }
+        }
+
+        if (Tools::isSubmit('submitSaveDPOptionsGlobal')) {
             $this->processGlobalSettings();
         }
 
-        if ($is_address_submit) {
+        if (Tools::isSubmit('submitSaveDPAddressOptions')) {
             $this->processAddressSettings();
         }
 
