@@ -11,7 +11,7 @@
  * @link      https://www.silbersaiten.de
  */
 
-require_once(dirname(__FILE__) . '/../../classes/fpdi/fpdi.php');
+require_once _PS_MODULE_DIR_ . 'dhldp/classes/fpdi/fpdi.php';
 
 class AdminDhldpManifestController extends ModuleAdminController
 {
