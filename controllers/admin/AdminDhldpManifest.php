@@ -94,7 +94,7 @@ class AdminDhldpManifestController extends ModuleAdminController
                         unlink($tempFile);
                     }
 // Output the merged PDF
-                    $pdf->Output('F', 'merged.pdf'); // Save as 'merged.pdf'
+                    $pdf->Output('merged.pdf', 'F'); // Save as 'merged.pdf'
                     $data = [
                         "manifest" => [
                             [
@@ -133,7 +133,7 @@ class AdminDhldpManifestController extends ModuleAdminController
                         unlink($tempFile);
                     }
 // Output the combined PDF
-                    $pdf->Output('F', 'combined.pdf');
+                    $pdf->Output('combined.pdf', 'F');
                     $pdf = new Fpdi();
                     $response = json_decode(json_encode($response));
                     foreach ($response['manifest'] as $manifestItem) {
