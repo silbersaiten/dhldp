@@ -641,8 +641,15 @@ class DhlDp extends Module
                 if (self::getConfig('DHL_EPRINT_EMAIL', $order->id_shop)) {
                     $template = 'eprint';
                     $subject = $this->l('Label') . ' :' . $order->id;
-                    $pdf_decoded = isset($response['labelUrl']) ? Tools::file_get_contents($response['labelUrl']) : '';
-                    if ($pdf_decoded != '') {
+                    $pdf_decoded = [];
+                    if(isset($response['items']) && is_array($response['items'])) {
+                        foreach($response['items'] as $_label) {
+                            if (isset($_label['label']['url'])) {
+                                $pdf_decoded = Tools::file_get_contents($_label['label']['url']);
+                            }
+                        }
+                    }
+                    if ($pdf_decoded) {
                         $file_attachment = array(
                             'label' => array(
                                 'content' => $pdf_decoded,
