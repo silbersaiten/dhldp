@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.1
+ * @version   3.2.2
  * @link      https://www.silbersaiten.de
  */
 
@@ -47,7 +47,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.1';
+        $this->version = '3.2.2';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -541,6 +541,7 @@ class DhlDp extends Module
                 )
             );
         }
+
         if (isset($def['export_documents']) && isset($options['export_docs'])) {
             $customs = $this->dhldp_api_rest->getPreparationCustoms($options['export_docs']);
             $shipment_order['customs'] = isset($customs) ? $customs : '';
@@ -551,7 +552,6 @@ class DhlDp extends Module
 
         $shipment_order_request = array('ShipmentOrder' => $shipment_order);
 
-        //TODO проверить необходимость условия
         if ($this->dhldp_api_rest->getMajorApiVersion() == 3) {
             $shipment_order_request['labelResponseType'] = 'URL';
             if (self::getConfig('DHL_LABEL_FORMAT', $id_shop) != '') {
@@ -1540,14 +1540,6 @@ class DhlDp extends Module
                 $dhl_errors[] = $this->l('Please select product.');
             } elseif ($formatted_product == false) {
                 $dhl_errors[] = $this->l('This product is not added in list.');
-            } elseif (isset($product_params['weight_package']['min']) && ($product_params['weight_package']['min'] > $packages[0]['weight'] || $product_params['weight_package']['max'] < $packages[0]['weight'])) {
-                $dhl_errors[] = $this->l('Weight is invalid') . ' (min. ' . $product_params['weight_package']['min'] . ' kg, max. ' . $product_params['weight_package']['max'] . ' kg)';
-            } elseif (isset($product_params['length']['min']) && ($product_params['length']['min'] > $packages[0]['length'] || $product_params['length']['max'] < $packages[0]['length'])) {
-                $dhl_errors[] = $this->l('Length is invalid') . ' (min. ' . $product_params['length']['min'] . ' cm, max. ' . $product_params['length']['max'] . ' cm)';
-            } elseif (isset($product_params['width']['min']) && ($product_params['width']['min'] > $packages[0]['width'] || $product_params['width']['max'] < $packages[0]['width'])) {
-                $dhl_errors[] = $this->l('Width is invalid') . ' (min. ' . $product_params['width']['min'] . ' cm, max. ' . $product_params['width']['max'] . ' cm)';
-            } elseif (isset($product_params['height']['min']) && ($product_params['height']['min'] > $packages[0]['height'] || $product_params['height']['max'] < $packages[0]['height'])) {
-                $dhl_errors[] = $this->l('Height is invalid') . ' (min. ' . $product_params['height']['min'] . ' cm, max. ' . $product_params['height']['max'] . ' cm)';
             } elseif (isset($product_def['export_documents']) && !isset($export_docs_input[$id_order_carrier])) {
                 $dhl_errors[] = $this->l('No data of export document.');
             } elseif (isset($product_def['export_documents']) && (!isset($export_docs_input[$id_order_carrier]['exportType']) || ($export_docs_input[$id_order_carrier]['exportType'] == '') || ($this->getExportTypeOptions($export_docs_input[$id_order_carrier]['exportType']) === false))) {

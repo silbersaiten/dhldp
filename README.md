@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.2 (19.03.2026)
+* Weight, Length, Width and Height can be zero
+
 #### 3.2.1 (03.03.2026)
 * DHL 1.6.1.* compatible
 

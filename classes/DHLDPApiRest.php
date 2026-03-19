@@ -3,11 +3,11 @@
  * DHL Deutschepost
  *
  * @author    silbersaiten <info@silbersaiten.de>
- * @copyright 2025 silbersaiten
+ * @copyright 2026 silbersaiten
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.1.0
+ * @version   3.2.2
  * @link      https://www.silbersaiten.de
  */
 
@@ -757,12 +757,7 @@ class DHLDPApiRest
             }
 
             if ($function === 'getManifest') {
-                //TODO удалить после теста
-                //$trackingEndpoint .= '/manifests?billingNumber=33333333336601';
-                //$trackingEndpoint .= '/manifests?includeDocs=URL&billingNumber=33333333335401';
                 $trackingEndpoint .= '/manifests?date=' . $params['manifestDate'] . '&includeDocs=URL';
-//                $trackingEndpoint .= '/manifests?date='.$params['manifestDate'].'&includeDocs=URL&billingNumber=33333333330101';
-//                $trackingEndpoint .= '/manifests?date='.$params['manifestDate'].'&includeDocs=URL';
                 $method = 'GET';
             }
 
@@ -929,7 +924,6 @@ class DHLDPApiRest
         $result = [
             "exportType" => $customs['exportType'], //exportType
             "exportDescription" => $customs['exportTypeDescription'], //exportTypeDescription
-            //TODO найти и присвоить правильные значения
             //"shipperCustomsRef" => "DE11111",
             //"consigneeCustomsRef" => "GB22222",
             "invoiceNo" => $customs['invoiceNumber'], //invoiceNumber
@@ -1006,7 +1000,6 @@ class DHLDPApiRest
         }
         //Cash On Delivery
         if (isset($services['Service']['CashOnDelivery']) && $services['Service']['CashOnDelivery']['active'] == "1") {
-            //TODO как использовать поле accountReference и Cash On Delivery: add fee
             $result["cashOnDelivery"] = [
                 "amount" => $this->convertToMonetaryObject($services['Service']['CashOnDelivery']['codAmount'])
                 ,
