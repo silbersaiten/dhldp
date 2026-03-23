@@ -3862,4 +3862,34 @@ class DhlDp extends Module
             'dimensions' => $dimensions
         ]));
     }
+
+    public function getCountriesForRA($id_lang, $limited = array(), $with_keys = false)
+    {
+        $c = array();
+        if (count($limited) == 0) {
+            $res = $this->module->getCountriesIDsForRA();
+            foreach ($res as $iso_code => $item) {
+                $c[] = '\'' . $iso_code . '\'';
+            }
+        } else {
+            $res = $limited;
+            foreach ($res as $item) {
+                $c[] = '\'' . $item . '\'';
+            }
+        }
+
+        $countries = Db::getInstance(_PS_USE_SQL_SLAVE_)->executes(
+            'SELECT cl.`name`, c.iso_code
+							FROM `' . _DB_PREFIX_ . 'country_lang` as cl, `' . _DB_PREFIX_ . 'country` as c
+							WHERE cl.id_country=c.id_country and cl.`id_lang` = ' . (int)$id_lang . '
+							and c.iso_code in (' . implode(',', $c) . ')');
+        if ($with_keys) {
+            $c = array();
+            foreach ($countries as $country) {
+                $c[$country['iso_code']] = $country['name'];
+            }
+            return $c;
+        }
+        return $countries;
+    }
 }
