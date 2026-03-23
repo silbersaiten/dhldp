@@ -251,8 +251,10 @@ class DPRestApi
         $sender = new stdClass();
         $sender->name = substr(Configuration::get('DHLDP_DP_FIRSTNAME', null, null, $id_shop) . ' ' . Configuration::get('DHLDP_DP_LASTNAME', null, null, $id_shop), 0, 50);
         $sender->additionalName = substr(Configuration::get('DHLDP_DP_COMPANY', null, null, $id_shop), 0, 40);
-//        $sender->addressLine1 = Configuration::get('DHLDP_DP_STREET', null, null, $id_shop) . ' ' . Configuration::get('DHLDP_DP_HOUSENO', null, null, $id_shop);
-        $sender->addressLine1 = substr(Configuration::get('DHLDP_DP_ADDITIONAL', null, null, $id_shop), 0, 50);
+        $sender->addressLine1 = Configuration::get('DHLDP_DP_STREET', null, null, $id_shop) . ' ' . Configuration::get('DHLDP_DP_HOUSENO', null, null, $id_shop);
+        if (!$sender->addressLine1) {
+            $sender->addressLine1 = substr(Configuration::get('DHLDP_DP_ADDITIONAL', null, null, $id_shop), 0, 50);
+        }
         $sender->postalCode = Configuration::get('DHLDP_DP_ZIP', null, null, $id_shop);
         $sender->city = Configuration::get('DHLDP_DP_CITY', null, null, $id_shop);
         $country = new Country((int)Configuration::get('DHLDP_DP_COUNTRY', null, null, $id_shop));

@@ -3354,16 +3354,14 @@ class DhlDp extends Module
 
             if (is_object($response) && isset($response->link)) {
                 $dp_label = new DPLabel();
-
                 $dp_label->id_order_carrier = (int)$id_order_carrier;
                 $dp_label->product = $product;
                 $dp_label->total = (float)$total;
                 $dp_label->wallet_ballance = (float)Tools::ps_round($response->walletBallance / 100, 2);
                 $dp_label->additional_info = $additional_info;
                 $dp_label->dp_order_id = $response->shoppingCart->shopOrderId;
-                $dp_label->dp_voucher_id = $response->shoppingCart->voucherList->voucher->voucherId;
-
-                $dp_label->dp_track_id = isset($response->shoppingCart->voucherList->voucher->trackId) ? $response->shoppingCart->voucherList->voucher->trackId : '';
+                $dp_label->dp_voucher_id = isset(reset($response->shoppingCart->voucherList)->voucherId) ? reset($response->shoppingCart->voucherList)->voucherId : '';
+                $dp_label->dp_track_id = isset(reset($response->shoppingCart->voucherList)->trackId) ? reset($response->shoppingCart->voucherList)->trackId : '';
                 $dp_label->is_complete = 1;
                 $dp_label->dp_link = $response->link;
                 $dp_label->manifest_link = isset($response->manifestLink) ? $response->manifestLink : '';
@@ -3375,10 +3373,10 @@ class DhlDp extends Module
                 if (!$dp_label->add()) {
                     return false;
                 } else {
-                    if (isset($response->shoppingCart->voucherList->voucher->trackId)) {
+                    if (isset(reset($response->shoppingCart->voucherList)->trackId)) {
                         $this->updateDPOrderCarrierWithTrackingNumber(
                             (int)$id_order_carrier,
-                            $response->shoppingCart->voucherList->voucher->trackId
+                            reset($response->shoppingCart->voucherList)->trackId
                         );
                         $this->updateOrderStatus($id_order_carrier, 'createDPDeliveryLabel');
                     }
