@@ -3865,7 +3865,7 @@ class DhlDp extends Module
     {
         $c = array();
         if (count($limited) == 0) {
-            $res = $this->module->getCountriesIDsForRA();
+            $res = $this->getCountriesIDsForRA();
             foreach ($res as $iso_code => $item) {
                 $c[] = '\'' . $iso_code . '\'';
             }
