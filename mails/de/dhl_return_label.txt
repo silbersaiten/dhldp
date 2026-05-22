@@ -1,9 +1,9 @@
-Hello {firstname} {lastname},
+Hallo {firstname} {lastname},
 
 ================================
 
-Return Label for {order_name}
+DHL-Rücksendeetikett für {order_name}
 
-Best regards
+Mit freundlichen Grüßen
 ================================
-Your {shop_name} Team
+Ihr {shop_name} Team

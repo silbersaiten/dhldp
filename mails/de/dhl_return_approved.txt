@@ -1,10 +1,11 @@
-Hello {firstname} {lastname},
+Hallo {firstname} {lastname},
 
 ================================
 
-Return has been approved.
-Please get DHL Return label for {order_name} on {order_return_url} .
+Ihre Rücksendung wurde freigegeben.
+Bitte laden Sie das DHL-Rücksendeetikett für {order_name} unter folgendem Link herunter:
+{order_return_url}
 
-Best regards
+Mit freundlichen Grüßen
 ================================
-Your {shop_name} Team
+Ihr {shop_name} Team
