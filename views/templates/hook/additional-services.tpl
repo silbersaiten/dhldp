@@ -11,7 +11,13 @@
 *}
 <div class="row" id="dhldp_dhl_addit_services" style="{if !isset($addit_services.show_dhl_additional_services) || (isset($addit_services.show_dhl_additional_services) && $addit_services.show_dhl_additional_services != 1)}display: none;{/if}">
     <div class="panel{if $is177} card{/if}">
-        <div class="panel-heading{if $is177} card-header{/if}"><button type="button" id="collapseDHLDPDhlAdditServices" class="button btn btn-default btn-sm collapseDHLDPDhlAdditServices">{if $is177}<i class="material-icons">expand_less</i>{else}<i class="icon-angle-double-up"></i>{/if} </button> {l s='Additional services' mod='dhldp'}</div>
+        <div class="panel-heading{if $is177} card-header{/if}">
+
+        {*
+            <button type="button" id="collapseDHLDPDhlAdditServices" class="button btn btn-default btn-sm collapseDHLDPDhlAdditServices">{if $is177}<i class="material-icons">expand_less</i>{else}<i class="icon-angle-double-up"></i>{/if} </button> 
+        *}
+
+        {l s='Additional services' mod='dhldp'}</div>
         <div class="row form-wrapper form-horizontal">
             <div class="col-lg-6">
                 <div class="form-group-flex">

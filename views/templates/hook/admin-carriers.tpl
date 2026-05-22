@@ -1,23 +1,13 @@
 {**
-
 * DHL Deutschepost
-
 *
-
 * @author    silbersaiten <info@silbersaiten.de>
-
 * @copyright 2025 silbersaiten
-
 * @license   See joined file licence.txt
-
 * @category  Module
-
 * @support   silbersaiten <support@silbersaiten.de>
-
 * @version   1.1.0
-
 * @link      http://www.silbersaiten.de
-
 *}
 
 <script type="text/javascript">
