@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.3 (26.05.2026)
+* Fixed generation of export documents (in cases where the quantity of some goods is 0).
+
 #### 3.2.2 (22.05.2026)
 * Weight, Length, Width and Height can be zero
 * Translations DE
