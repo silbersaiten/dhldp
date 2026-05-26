@@ -934,6 +934,10 @@ class DHLDPApiRest
         ];
 
         foreach ($customs['ExportDocPosition'] as $item) {
+            if ((float)$item['amount'] <= 0) {
+                continue;
+            }
+
             $country = (new \DhlDp)->getCountriesIDsForRA($item['countryCodeOrigin']);
             $itemData = [
                 "itemDescription" => $item['description'], // description
