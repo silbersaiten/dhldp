@@ -23,7 +23,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $this->table = '';
         $this->bootstrap = true;
         $this->show_toolbar = false;
-        $this->multishop_context = Shop::CONTEXT_SHOP;
+        $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         $this->context = Context::getContext();
 
         parent::__construct();
@@ -31,12 +31,6 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
 
     public function initContent()
     {
-        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->content .= $this->displayInformation($this->module->l('You can only display the page in a shop context.'));
-            parent::initContent();
-            return;
-        }
-
         if (Tools::getValue('view') === 'init_dhl') {
             $this->content .= $this->module->postInitDHLProcess();
             $this->content .= $this->displayFormInitDHLSettings();
@@ -48,7 +42,84 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $this->content .= $this->renderMessages();
         $this->content .= $this->module->displayMenu();
         $this->content .= $this->displayFormDHLSettings();
+        $this->content .= $this->renderMultishopActivationBlock();
         parent::initContent();
+    }
+
+
+    protected function postProcessMultishopActivation()
+    {
+        if (!Shop::isFeatureActive() || !Tools::isSubmit('submitMultishopActivation')) {
+            return false;
+        }
+
+        $is_enabled = (int)Tools::getValue('activateModule', 0) === 1;
+        $result = $is_enabled ? $this->module->enable() : $this->module->disable();
+
+        if ($result) {
+            $this->dhldpConfirmations[] = $this->module->l('Settings updated');
+        } else {
+            $this->dhldpErrors[] = $this->module->l('The module status could not be updated for this shop context.');
+        }
+    }
+
+    protected function renderMultishopActivationBlock()
+    {
+        if (!Shop::isFeatureActive()) {
+            return '';
+        }
+
+        $this->context->smarty->assign([
+            'multishop_activation_action' => self::$currentIndex . '&token=' . $this->token,
+            'multishop_activation_enabled' => $this->isModuleEnabledForCurrentShopContext(),
+            'multishop_activation_context_label' => $this->getCurrentShopContextLabel(),
+        ]);
+
+        return $this->context->smarty->fetch(
+            _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/multishop-activation.tpl'
+        );
+    }
+
+    protected function isModuleEnabledForCurrentShopContext()
+    {
+        if (method_exists($this->module, 'isEnabledForShopContext')) {
+            return (bool)$this->module->isEnabledForShopContext();
+        }
+
+        $id_module = (int)$this->module->id;
+        if (!$id_module) {
+            return false;
+        }
+
+        $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'module_shop` ms
+            INNER JOIN `' . _DB_PREFIX_ . 'shop` s ON (s.`id_shop` = ms.`id_shop`)
+            WHERE ms.`id_module` = ' . (int)$id_module;
+
+        if (Shop::getContext() == Shop::CONTEXT_GROUP) {
+            $sql .= ' AND s.`id_shop_group` = ' . (int)Shop::getContextShopGroupID();
+        } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
+            $sql .= ' AND s.`id_shop` = ' . (int)Shop::getContextShopID();
+        }
+
+        return (bool)Db::getInstance()->getValue($sql);
+    }
+
+    protected function getCurrentShopContextLabel()
+    {
+        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+            return $this->module->l('shop') . ' <b>' . Tools::safeOutput($this->context->shop->name) . '</b>';
+        }
+
+        if (Shop::getContext() == Shop::CONTEXT_GROUP) {
+            $shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+            if (Validate::isLoadedObject($shop_group)) {
+                return $this->module->l('all shops of group shop') . ' <b>' . Tools::safeOutput($shop_group->name) . '</b>';
+            }
+
+            return $this->module->l('shop group');
+        }
+
+        return $this->module->l('all shops');
     }
 
     public function setMedia($isNewTheme = false)
@@ -94,6 +165,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
 
     public function postProcess()
     {
+        $this->postProcessMultishopActivation();
+
         if (!Tools::isSubmit('submitAddDHLDP_dhl_configure')) {
             return false;
         }
