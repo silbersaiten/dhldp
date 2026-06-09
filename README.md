@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.4 (09.06.2026)
+* Fixed multistore labels generation
+
 #### 3.2.3 (26.05.2026)
 * Fixed generation of export documents (in cases where the quantity of some goods is 0).
 
