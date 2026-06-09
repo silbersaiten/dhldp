@@ -2375,10 +2375,9 @@ class DhlDp extends Module
     public function getContent()
     {
         $html = '';
-
-        if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive()) {
-            return $this->displayError($this->l('You have to select a shop before configuring module.'));
-        }
+//        if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive()) {
+//            return $this->displayError($this->l('You have to select a shop before configuring module.'));
+//        }
         $view_mode = Tools::getValue('view');
 
         switch ($view_mode) {
@@ -2392,7 +2391,6 @@ class DhlDp extends Module
                 }
 
                 $html .= $this->displayMessages();
-
                 $this->context->smarty->assign(
                     array(
                         'module' => $this,
@@ -2411,7 +2409,6 @@ class DhlDp extends Module
                 }
                 $dhl_with_warning = (bool)self::getConfig('DHL_LABEL_IGNORE_WARNING', (int)\Context::getContext()->shop->id);
                 $this->context->smarty->assign('dhl_with_warning', $dhl_with_warning);
-
                 $html .= $this->context->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/order-list.tpl');
                 break;
             case 'changelog':
@@ -2476,7 +2473,6 @@ class DhlDp extends Module
                 'active' => $currentController == 'AdminDhldpManifest',
             ),
         );
-
         $this->smarty->assign(array(
             'module_version' => $this->version,
             'module_name' => $this->displayName,
@@ -2536,7 +2532,6 @@ class DhlDp extends Module
             }
 
             $this->dhldp_api_rest->setApiVersionByIdShop($order->id_shop);
-
             $receiver_address = $this->dhldp_api_rest->getDHLDeliveryAddress(
                 $c['id_address'],
                 isset($address_input[$id_order_carrier]) ? $address_input[$id_order_carrier] : false,
@@ -2769,7 +2764,6 @@ class DhlDp extends Module
         if (substr($basename, -4) === '.pdf') {
             $basename = substr($basename, 0, -4);
         }
-
         return $basename;
     }
 
@@ -2792,7 +2786,6 @@ class DhlDp extends Module
         if (file_exists($label_file) && ((int)filesize($label_file) != 0)) {
             return $this->getLabelFileURIByLabelUrl($label_url);
         }
-
         return '';
     }
 
