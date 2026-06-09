@@ -63,6 +63,22 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         }
     }
 
+    protected function getAdminControllerLink($controller, array $params = array(), $with_token = false)
+    {
+        $url = $this->context->link->getAdminLink($controller, $with_token);
+
+        foreach ($params as $key => $value) {
+            $url .= (strpos($url, '?') === false ? '?' : '&') . urlencode($key) . '=' . urlencode($value);
+        }
+
+        return $url;
+    }
+
+    protected function getCurrentToken()
+    {
+        return Tools::getValue('token', Tools::getAdminTokenLite($this->controller_name));
+    }
+
     protected function renderMultishopActivationBlock()
     {
         if (!Shop::isFeatureActive()) {
@@ -70,7 +86,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         }
 
         $this->context->smarty->assign([
-            'multishop_activation_action' => $this->context->link->getAdminLink($this->controller_name),
+            'multishop_activation_action' => $this->getAdminControllerLink($this->controller_name, array(), true),
             'multishop_activation_enabled' => $this->isModuleEnabledForCurrentShopContext(),
             'multishop_activation_context_label' => $this->getCurrentShopContextLabel(),
         ]);
@@ -495,9 +511,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $helper = new HelperForm();
         $helper->required = false;
         $helper->id = null;
-        $helper->currentIndex = self::$currentIndex;
+        $helper->currentIndex = $this->getAdminControllerLink($this->controller_name);
         $helper->table = 'DHLDP_dhl_configure';
-        $helper->token = Tools::getValue('token');
+        $helper->token = $this->getCurrentToken();
         $helper->module = $this->module;
         $helper->identifier = null;
         $helper->toolbar_btn = null;
@@ -529,7 +545,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         );
         $this->context->smarty->assign(
             array(
-                'initdhl_link' => $helper->currentIndex . '&view=init_dhl&token=' . $helper->token,
+                'initdhl_link' => $this->getAdminControllerLink($this->controller_name, array('view' => 'init_dhl'), true),
                 'dhldp_dhl_api_version' => Tools::getValue('DHLDP_DHL_API_VERSION', Configuration::get('DHLDP_DHL_API_VERSION') ? Configuration::get('DHLDP_DHL_API_VERSION') : '2.1'),
             )
         );
@@ -1516,9 +1532,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     private function displayDHLLogInformation()
     {
         $this->context->smarty->assign(array(
-            'general_log_file_path' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dhl&log_file=dhl_general',
-            'api_log_file_path' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dhl&log_file=dhl_api',
-            'api_log_file_path_clear' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dhl&log_file=dhl_api_clear',
+            'general_log_file_path' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dhl', 'log_file' => 'dhl_general')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'api_log_file_path' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dhl', 'log_file' => 'dhl_api')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'api_log_file_path_clear' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dhl', 'log_file' => 'dhl_api_clear')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
         ));
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/log_information.tpl');
     }
@@ -1528,9 +1544,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         $helper = new HelperForm();
         $helper->required = false;
         $helper->id = Tab::getCurrentTabId();
-        $helper->currentIndex = AdminController::$currentIndex . '&view=init_dhl';
+        $helper->currentIndex = $this->getAdminControllerLink($this->controller_name, array('view' => 'init_dhl'));
         $helper->table = 'dhldp_ini_configure';
-        $helper->token = Tools::getValue('token');
+        $helper->token = $this->getCurrentToken();
         $helper->module = $this;
         $helper->identifier = null;
         $helper->toolbar_btn = null;
