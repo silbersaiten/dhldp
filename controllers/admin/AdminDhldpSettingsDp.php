@@ -62,6 +62,22 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         ]);
     }
 
+    protected function getAdminControllerLink($controller, array $params = array(), $with_token = false)
+    {
+        $url = $this->context->link->getAdminLink($controller, $with_token);
+
+        foreach ($params as $key => $value) {
+            $url .= (strpos($url, '?') === false ? '?' : '&') . urlencode($key) . '=' . urlencode($value);
+        }
+
+        return $url;
+    }
+
+    protected function getCurrentToken()
+    {
+        return Tools::getValue('token', Tools::getAdminTokenLite($this->controller_name));
+    }
+
     public function postProcess()
     {
         if (Tools::isSubmit('submitDPGetProductList')) {
@@ -286,9 +302,9 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $helper = new HelperForm();
         $helper->required = false;
         $helper->id = null;// Tab::getCurrentTabId();
-        $helper->currentIndex = AdminController::$currentIndex;
+        $helper->currentIndex = $this->getAdminControllerLink($this->controller_name);
         $helper->table = 'dp_configure';
-        $helper->token = Tools::getValue('token');
+        $helper->token = $this->getCurrentToken();
         $helper->module = $this->module;
         $helper->identifier = null;
         $helper->toolbar_btn = null;
@@ -352,9 +368,9 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     private function renderDPLogInformation()
     {
         $this->context->smarty->assign(array(
-            'general_log_file_path' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dp&log_file=dp_general',
-            'api_log_file_path' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dp&log_file=dp_api',
-            'api_log_file_path_clear' => AdminController::$currentIndex . '&configure=' . $this->module->name . '&token=' . Tools::getAdminTokenLite('AdminModules') . '&view=settings_dp&log_file=dp_api_clear',
+            'general_log_file_path' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dp', 'log_file' => 'dp_general')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'api_log_file_path' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dp', 'log_file' => 'dp_api')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'api_log_file_path_clear' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dp', 'log_file' => 'dp_api_clear')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
         ));
         return $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/log_information.tpl'
