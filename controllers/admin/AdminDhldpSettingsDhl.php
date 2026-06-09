@@ -70,7 +70,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         }
 
         $this->context->smarty->assign([
-            'multishop_activation_action' => self::$currentIndex . '&token=' . $this->token,
+            'multishop_activation_action' => $this->context->link->getAdminLink($this->controller_name),
             'multishop_activation_enabled' => $this->isModuleEnabledForCurrentShopContext(),
             'multishop_activation_context_label' => $this->getCurrentShopContextLabel(),
         ]);
