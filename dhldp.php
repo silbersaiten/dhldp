@@ -2764,6 +2764,12 @@ class DhlDp extends Module
         if (substr($basename, -4) === '.pdf') {
             $basename = substr($basename, 0, -4);
         }
+
+        $basename = preg_replace('#[^a-zA-Z0-9_-]#', '', $basename);
+        if ($basename === '' || Tools::strlen($basename) > 100) {
+            $basename = 'label_' . sha1($label_url);
+        }
+
         return $basename;
     }
 
