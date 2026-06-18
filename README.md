@@ -1,6 +1,9 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.5 (18.06.2026)
+* Add GoGreenPlus option
+
 #### 3.2.4 (09.06.2026)
 * Fixed multistore labels generation
 
