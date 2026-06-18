@@ -123,6 +123,7 @@ class DHLDPApiRest
                     'PreferredDay',
                     'NoticeOfNonDeliverability',
                     'DHLRetoure',
+                    'GoGreenPlus',
                     'ParcelOutletRouting', // *NEW
                     'SignedForByRecipient', // *NEW
                 ],
@@ -218,6 +219,7 @@ class DHLDPApiRest
                     'AdditionalInsurance',
                     'PreferredNeighbour',
                     'PreferredLocation',
+                    'GoGreenPlus',
                     'ParcelOutletRouting', // *NEW
                 ],
             ),
