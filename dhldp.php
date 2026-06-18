@@ -449,7 +449,14 @@ class DhlDp extends Module
                 'details' => $options['addit_services']['PreferredDay']
             );
         }
-        if (Configuration::get('DHLDP_DHL_DEF_GOGREEN', null, null, $order->id_shop)) {
+        $goGreenPlusEnabled = Configuration::get('DHLDP_DHL_DEF_GOGREEN_PLUS', null, null, $order->id_shop);
+        $goGreenPlusSupported = $goGreenPlusEnabled
+            && isset($def['services'])
+            && in_array('GoGreenPlus', $def['services'])
+            && $receiver['countryISOCode'] == 'DE'
+            && $shipper['countryISOCode'] == 'DE';
+
+        if (Configuration::get('DHLDP_DHL_DEF_GOGREEN', null, null, $order->id_shop) && !$goGreenPlusSupported) {
             if (isset($shipment_order['shipments']['product']) && isset($shipment_order['shipments']['billingNumber'])) {
                 $product = $shipment_order['shipments']['product'];
                 $billingNumber = $shipment_order['shipments']['billingNumber'];
@@ -466,15 +473,8 @@ class DhlDp extends Module
             }
             $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreen'] = array('active' => '1');
         }
-        if (Configuration::get('DHLDP_DHL_DEF_GOGREEN_PLUS', null, null, $order->id_shop)) {
-            $goGreenPlusSupported = isset($def['services'])
-                && in_array('GoGreenPlus', $def['services'])
-                && $receiver['countryISOCode'] == 'DE'
-                && $shipper['countryISOCode'] == 'DE';
-
-            if ($goGreenPlusSupported) {
-                $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreenPlus'] = array('active' => '1');
-            }
+        if ($goGreenPlusSupported) {
+            $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreenPlus'] = array('active' => '1');
         }
         if (isset($options['addit_services']['Perishables']) && $options['addit_services']['Perishables'] != '') {
             $shipment_order['Shipment']['ShipmentDetails']['Service']['Perishables'] = array('active' => '1');
