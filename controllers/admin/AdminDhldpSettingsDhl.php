@@ -448,7 +448,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 if ($is_submit_additional) {
                     $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', (int)Tools::getValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', DhlDp::getConfig('DHL_DEF_PARCEL_ROUT_SERV'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN', DhlDp::getConfig('DHL_DEF_GOGREEN')));
+                        Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN', DhlDp::getConfig('DHL_DEF_GOGREEN'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN_PLUS', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN_PLUS', DhlDp::getConfig('DHL_DEF_GOGREEN_PLUS')));
                 }
 
                 if ($is_submit_retoure) {
@@ -533,7 +534,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             'DHL_STREET_NAME', 'DHL_STREET_NUMBER', 'DHL_ZIP', 'DHL_CITY', 'DHL_STATE', 'DHL_PHONE', 'DHL_EMAIL', 'DHL_REFERENCE', 'DHL_ACCOUNT_OWNER',
             'DHL_ACCOUNT_NUMBER', 'DHL_BANK_CODE', 'DHL_BANK_NAME', 'DHL_IBAN', 'DHL_BIC', 'DHL_NOTE', 'DHL_NOTE2', 'DHL_DEFAULT_LENGTH', 'DHL_DEFAULT_WIDTH',
             'DHL_DEFAULT_HEIGHT', 'DHL_LABEL_FORMAT', 'DHL_RETOURE_LABEL_FORMAT', 'DHL_EPRINT_EMAIL', 'DHL_LIVE_TUSER', 'DHL_LIVE_TSIGN', 'DHL_SECURE_KEY',
-            'DHL_CHANGE_OS_DELIVERED', 'DHL_EXP_INV_NUM', 'DHL_DEF_CUSTOMS_TARIFF_NUM', 'DHL_DEF_PLACE_OF_COMMITAL', 'DHL_DEF_ADDITIONAL_CUSTOM_FEES', 'DHL_DEF_PARCEL_ROUT_SERV', 'DHL_DEF_GOGREEN');
+            'DHL_CHANGE_OS_DELIVERED', 'DHL_EXP_INV_NUM', 'DHL_DEF_CUSTOMS_TARIFF_NUM', 'DHL_DEF_PLACE_OF_COMMITAL', 'DHL_DEF_ADDITIONAL_CUSTOM_FEES', 'DHL_DEF_PARCEL_ROUT_SERV', 'DHL_DEF_GOGREEN', 'DHL_DEF_GOGREEN_PLUS');
 
         $this->setFormFieldsValue($helper, $fields_value_keys);
 
@@ -1137,6 +1138,25 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             ),
                             array(
                                 'id' => 'DHLDP_DHL_DEF_GOGREEN_off',
+                                'value' => 0,
+                            )
+                        ),
+                        'form_group_class' => 'dhlp_new_release'
+                    ),
+                    array(
+                        'name' => 'DHLDP_DHL_DEF_GOGREEN_PLUS',
+                        'type' => 'switch',
+                        'label' => $this->module->l('GoGreen Plus'),
+                        'is_bool' => true,
+                        'disabled' => false,
+                        'desc' => $this->module->l('GoGreen Plus enables sustainable shipping by investing in measures to reduce greenhouse gas emissions at DHL.'),
+                        'values' => array(
+                            array(
+                                'id' => 'DHLDP_DHL_DEF_GOGREEN_PLUS_on',
+                                'value' => 1,
+                            ),
+                            array(
+                                'id' => 'DHLDP_DHL_DEF_GOGREEN_PLUS_off',
                                 'value' => 0,
                             )
                         ),
