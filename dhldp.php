@@ -128,6 +128,7 @@ class DhlDp extends Module
         Configuration::updateValue('DHLDP_DHL_API_VERSION', '2.1');
         Configuration::updateValue('DHLDP_DHL_COUNTRY', 'DE');
         Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', 0);
+        Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN_PLUS', 0);
 
         if (!Configuration::hasKey('DHLDP_INTRANSIT_MAIL')) {
             Configuration::updateValue('DHLDP_INTRANSIT_MAIL', 1);
@@ -464,6 +465,9 @@ class DhlDp extends Module
                 }
             }
             $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreen'] = array('active' => '1');
+        }
+        if (Configuration::get('DHLDP_DHL_DEF_GOGREEN_PLUS', null, null, $order->id_shop)) {
+            $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreenPlus'] = array('active' => '1');
         }
         if (isset($options['addit_services']['Perishables']) && $options['addit_services']['Perishables'] != '') {
             $shipment_order['Shipment']['ShipmentDetails']['Service']['Perishables'] = array('active' => '1');

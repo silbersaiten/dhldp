@@ -1032,6 +1032,9 @@ class DHLDPApiRest
         if (isset($services['Service']['BulkyGoods']) && $services['Service']['BulkyGoods']['active'] == "1") {
             $result['bulkyGoods'] = true;
         }
+        if (isset($services['Service']['GoGreenPlus']) && $services['Service']['GoGreenPlus']['active'] == "1") {
+            $result['goGreenPlus'] = true;
+        }
         if (isset($services['Service']['premium'])) {
             $result['premium'] = true;
         }
