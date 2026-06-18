@@ -467,7 +467,14 @@ class DhlDp extends Module
             $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreen'] = array('active' => '1');
         }
         if (Configuration::get('DHLDP_DHL_DEF_GOGREEN_PLUS', null, null, $order->id_shop)) {
-            $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreenPlus'] = array('active' => '1');
+            $goGreenPlusSupported = isset($def['services'])
+                && in_array('GoGreenPlus', $def['services'])
+                && $receiver['countryISOCode'] == 'DE'
+                && $shipper['countryISOCode'] == 'DE';
+
+            if ($goGreenPlusSupported) {
+                $shipment_order['Shipment']['ShipmentDetails']['Service']['GoGreenPlus'] = array('active' => '1');
+            }
         }
         if (isset($options['addit_services']['Perishables']) && $options['addit_services']['Perishables'] != '') {
             $shipment_order['Shipment']['ShipmentDetails']['Service']['Perishables'] = array('active' => '1');
