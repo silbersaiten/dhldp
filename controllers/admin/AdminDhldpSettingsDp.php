@@ -199,7 +199,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $deutschepost_sbx_username = Tools::getValue('DHLDP_DP_SBX_USERNAME');
         $deutschepost_sbx_password = Tools::getValue('DHLDP_DP_SBX_PASSWORD');
         $deutschepost_carriers = Tools::getValue('deutschepost_carriers', array());
-        $deutschepost_log = Tools::getValue('DHLDP_DP_LOG');
 
         if (!in_array($deutschepost_mode, array('0', '1'))) {
             $this->dpErrors[] = $this->module->l('Please select mode');
@@ -235,10 +234,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                     Configuration::updateValue('DHLDP_DP_LIVE_PASSWORD', Tools::getValue('DHLDP_DP_LIVE_PASSWORD'));
                 }
             }
-        }
-
-        if (!in_array($deutschepost_log, array('0', '1'))) {
-            $this->dpErrors[] = $this->module->l('Please select log mode');
         }
 
         if (!in_array(Tools::getValue('DHLDP_DP_CREATE_MANIFEST'), array('0', '1'))) {
