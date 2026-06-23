@@ -309,8 +309,9 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 $this->dhldpErrors[] = $this->module->l('The company name is too long');
             }
             $fee = Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES');
-            if ($is_submit_misc && !Validate::isPrice($fee)) {
-                $this->dhldpErrors[] = $this->module->l('Invalid amount for additional custom fees.');
+
+            if ($is_submit_additional && !is_numeric($fee)) {
+                $this->dhldpErrors[] = $this->module->l('Invalid amount for additional custom fees.') . $this->module->l('Must be an integer!');
             }
             if ($is_submit_misc && Tools::getValue('DHLDP_DHL_LABEL_FORMAT') != '' && !in_array(Tools::getValue('DHLDP_DHL_LABEL_FORMAT'), array_keys($this->module->getLabelFormats()))) {
                 $this->dhldpErrors[] = $this->module->l('Invalid label format');
@@ -418,7 +419,6 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         Configuration::updateValue('DHLDP_DHL_REF_NUMBER', (int)Tools::getValue('DHLDP_DHL_REF_NUMBER', DhlDp::getConfig('DHL_REF_NUMBER'))) &&
                         Configuration::updateValue('DHLDP_DHL_ORDER_WEIGHT', (int)Tools::getValue('DHLDP_DHL_ORDER_WEIGHT', DhlDp::getConfig('DHL_ORDER_WEIGHT'))) &&
                         Configuration::updateValue('DHLDP_DHL_WEIGHT_RATE', str_replace(',', '.', Tools::getValue('DHLDP_DHL_WEIGHT_RATE', DhlDp::getConfig('DHL_WEIGHT_RATE')))) &&
-                        //                    Configuration::updateValue('DHLDP_DHL_DEFAULT_WEIGHT', str_replace(',', '.', Tools::getValue('DHLDP_DHL_DEFAULT_WEIGHT', ''))) &&
                         Configuration::updateValue('DHLDP_DHL_PACK_WEIGHT', str_replace(',', '.', Tools::getValue('DHLDP_DHL_PACK_WEIGHT', DhlDp::getConfig('DHL_PACK_WEIGHT')))) &&
                         Configuration::updateValue('DHLDP_DHL_DEFAULT_LENGTH', (int)Tools::getValue('DHLDP_DHL_DEFAULT_LENGTH', DhlDp::getConfig('DHL_DEFAULT_LENGTH'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEFAULT_WIDTH', (int)Tools::getValue('DHLDP_DHL_DEFAULT_WIDTH', DhlDp::getConfig('DHL_DEFAULT_WIDTH'))) &&
@@ -434,21 +434,20 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         Configuration::updateValue('DHLDP_DHL_CONFIRMATION_PRIVATE', (int)Tools::getValue('DHLDP_DHL_CONFIRMATION_PRIVATE', (int)DhlDp::getConfig('DHL_CONFIRMATION_PRIVATE'))) &&
                         Configuration::updateValue('DHLDP_DHL_RETURN_MAIL', (int)Tools::getValue('DHLDP_DHL_RETURN_MAIL', (int)DhlDp::getConfig('DHL_RETURN_MAIL'))) &&
                         Configuration::updateValue('DHLDP_DHL_LABEL_WITH_RETURN', (int)Tools::getValue('DHLDP_DHL_LABEL_WITH_RETURN', (int)DhlDp::getConfig('DHL_LABEL_WITH_RETURN'))) &&
-                        Configuration::updateValue('DHLDP_DHL_LABEL_IGNORE_WARNING', (int)Tools::getValue('DHLDP_DHL_LABEL_IGNORE_WARNING', (int)DhlDp::getConfig('DHLDP_DHL_LABEL_IGNORE_WARNING'))) &&
+                        Configuration::updateValue('DHLDP_DHL_LABEL_IGNORE_WARNING', (int)Tools::getValue('DHLDP_DHL_LABEL_IGNORE_WARNING', (int)DhlDp::getConfig('DHL_LABEL_IGNORE_WARNING'))) &&
                         Configuration::updateValue('DHLDP_DHL_EXP_INV_NUM', (int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM', DhlDp::getConfig('DHL_EXP_INV_NUM'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM', Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM', DhlDp::getConfig('DHL_DEF_CUSTOMS_TARIFF_NUM'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', DhlDp::getConfig('DHLDP_DHL_DEF_PLACE_OF_COMMITAL'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', DhlDp::getConfig('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', DhlDp::getConfig('DHL_DEF_PLACE_OF_COMMITAL'))) &&
                         Configuration::updateValue('DHLDP_DHL_LABEL_FORMAT', Tools::getValue('DHLDP_DHL_LABEL_FORMAT', DhlDp::getConfig('DHL_LABEL_FORMAT'))) &&
                         Configuration::updateValue('DHLDP_DHL_RETOURE_LABEL_FORMAT', Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT', DhlDp::getConfig('DHL_RETOURE_LABEL_FORMAT'))) &&
                         Configuration::updateValue('DHLDP_DHL_EPRINT_EMAIL', Tools::getValue('DHLDP_DHL_EPRINT_EMAIL', DhlDp::getConfig('DHL_EPRINT_EMAIL')));
                 }
 
-
                 if ($is_submit_additional) {
                     $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', (int)Tools::getValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', DhlDp::getConfig('DHL_DEF_PARCEL_ROUT_SERV'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN', DhlDp::getConfig('DHL_DEF_GOGREEN'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', DhlDp::getConfig('DHL_DEF_ADDITIONAL_CUSTOM_FEES'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN_PLUS', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN_PLUS', DhlDp::getConfig('DHL_DEF_GOGREEN_PLUS')));
                 }
 
@@ -1225,7 +1224,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         'type' => 'text',
                         'label' => $this->module->l('Default additional custom fees'),
                         'form_group_class' => 'dhlp_new_release',
-                        'desc' => $this->module->l('Enter the default amount for additional custom fees.'),
+                        'desc' => $this->module->l('Enter the default amount for additional custom fees.') . $this->module->l('Must be an integer!'),
                     ),
                 ),
                 'submit' => array(
