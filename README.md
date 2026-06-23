@@ -1,6 +1,11 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.6 (23.06.2026)
+* Now the log option is enabled regardless of authorization
+* Default additional custom fees must be integer
+* Remove `this->postProcess();` from the `initContent()`
+
 #### 3.2.5 (18.06.2026)
 * Add GoGreenPlus option
 

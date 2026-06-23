@@ -37,8 +37,6 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             parent::initContent();
             return;
         }
-
-        $this->postProcess();
         $this->content .= $this->renderMessages();
         $this->content .= $this->module->displayMenu();
         $this->content .= $this->displayFormDHLSettings();
@@ -217,7 +215,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             $dhl_live_user = Tools::getValue('DHLDP_DHL_LIVE_USER');
             $dhl_live_sign = Tools::getValue('DHLDP_DHL_LIVE_SIGN');
             $dhl_live_ekp = Tools::getValue('DHLDP_DHL_LIVE_EKP');
-            $dhl_log = Tools::getValue('DHLDP_DHL_LOG');
+            Configuration::updateValue('DHLDP_DHL_LOG', (int)Tools::getValue('DHLDP_DHL_LOG'));
             $dhl_carriers = [];
             foreach (Tools::getValue('dhl_carriers', []) as $value) {
                 if (isset($value['carrier']) && isset($value['product'])) {
@@ -243,9 +241,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             if ($dhl_mode == '1' && $dhl_live_ekp == '') {
                 $this->dhldpErrors[] = $this->module->l('Please fill EKP');
             }
-            if (!in_array($dhl_log, array('0', '1'))) {
-                $this->dhldpErrors[] = $this->module->l('Please select log mode');
-            }
+
             if (count($this->dhldpErrors) == 0) {
                 $check_client = $this->module->dhldp_api_rest->checkDHLAccount($dhl_mode);
                 if ($check_client) {
@@ -256,6 +252,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                     Configuration::updateValue('DHLDP_DHL_MODE', (int)$dhl_mode);
                     Configuration::updateValue('DHLDP_DHL_CARRIERS', implode(',', $dhl_carriers));
                     Configuration::updateValue('DHLDP_DHL_LIVE_EKP', $dhl_live_ekp);
+                    $this->dhldpConfirmations[] = $this->module->l('Account settings updated');
                 } else {
                     $rest_errors = $this->module->getRestErrorsForController();
                     if (!empty($rest_errors)) {
@@ -727,24 +724,23 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                             ),
                             array(
                                 'name' => 'DHLDP_DHL_LOG',
-                                'type' => 'radio',
+                                'type' => 'switch',
                                 'label' => $this->module->l('Enable Log'),
                                 'desc' => $this->module->l('Logs of actions in') . ' ' . DIRECTORY_SEPARATOR . 'logs ' .
                                     $this->module->l('directory. Please notice: logs information can take a lot of disk space after a time.'),
-                                'class' => 't',
                                 'is_bool' => true,
                                 'disabled' => false,
                                 'values' => array(
                                     array(
-                                        'id' => 'log_yes',
+                                        'id' => 'DHLDP_DHL_LOG_on',
                                         'value' => 1,
                                         'label' => $this->module->l('Yes')
                                     ),
                                     array(
-                                        'id' => 'log_no',
+                                        'id' => 'DHLDP_DHL_LOG_off',
                                         'value' => 0,
                                         'label' => $this->module->l('No')
-                                    ),
+                                    )
                                 ),
                             ),
                             array(
