@@ -385,7 +385,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
             return '';
         }
 
-        return $this->module->getPathUri() . 'logs/' . $file_name;
+        return $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dp', 'log_file' => $key)) . '&token=' . Tools::getAdminTokenLite('AdminModules');
     }
 
     protected function getFormFieldsDPSettings()
