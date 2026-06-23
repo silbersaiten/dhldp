@@ -127,7 +127,10 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
             $sql .= ' AND s.`id_shop` = ' . (int)Shop::getContextShopID();
         }
 
-        return (bool)Db::getInstance()->getValue($sql);
+        $enabled_shop_count = (int)Db::getInstance()->getValue($sql);
+        $context_shop_count = count(Shop::getContextListShopID());
+
+        return $context_shop_count > 0 && $enabled_shop_count === $context_shop_count;
     }
 
     protected function getCurrentShopContextLabel()
