@@ -1551,11 +1551,22 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     private function displayDHLLogInformation()
     {
         $this->context->smarty->assign(array(
-            'general_log_file_path' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dhl', 'log_file' => 'dhl_general')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
-            'api_log_file_path' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dhl', 'log_file' => 'dhl_api')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'general_log_file_path' => $this->getLogFilePath('dhl_general'),
+            'api_log_file_path' => $this->getLogFilePath('dhl_api'),
             'api_log_file_path_clear' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dhl', 'log_file' => 'dhl_api_clear')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
         ));
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/log_information.tpl');
+    }
+
+    private function getLogFilePath($key)
+    {
+        $file_name = 'log_' . $key . '.txt';
+
+        if (!file_exists($this->module->getLocalPath() . 'logs/' . $file_name)) {
+            return '';
+        }
+
+        return $this->module->getPathUri() . 'logs/' . $file_name;
     }
 
     public function displayFormInitDHLSettings()
