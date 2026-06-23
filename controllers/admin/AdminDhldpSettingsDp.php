@@ -41,7 +41,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         }
 
         $this->postProcess();
-        $this->content .= $this->module->postProcess();// #FIXME
         $this->content .= $this->renderMessages();
         $this->content .= $this->module->displayMenu();
         $this->content .= $this->displayFormDPSettings();
@@ -80,6 +79,12 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     public function postProcess()
     {
+        if (Tools::getIsset('log_file')) {
+            if ($this->processLogFileRequest(Tools::getValue('log_file')) === false) {
+                Tools::redirectAdmin($this->getAdminControllerLink($this->controller_name, array('view' => Tools::getValue('view'), 'm' => 2), true));
+            }
+        }
+
         if (Tools::isSubmit('submitDPGetProductList')) {
             if ($this->dp_api->getProductList()) {
                 $this->dpConfirmations[] = $this->module->l('Product list has been updated successfully');
@@ -370,7 +375,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $this->context->smarty->assign(array(
             'general_log_file_path' => $this->getLogFilePath('dp_general'),
             'api_log_file_path' => $this->getLogFilePath('dp_api'),
-            'api_log_file_path_clear' => $this->getAdminControllerLink('AdminModules', array('configure' => $this->module->name, 'view' => 'settings_dp', 'log_file' => 'dp_api_clear')) . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+            'api_log_file_path_clear' => $this->getAdminControllerLink($this->controller_name, array('view' => 'settings_dp', 'log_file' => 'dp_api_clear'), true),
         ));
         return $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/log_information.tpl'
@@ -379,7 +384,61 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     private function getLogFilePath($key)
     {
-        return $this->module->getLogFileDownloadUrl($key, 'settings_dp');
+        if (!$this->isDownloadableLogFileKey($key)) {
+            return '';
+        }
+
+        $file_path = $this->getLogFilePathByKey($key);
+        if (!file_exists($file_path)) {
+            return '';
+        }
+
+        return $this->getAdminControllerLink(
+            $this->controller_name,
+            array('view' => 'settings_dp', 'log_file' => (string)$key),
+            true
+        );
+    }
+
+    private function isDownloadableLogFileKey($key)
+    {
+        return in_array((string)$key, array('dp_general', 'dp_api'), true);
+    }
+
+    private function isLogFileRequestKey($key)
+    {
+        return in_array((string)$key, array('dp_general', 'dp_api', 'dp_api_clear'), true);
+    }
+
+    private function getLogFilePathByKey($key)
+    {
+        $file_key = strpos((string)$key, '_clear') !== false ? str_replace('_clear', '', (string)$key) : (string)$key;
+
+        return _PS_MODULE_DIR_ . $this->module->name . '/logs/log_' . $file_key . '.txt';
+    }
+
+    private function processLogFileRequest($key)
+    {
+        if (!$this->isLogFileRequestKey($key)) {
+            return false;
+        }
+
+        $file_path = $this->getLogFilePathByKey($key);
+        if (strpos((string)$key, '_clear') !== false && file_exists($file_path)) {
+            file_put_contents($file_path, '');
+            Tools::redirectAdmin($this->getAdminControllerLink($this->controller_name, array('view' => 'settings_dp', 'm' => 3), true));
+        }
+
+        if (!file_exists($file_path)) {
+            return false;
+        }
+
+        $download_name = basename($file_path);
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="' . $download_name . '"');
+        header('Content-Length: ' . filesize($file_path));
+        readfile($file_path);
+        exit;
     }
 
     protected function getFormFieldsDPSettings()
