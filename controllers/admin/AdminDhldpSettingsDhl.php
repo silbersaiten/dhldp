@@ -1553,8 +1553,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     private function displayDHLLogInformation()
     {
         $this->context->smarty->assign(array(
-            'general_log_file_path' => Tools::safeOutput($this->getLogFilePath('dhl_general')),
-            'api_log_file_path' => Tools::safeOutput($this->getLogFilePath('dhl_api')),
+            'general_log_file_path' => $this->getLogFilePath('dhl_general'),
+            'api_log_file_path' => $this->getLogFilePath('dhl_api'),
             'api_log_file_path_clear' => $this->getAdminControllerLink($this->controller_name, array('view' => 'settings_dhl', 'log_file' => 'dhl_api_clear'), true),
         ));
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/log_information.tpl');

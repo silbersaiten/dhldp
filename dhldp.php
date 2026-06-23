@@ -2383,67 +2383,9 @@ class DhlDp extends Module
         }
     }
 
-    public function getLogFileDownloadUrl($key, $view)
-    {
-        if (!$this->isDownloadableLogFileKey($key)) {
-            return '';
-        }
-
-        $file_path = $this->getLogFilePathByKey($key);
-        if (!file_exists($file_path)) {
-            return '';
-        }
-
-        return $this->getModuleUrl() . '&view=' . urlencode((string) $view) . '&log_file=' . urlencode((string) $key);
-    }
-
-    protected function isDownloadableLogFileKey($key)
-    {
-        return in_array((string) $key, array('dhl_general', 'dhl_api', 'dp_general', 'dp_api'), true);
-    }
-
-    protected function isLogFileRequestKey($key)
-    {
-        return in_array((string) $key, array('dhl_general', 'dhl_api', 'dhl_api_clear', 'dp_general', 'dp_api', 'dp_api_clear'), true);
-    }
-
-    protected function getLogFilePathByKey($key)
-    {
-        $file_key = strpos((string) $key, '_clear') !== false ? str_replace('_clear', '', (string) $key) : (string) $key;
-
-        return dirname(__FILE__) . '/logs/log_' . $file_key . '.txt';
-    }
-
-    protected function processLogFileRequest($key)
-    {
-        if (!$this->isLogFileRequestKey($key)) {
-            return false;
-        }
-
-        $file_path = $this->getLogFilePathByKey($key);
-        if (strpos((string) $key, '_clear') !== false && file_exists($file_path)) {
-            file_put_contents($file_path, '');
-            Tools::redirectAdmin($this->getModuleUrl() . '&view=' . Tools::getValue('view') . '&m=3');
-        }
-
-        if (!file_exists($file_path)) {
-            return false;
-        }
-
-        $download_name = basename($file_path);
-        header('Content-Type: text/plain');
-        header('Content-Disposition: attachment; filename="' . $download_name . '"');
-        header('Content-Length: ' . filesize($file_path));
-        readfile($file_path);
-        exit;
-    }
-
     public function getContent()
     {
         $html = '';
-//        if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive()) {
-//            return $this->displayError($this->l('You have to select a shop before configuring module.'));
-//        }
         $view_mode = Tools::getValue('view');
 
         switch ($view_mode) {
@@ -2490,7 +2432,6 @@ class DhlDp extends Module
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpSettingsDp'));
                 break;
             default:
-//                $html .= $this->postProcess();
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminDhldpSettingsDhl'));
                 break;
         }
@@ -3127,12 +3068,6 @@ class DhlDp extends Module
             case 4:
                 $this->_confirmations[] = $this->l('Country and Api Version have been saved successfully');
                 break;
-        }
-
-        if (Tools::getIsset('log_file')) {
-            if ($this->processLogFileRequest(Tools::getValue('log_file')) === false) {
-                Tools::redirectAdmin($this->getModuleUrl() . '&view=' . Tools::getValue('view') . '&m=2');
-            }
         }
 
         if (Tools::isSubmit('resetLiveAccount')) {
