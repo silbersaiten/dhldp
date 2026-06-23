@@ -2383,6 +2383,61 @@ class DhlDp extends Module
         }
     }
 
+    public function getLogFileDownloadUrl($key, $view)
+    {
+        if (!$this->isDownloadableLogFileKey($key)) {
+            return '';
+        }
+
+        $file_path = $this->getLogFilePathByKey($key);
+        if (!file_exists($file_path)) {
+            return '';
+        }
+
+        return $this->getModuleUrl() . '&view=' . urlencode((string) $view) . '&log_file=' . urlencode((string) $key);
+    }
+
+    protected function isDownloadableLogFileKey($key)
+    {
+        return in_array((string) $key, array('dhl_general', 'dhl_api', 'dp_general', 'dp_api'), true);
+    }
+
+    protected function isLogFileRequestKey($key)
+    {
+        return in_array((string) $key, array('dhl_general', 'dhl_api', 'dhl_api_clear', 'dp_general', 'dp_api', 'dp_api_clear'), true);
+    }
+
+    protected function getLogFilePathByKey($key)
+    {
+        $file_key = strpos((string) $key, '_clear') !== false ? str_replace('_clear', '', (string) $key) : (string) $key;
+
+        return dirname(__FILE__) . '/logs/log_' . $file_key . '.txt';
+    }
+
+    protected function processLogFileRequest($key)
+    {
+        if (!$this->isLogFileRequestKey($key)) {
+            return false;
+        }
+
+        $file_path = $this->getLogFilePathByKey($key);
+        if (strpos((string) $key, '_clear') !== false && file_exists($file_path)) {
+            file_put_contents($file_path, '');
+            Tools::redirectAdmin($this->getModuleUrl() . '&view=' . Tools::getValue('view') . '&m=3');
+        }
+
+        if (!file_exists($file_path)) {
+            return false;
+        }
+
+        $download_name = basename($file_path);
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="' . $download_name . '"');
+        header('Content-Length: ' . filesize($file_path));
+        readfile($file_path);
+        exit;
+    }
+
     public function getContent()
     {
         $html = '';
@@ -3075,22 +3130,9 @@ class DhlDp extends Module
         }
 
         if (Tools::getIsset('log_file')) {
-            if (in_array(Tools::getValue('log_file'), array('dhl_general', 'dhl_api', 'dhl_api_clear', 'dp_general', 'dp_api', 'dp_api_clear'))) {
-                $key = Tools::getValue('log_file');
-                $file_key = strpos($key, '_clear') !== false ? str_replace('_clear', '', $key) : $key;
-                $file_path = dirname(__FILE__) . '/logs/log_' . $file_key . '.txt';
-                if (strpos($key, '_clear') !== false && file_exists($file_path)) {
-                    file_put_contents($file_path, '');
-                    Tools::redirectAdmin($this->getModuleUrl() . '&view=' . Tools::getValue('view') . '&m=3');
-                }
-                if (file_exists($file_path)) {
-                    header('Content-type: text/plain');
-                    header('Content-Disposition: attachment; filename=' . $key . '.txt');
-                    echo Tools::file_get_contents($file_path);
-                    exit;
-                }
+            if ($this->processLogFileRequest(Tools::getValue('log_file')) === false) {
+                Tools::redirectAdmin($this->getModuleUrl() . '&view=' . Tools::getValue('view') . '&m=2');
             }
-            Tools::redirectAdmin($this->getModuleUrl() . '&view=' . Tools::getValue('view') . '&m=2');
         }
 
         if (Tools::isSubmit('resetLiveAccount')) {

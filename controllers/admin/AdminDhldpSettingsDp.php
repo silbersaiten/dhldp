@@ -379,34 +379,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
 
     private function getLogFilePath($key)
     {
-        $fileName = 'log_' . $key . '.txt';
-        $filePath = $this->module->getLocalPath() . 'logs/' . $fileName;
-
-        if (!file_exists($filePath)) {
-            return '';
-        }
-
-        return $this->buildPublicLogFileUrl($filePath);
-    }
-
-    private function buildPublicLogFileUrl($filePath)
-    {
-        $rootPath = rtrim(_PS_ROOT_DIR_, '/\\');
-        $normalizedFilePath = str_replace('\\', '/', (string) $filePath);
-        $normalizedRootPath = str_replace('\\', '/', $rootPath);
-
-        if (strpos($normalizedFilePath, $normalizedRootPath) !== 0) {
-            return '';
-        }
-
-        $relativePath = ltrim(substr($normalizedFilePath, strlen($normalizedRootPath)), '/');
-        if ($relativePath === '') {
-            return '';
-        }
-
-        $shopUrl = Context::getContext()->shop->getBaseURL(true);
-
-        return rtrim($shopUrl, '/') . '/' . $relativePath;
+        return $this->module->getLogFileDownloadUrl($key, 'settings_dp');
     }
 
     protected function getFormFieldsDPSettings()
