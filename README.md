@@ -7,6 +7,7 @@
 * Remove `this->postProcess();` from the `initContent()`
 * Moved log generating to the admin controllers
 * Multistore for DP
+* Fixed DP .png generation
 
 #### 3.2.5 (18.06.2026)
 * Add GoGreenPlus option

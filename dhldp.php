@@ -3278,7 +3278,12 @@ class DhlDp extends Module
         $position->address->receiver = $receiver;
         $position->additionalInfo = $additional_info;
         $position->voucherLayout = $this->dp_api->voucher_layout;
-        $position->positionType = 'AppShoppingCartPDFPosition';
+        if (Configuration::get('DHLDP_DP_LABEL_FORMAT', false, false, $id_shop) == 'pdf') {
+            $position->positionType = 'AppShoppingCartPDFPosition';
+        }
+        if (Configuration::get('DHLDP_DP_LABEL_FORMAT', false, false, $id_shop) == 'png') {
+            $position->positionType = 'AppShoppingCartPosition';
+        }
         $position_page = 1;
         $position_col = 1;
         $position_row = 1;
