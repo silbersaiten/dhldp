@@ -27,15 +27,12 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $this->show_toolbar = false;
         $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         $this->context = Context::getContext();
-
         parent::__construct();
-
         $this->dp_api = new DPRestApi();
     }
 
     public function initContent()
     {
-        $this->postProcess();
         $this->content .= $this->renderMessages();
         $this->content .= $this->module->displayMenu();
         $this->content .= $this->displayFormDPSettings();
@@ -46,11 +43,9 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-
         $this->context->controller->addJqueryUI('ui.tabs');
         $this->context->controller->addCSS($this->module->getPathUri() . 'views/css/admin.css');
         $this->context->controller->addJS($this->module->getPathUri() . 'views/js/dp_admin_configure.js');
-
         Media::addJsDef([
             'is177' => $this->module->is177,
             'dhldp_ajax_path' => $this->context->link->getAdminLink('AdminDhldpAjax')
@@ -60,11 +55,9 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     protected function getAdminControllerLink($controller, array $params = array(), $with_token = false)
     {
         $url = $this->context->link->getAdminLink($controller, $with_token);
-
         foreach ($params as $key => $value) {
             $url .= (strpos($url, '?') === false ? '?' : '&') . urlencode($key) . '=' . urlencode($value);
         }
-
         return $url;
     }
 
@@ -100,7 +93,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
             'multishop_activation_enabled' => $this->isModuleEnabledForCurrentShopContext(),
             'multishop_activation_context_label' => $this->getCurrentShopContextLabel(),
         ]);
-
         return $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/multishop-activation.tpl'
         );
@@ -126,7 +118,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
             $sql .= ' AND s.`id_shop` = ' . (int)Shop::getContextShopID();
         }
-
         return (bool)Db::getInstance()->getValue($sql);
     }
 
@@ -141,10 +132,8 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
             if (Validate::isLoadedObject($shop_group)) {
                 return $this->module->l('all shops of group shop') . ' <b>' . Tools::safeOutput($shop_group->name) . '</b>';
             }
-
             return $this->module->l('shop group');
         }
-
         return $this->module->l('all shops');
     }
 
@@ -157,7 +146,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         }
 
         $this->postProcessMultishopActivation();
-
         $is_submit_product_list = Tools::isSubmit('submitDPGetProductList');
         $is_submit_page_formats = Tools::isSubmit('submitDPRetrievePageFormats');
         $is_submit_global = Tools::isSubmit('submitSaveDPOptionsGlobal');
@@ -448,7 +436,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         $helper->fields_value['DHLDP_DP_CITY'] = Tools::getValue('DHLDP_DP_CITY', Configuration::get('DHLDP_DP_CITY'));
         $helper->fields_value['DHLDP_DP_COUNTRY'] = Tools::getValue('DHLDP_DP_COUNTRY', Configuration::get('DHLDP_DP_COUNTRY'));
         $helper->fields_value['DHLDP_DP_ADDITIONAL'] = Tools::getValue('DHLDP_DP_ADDITIONAL', Configuration::get('DHLDP_DP_ADDITIONAL'));
-
         return $helper->generateForm($this->getFormFieldsDPSettings());
     }
 
@@ -495,7 +482,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     private function getLogFilePathByKey($key)
     {
         $file_key = strpos((string)$key, '_clear') !== false ? str_replace('_clear', '', (string)$key) : (string)$key;
-
         return _PS_MODULE_DIR_ . $this->module->name . '/logs/log_' . $file_key . '.txt';
     }
 
@@ -551,24 +537,23 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
                         ),
                         array(
                             'name' => 'DHLDP_DP_LOG',
-                            'type' => 'radio',
+                            'type' => 'switch',
                             'label' => $this->module->l('Enable Log'),
                             'desc' => $this->module->l('Logs of actions in') . ' ' . DIRECTORY_SEPARATOR . 'logs ' .
                                 $this->module->l('directory. Please notice: logs information can take a lot of disk space after a time.'),
-                            'class' => 't',
                             'is_bool' => true,
                             'disabled' => false,
                             'values' => array(
                                 array(
-                                    'id' => 'log_yes',
+                                    'id' => 'DHLDP_DP_LOG_on',
                                     'value' => 1,
                                     'label' => $this->module->l('Yes')
                                 ),
                                 array(
-                                    'id' => 'log_no',
+                                    'id' => 'DHLDP_DP_LOG_off',
                                     'value' => 0,
                                     'label' => $this->module->l('No')
-                                ),
+                                )
                             ),
                         ),
                         array(
@@ -870,7 +855,6 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
         foreach ($this->dpConfirmations as $confirmation) {
             $messages .= $this->module->displayConfirmation($confirmation);
         }
-
         return $messages;
     }
 }
