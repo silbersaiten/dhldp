@@ -5,6 +5,7 @@
 * Now the log option is enabled regardless of authorization
 * Default additional custom fees must be integer
 * Remove `this->postProcess();` from the `initContent()`
+* Moved log generating to the admin controllers
 
 #### 3.2.5 (18.06.2026)
 * Add GoGreenPlus option
