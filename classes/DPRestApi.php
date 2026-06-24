@@ -156,16 +156,14 @@ class DPRestApi
     {
         $response = $this->callApi(
             'retrievePageFormats',
-            array(),
+            [],
             Context::getContext()->shop->id,
-            false
+            true
         );
         $page_formats = array();
         $formats = array();
-        if (isset($response->pageFormats) && is_array($response->pageFormats)) {
-            $formats = $response->pageFormats;
-        } elseif (isset($response->pageFormat) && is_array($response->pageFormat)) {
-            $formats = $response->pageFormat;
+        if (isset($response->pageFormats) && $response->pageFormats) {
+            $formats = (array)$response->pageFormats;
         }
 
         foreach ($formats as $page_format) {
@@ -339,7 +337,8 @@ class DPRestApi
         switch ($function) {
             case 'retrievePageFormats':
                 $method = 'GET';
-                $endpoint = '/pageformats';
+                $endpoint = '/app/catalog';
+                $query = ['types' => 'PAGE_FORMATS'];
                 break;
             case 'retrieveContractProducts':
                 $method = 'GET';
