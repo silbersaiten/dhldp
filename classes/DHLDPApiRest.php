@@ -1066,7 +1066,7 @@ class DHLDPApiRest
         }
         return [
             "currency" => $currency,
-            "value" => (int)$value
+            "value" => (float)$value
         ];
     }
 

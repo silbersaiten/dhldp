@@ -498,10 +498,11 @@ class DhlDp extends Module
             $shipment_order['Shipment']['ShipmentDetails']['Service']['premium'] = true;
         }
         if (isset($options['addit_services']['CashOnDelivery']) && $options['addit_services']['CashOnDelivery'] != '') {
+            $CashOnDelivery_codAmount = $options['addit_services']['CashOnDelivery_codAmount'] == '' ? 0 : $options['addit_services']['CashOnDelivery_codAmount'];
             $shipment_order['Shipment']['ShipmentDetails']['Service']['CashOnDelivery'] = array(
                 'active' => '1',
                 'addFee' => (isset($options['addit_services']['CashOnDelivery_addFee']) && $options['addit_services']['CashOnDelivery_addFee'] == 1) ? 1 : 0,
-                'codAmount' => $options['addit_services']['CashOnDelivery_codAmount']
+                'codAmount' => $order->total_paid + $CashOnDelivery_codAmount
             );
             $shipment_order['Shipment']['ShipmentDetails']['BankData'] = array(
                 'accountOwner' => self::getConfig('DHL_ACCOUNT_OWNER', $id_shop),
