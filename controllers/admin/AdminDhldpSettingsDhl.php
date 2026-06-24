@@ -313,8 +313,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             }
             $fee = Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES');
 
-            if ($is_submit_additional && !is_numeric($fee)) {
-                $this->dhldpErrors[] = $this->module->l('Invalid amount for additional custom fees.') . $this->module->l('Must be an integer!');
+            if ($is_submit_additional && !Validate::isPrice($fee)) {
+                $this->dhldpErrors[] = $this->module->l('Invalid amount for additional custom fees.');
             }
             if ($is_submit_misc && Tools::getValue('DHLDP_DHL_LABEL_FORMAT') != '' && !in_array(Tools::getValue('DHLDP_DHL_LABEL_FORMAT'), array_keys($this->module->getLabelFormats()))) {
                 $this->dhldpErrors[] = $this->module->l('Invalid label format');
@@ -1226,7 +1226,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         'type' => 'text',
                         'label' => $this->module->l('Default additional custom fees'),
                         'form_group_class' => 'dhlp_new_release',
-                        'desc' => $this->module->l('Enter the default amount for additional custom fees.') . $this->module->l('Must be an integer!'),
+                        'desc' => $this->module->l('Enter the default amount for additional custom fees.'),
                     ),
                 ),
                 'submit' => array(
