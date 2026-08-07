@@ -738,7 +738,7 @@ class DHLDPApiRest
             $data = [];
             $method = 'GET';
             if ($function === 'createShipmentOrder') {
-                $trackingEndpoint .= '/orders?includeDocs=URL';
+                $trackingEndpoint = rtrim($trackingEndpoint, '/') . '/orders?includeDocs=URL';
                 $shipments = [];
                 $shipments['product'] = isset($params['ShipmentOrder']['shipments']['product']) ? $params['ShipmentOrder']['shipments']['product'] : null;
                 $shipments['billingNumber'] = isset($params['ShipmentOrder']['shipments']['billingNumber']) ? $params['ShipmentOrder']['shipments']['billingNumber'] : null;
@@ -746,7 +746,6 @@ class DHLDPApiRest
                 $shipments['shipper'] = isset($params['ShipmentOrder']['shipments']['shipper']) ? $params['ShipmentOrder']['shipments']['shipper'] : null;
                 if (isset($params['ShipmentOrder']['shipments']['shipperRef'])) {
                     $shipments['shipperRef'] = $params['ShipmentOrder']['shipments']['shipperRef'];
-                    unset($shipments['shipper']);
                 }
                 $shipments['consignee'] = isset($params['ShipmentOrder']['shipments']['consignee']) ? $params['ShipmentOrder']['shipments']['consignee'] : null;
                 $shipments['details'] = isset($params['ShipmentOrder']['shipments']['details']) ? $params['ShipmentOrder']['shipments']['details'] : null;
@@ -852,16 +851,15 @@ class DHLDPApiRest
         } else {
             $trackingEndpoint = self::$cig_endpoint_sandbox;
         }
-        $trackingEndpoint = $trackingEndpoint . '/orders?validate=true';
+        $trackingEndpoint = rtrim($trackingEndpoint, '/') . '/orders?validate=true';
 
         $shipments = [];
         $shipments['product'] = $params['ShipmentOrder']['shipments']['product'];
         $shipments['billingNumber'] = $params['ShipmentOrder']['shipments']['billingNumber'];
         $shipments['refNo'] = $params['ShipmentOrder']['shipments']['refNo'];
+        $shipments['shipper'] = $params['ShipmentOrder']['shipments']['shipper'];
         if (isset($params['ShipmentOrder']['shipments']['shipperRef'])) {
             $shipments['shipperRef'] = $params['ShipmentOrder']['shipments']['shipperRef'];
-        } else {
-            $shipments['shipper'] = $params['ShipmentOrder']['shipments']['shipper'];
         }
         $shipments['consignee'] = $params['ShipmentOrder']['shipments']['consignee'];
         $shipments['details'] = $params['ShipmentOrder']['shipments']['details'];
