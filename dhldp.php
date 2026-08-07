@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.6
+ * @version   3.2.7
  * @link      https://www.silbersaiten.de
  */
 

@@ -1,6 +1,10 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.7 (07.08.2026)
+* ENV data moved
+* Fix Shipment/ShipperReference
+
 #### 3.2.6 (23.06.2026)
 * Now the log option is enabled regardless of authorization
 * Default additional custom fees must be integer
