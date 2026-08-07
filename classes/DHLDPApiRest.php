@@ -744,10 +744,6 @@ class DHLDPApiRest
                 $shipments['billingNumber'] = isset($params['ShipmentOrder']['shipments']['billingNumber']) ? $params['ShipmentOrder']['shipments']['billingNumber'] : null;
                 $shipments['refNo'] = isset($params['ShipmentOrder']['shipments']['refNo']) ? $params['ShipmentOrder']['shipments']['refNo'] : null;
                 $shipments['shipper'] = isset($params['ShipmentOrder']['shipments']['shipper']) ? $params['ShipmentOrder']['shipments']['shipper'] : null;
-                if (isset($params['ShipmentOrder']['shipments']['shipperRef'])) {
-                    $shipments['shipperRef'] = $params['ShipmentOrder']['shipments']['shipperRef'];
-                    unset($shipments['shipper']);
-                }
                 $shipments['consignee'] = isset($params['ShipmentOrder']['shipments']['consignee']) ? $params['ShipmentOrder']['shipments']['consignee'] : null;
                 $shipments['details'] = isset($params['ShipmentOrder']['shipments']['details']) ? $params['ShipmentOrder']['shipments']['details'] : null;
                 $shipments['customs'] = isset($params['ShipmentOrder']['customs']) ? $params['ShipmentOrder']['customs'] : null;
@@ -858,11 +854,7 @@ class DHLDPApiRest
         $shipments['product'] = $params['ShipmentOrder']['shipments']['product'];
         $shipments['billingNumber'] = $params['ShipmentOrder']['shipments']['billingNumber'];
         $shipments['refNo'] = $params['ShipmentOrder']['shipments']['refNo'];
-        if (isset($params['ShipmentOrder']['shipments']['shipperRef'])) {
-            $shipments['shipperRef'] = $params['ShipmentOrder']['shipments']['shipperRef'];
-        } else {
-            $shipments['shipper'] = $params['ShipmentOrder']['shipments']['shipper'];
-        }
+        $shipments['shipper'] = $params['ShipmentOrder']['shipments']['shipper'];
         $shipments['consignee'] = $params['ShipmentOrder']['shipments']['consignee'];
         $shipments['details'] = $params['ShipmentOrder']['shipments']['details'];
         if (isset($params['ShipmentOrder']['customs'])) {

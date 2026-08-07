@@ -381,14 +381,6 @@ class DhlDp extends Module
             ),
         );
 
-        if ((int)self::getConfig('DHL_SHIPPER_TYPE', $id_shop) === 1
-            && self::getConfig('DHL_REFERENCE', $id_shop) != ''
-        ) {
-            $shipment_order['shipments']['shipperRef'] = self::getConfig('DHL_REFERENCE', $id_shop);
-            // A GKP shipper reference replaces the complete shipper address.
-            unset($shipment_order['shipments']['shipper']);
-        }
-
         if ($this->dhldp_api_rest->getMajorApiVersion() != 3) {
             $shipment_order['LabelResponseType'] = 'URL';
             $shipment_order['PRINTONLYIFCODEABLE'] = 0;
