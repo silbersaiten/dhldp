@@ -4,6 +4,7 @@
 #### 3.2.7 (07.08.2026)
 * ENV data moved
 * Fix Shipment/ShipperReference
+* Fix replacing $goGreenEnabled && $goGreenPlusEnabled V66WPI
 
 #### 3.2.6 (23.06.2026)
 * Now the log option is enabled regardless of authorization
