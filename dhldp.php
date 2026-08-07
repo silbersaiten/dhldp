@@ -385,6 +385,8 @@ class DhlDp extends Module
             && self::getConfig('DHL_REFERENCE', $id_shop) != ''
         ) {
             $shipment_order['shipments']['shipperRef'] = self::getConfig('DHL_REFERENCE', $id_shop);
+            // A GKP shipper reference replaces the complete shipper address.
+            unset($shipment_order['shipments']['shipper']);
         }
 
         if ($this->dhldp_api_rest->getMajorApiVersion() != 3) {

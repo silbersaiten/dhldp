@@ -746,6 +746,7 @@ class DHLDPApiRest
                 $shipments['shipper'] = isset($params['ShipmentOrder']['shipments']['shipper']) ? $params['ShipmentOrder']['shipments']['shipper'] : null;
                 if (isset($params['ShipmentOrder']['shipments']['shipperRef'])) {
                     $shipments['shipperRef'] = $params['ShipmentOrder']['shipments']['shipperRef'];
+                    unset($shipments['shipper']);
                 }
                 $shipments['consignee'] = isset($params['ShipmentOrder']['shipments']['consignee']) ? $params['ShipmentOrder']['shipments']['consignee'] : null;
                 $shipments['details'] = isset($params['ShipmentOrder']['shipments']['details']) ? $params['ShipmentOrder']['shipments']['details'] : null;
@@ -857,9 +858,10 @@ class DHLDPApiRest
         $shipments['product'] = $params['ShipmentOrder']['shipments']['product'];
         $shipments['billingNumber'] = $params['ShipmentOrder']['shipments']['billingNumber'];
         $shipments['refNo'] = $params['ShipmentOrder']['shipments']['refNo'];
-        $shipments['shipper'] = $params['ShipmentOrder']['shipments']['shipper'];
         if (isset($params['ShipmentOrder']['shipments']['shipperRef'])) {
             $shipments['shipperRef'] = $params['ShipmentOrder']['shipments']['shipperRef'];
+        } else {
+            $shipments['shipper'] = $params['ShipmentOrder']['shipments']['shipper'];
         }
         $shipments['consignee'] = $params['ShipmentOrder']['shipments']['consignee'];
         $shipments['details'] = $params['ShipmentOrder']['shipments']['details'];
