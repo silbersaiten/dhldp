@@ -384,8 +384,9 @@ class DhlDp extends Module
         if ((int)self::getConfig('DHL_SHIPPER_TYPE', $id_shop) === 1
             && self::getConfig('DHL_REFERENCE', $id_shop) != ''
         ) {
-            $shipment_order['shipments']['shipperRef'] = self::getConfig('DHL_REFERENCE', $id_shop);
-            unset($shipment_order['shipments']['shipper']);
+            $shipment_order['shipments']['shipper'] = array(
+                'shipperRef' => self::getConfig('DHL_REFERENCE', $id_shop),
+            );
         }
 
         if ($this->dhldp_api_rest->getMajorApiVersion() != 3) {
