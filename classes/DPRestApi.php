@@ -269,8 +269,8 @@ class DPRestApi
         $this->errors = array();
         $headers = $this->getRestHeaders($partner_id, $key_phase, $api_key);
         $headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        $client_id = getenv('DHLDP_DP_CLIENT_ID');
-        $client_secret = getenv('DHLDP_DP_CLIENT_SECRET');
+        $client_id = Configuration::get('DHLDP_DP_CLIENT_ID');
+        $client_secret = Configuration::get('DHLDP_DP_CLIENT_SECRET');
         if (!$client_secret) {
             $client_secret = Configuration::get('DHLDP_DP_CLIENT_SECRET', null, null, $id_shop);
         }
