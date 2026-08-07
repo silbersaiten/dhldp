@@ -24,7 +24,6 @@ require_once(dirname(__FILE__) . '/classes/Service/DHLRestService.php');
 require_once(dirname(__FILE__) . '/classes/DPRestApi.php');
 require_once(dirname(__FILE__) . '/classes/DPLabel.php');
 require_once(dirname(__FILE__) . '/classes/DHLDPRestClient.php');
-require_once(dirname(__FILE__) . '/classes/Env.php');
 
 class DhlDp extends Module
 {
@@ -47,7 +46,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.6';
+        $this->version = '3.2.7';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -60,7 +59,6 @@ class DhlDp extends Module
         $this->description = $this->l('DHL and Deutschepost shipment service');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 
-        new \PrestaShop\Module\dhldp\classes\Env($this->name);
         $this->dp_api = new DPRestApi();
         $this->dhldp_api_rest = new \PrestaShop\Module\dhldp\classes\DHLDPApiRest($this);
         $this->dhl_service = new \PrestaShop\Module\dhldp\Service\DHLRestService($this, $this->dhldp_api_rest);
@@ -129,6 +127,7 @@ class DhlDp extends Module
         Configuration::updateValue('DHLDP_DHL_COUNTRY', 'DE');
         Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', 0);
         Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN_PLUS', 0);
+        $return &= $this->installApiCredentials();
 
         if (!Configuration::hasKey('DHLDP_INTRANSIT_MAIL')) {
             Configuration::updateValue('DHLDP_INTRANSIT_MAIL', 1);
@@ -136,6 +135,33 @@ class DhlDp extends Module
 
         $this->dp_api->retrievePageFormats();
         return (bool)$return;
+    }
+
+    public function installApiCredentials()
+    {
+        $credentials = array(
+            'PRODWS_USERNAME' => 'silbersaiten',
+            'PRODWS_PASSWORD' => 'vZ&xu$B7o0',
+            'DHL_SDX_CIGUSER' => 'prestashop',
+            'DHL_SDX_CIGPASS' => ',E&Sg9z<Wq?>',
+            'DHL_SDX_RETOURE_USER' => '2222222222_customer',
+            'DHL_SDX_RETOURE_SIGN' => 'uBQbZ62!ZiBiVVbhc',
+            'DHLDP_DHL_SDX_USER' => 'user-valid',
+            'DHLDP_DHL_SDX_PASS' => 'SandboxPasswort2023!',
+            'DHLDP_DHL_CLIENT_ID' => 'tbGdRSxemIWAoijCCSLBgTBARAWjUGTc',
+            'DHLDP_DHL_CLIENT_SECRET' => 'hZaFXx3hfJ2Anhw9',
+            'DHLDP_DP_CLIENT_ID' => 'prestashop',
+            'DHLDP_DP_CLIENT_SECRET' => 'hZaFXx3hfJ2Anhw9',
+            'APPNAME' => 'zt12345',
+            'PASSWORD' => 'geheim',
+        );
+
+        $result = true;
+        foreach ($credentials as $name => $value) {
+            $result &= Configuration::updateGlobalValue($name, $value);
+        }
+
+        return (bool)$result;
     }
 
     public function uninstall()

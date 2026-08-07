@@ -52,14 +52,12 @@ class DHLDPApiRest
     {
         $this->module = $module;
         $this->setApiVersion($api_version);
-//        self::$dhl_sbx_user = getenv('DHL_SDX_USER');
-//        self::$dhl_sbx_pass = getenv('DHL_SDX_PASS');
-        self::$dhl_live_user = getenv('DHL_LIVE_USER');
-        self::$dhl_live_pass = getenv('DHL_LIVE_PASS');
-        self::$dhl_sbx_ciguser = getenv('DHL_SDX_CIGUSER');
-        self::$dhl_sbx_cigpass = getenv('DHL_SDX_CIGPASS');
-        self::$dhl_sbx_retoure_user = getenv('DHLDP_DHL_SDX_USER');
-        self::$dhl_sbx_retoure_sign = getenv('DHLDP_DHL_SDX_PASS');
+        self::$dhl_live_user = Configuration::get('DHL_LIVE_USER');
+        self::$dhl_live_pass = Configuration::get('DHL_LIVE_PASS');
+        self::$dhl_sbx_ciguser = Configuration::get('DHL_SDX_CIGUSER');
+        self::$dhl_sbx_cigpass = Configuration::get('DHL_SDX_CIGPASS');
+        self::$dhl_sbx_retoure_user = Configuration::get('DHLDP_DHL_SDX_USER');
+        self::$dhl_sbx_retoure_sign = Configuration::get('DHLDP_DHL_SDX_PASS');
     }
 
     public function setApiVersion($api_version)

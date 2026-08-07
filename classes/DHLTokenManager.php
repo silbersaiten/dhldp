@@ -18,8 +18,8 @@ use DHLDPRestClient;
 
 class DHLTokenManager
 {
-    const ENV_TOKEN_KEY = 'DHLDP_DHL_ACCESS_TOKEN';
-    const ENV_TOKEN_EXPIRY = 'DHLDP_DHL_TOKEN_EXPIRY';
+    const CONFIG_TOKEN_KEY = 'DHLDP_DHL_ACCESS_TOKEN';
+    const CONFIG_TOKEN_EXPIRY = 'DHLDP_DHL_TOKEN_EXPIRY';
     private $clientId;
     private $clientSecret;
     private $dhl_user;
@@ -46,11 +46,11 @@ class DHLTokenManager
             }
         } else {
             $this->tokenUrl = $this->tokenUrlSDX;
-            $this->dhl_user = getenv('DHLDP_DHL_SDX_USER');
-            $this->dhl_pass = getenv('DHLDP_DHL_SDX_PASS');
+            $this->dhl_user = Configuration::get('DHLDP_DHL_SDX_USER');
+            $this->dhl_pass = Configuration::get('DHLDP_DHL_SDX_PASS');
         }
-        $this->clientId = getenv('DHLDP_DHL_CLIENT_ID');
-        $this->clientSecret = getenv('DHLDP_DHL_CLIENT_SECRET');
+        $this->clientId = Configuration::get('DHLDP_DHL_CLIENT_ID');
+        $this->clientSecret = Configuration::get('DHLDP_DHL_CLIENT_SECRET');
     }
 
     public function getToken()
@@ -58,12 +58,12 @@ class DHLTokenManager
         if ($this->isTokenExpired()) {
             return $this->requestNewToken();
         }
-        return getenv(self::ENV_TOKEN_KEY);
+        return Configuration::get(self::CONFIG_TOKEN_KEY);
     }
 
     private function isTokenExpired()
     {
-        $tokenExpiry = getenv(self::ENV_TOKEN_EXPIRY);
+        $tokenExpiry = Configuration::get(self::CONFIG_TOKEN_EXPIRY);
         return !$tokenExpiry || time() >= (int)$tokenExpiry;
     }
 
