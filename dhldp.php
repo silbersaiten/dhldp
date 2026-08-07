@@ -484,7 +484,13 @@ class DhlDp extends Module
             && $receiver['countryISOCode'] == 'DE'
             && $shipper['countryISOCode'] == 'DE';
 
-        if (Configuration::get('DHLDP_DHL_DEF_GOGREEN', null, null, $order->id_shop) && !$goGreenPlusSupported) {
+        $goGreenEnabled = Configuration::get('DHLDP_DHL_DEF_GOGREEN', null, null, $order->id_shop);
+
+        // GoGreen Plus supersedes the legacy GoGreen billing participation. If Plus is
+        // enabled but unavailable for this route, keep the product's standard billing
+        // number instead of silently switching to a legacy GoGreen participation that
+        // may not be part of the customer's contract.
+        if ($goGreenEnabled && !$goGreenPlusEnabled) {
             if (isset($shipment_order['shipments']['product']) && isset($shipment_order['shipments']['billingNumber'])) {
                 $product = $shipment_order['shipments']['product'];
                 $billingNumber = $shipment_order['shipments']['billingNumber'];
