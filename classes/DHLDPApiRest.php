@@ -924,11 +924,14 @@ class DHLDPApiRest
         $result = [
             "exportType" => $customs['exportType'], //exportType
             "exportDescription" => $customs['exportTypeDescription'], //exportTypeDescription
+            "shippingConditions" => $customs['termsOfTrade'], //termsOfTrade
+            "officeOfOrigin" => $customs['placeOfCommital'], //placeOfCommital
             //"shipperCustomsRef" => "DE11111",
             //"consigneeCustomsRef" => "GB22222",
             "invoiceNo" => $customs['invoiceNumber'], //invoiceNumber
             "permitNo" => $customs['permitNumber'], //permitNumber
             "attestationNo" => $customs['attestationNumber'], //attestationNumber
+            "hasElectronicExportNotification" => !empty($customs['WithElectronicExportNtfctn']),
             "postalCharges" => $this->convertToMonetaryObject($customs['additionalFee']),
             "items" => []
         ];
