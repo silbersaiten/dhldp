@@ -1,6 +1,12 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.8 (11.08.2026)
+* Replace oldest options:
+ - WithElectronicExportNtfctn -> hasElectronicExportNotification
+ - termsOfTrade -> shippingConditions
+ - placeOfCommital -> officeOfOrigin
+
 #### 3.2.7 (07.08.2026)
 * ENV data moved
 * Fix Shipment/ShipperReference
