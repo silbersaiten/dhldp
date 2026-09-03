@@ -32,6 +32,8 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
     public function initContent()
     {
         if (Tools::getValue('view') === 'init_dhl') {
+            $this->content .= $this->module->displayMenu();
+            $this->content .= $this->module->renderQuickStartPanel();
             $this->content .= $this->module->postInitDHLProcess();
             $this->content .= $this->displayFormInitDHLSettings();
             parent::initContent();
@@ -39,6 +41,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
         }
         $this->content .= $this->renderMessages();
         $this->content .= $this->module->displayMenu();
+        $this->content .= $this->module->renderQuickStartPanel();
         $this->content .= $this->displayFormDHLSettings();
         $this->content .= $this->renderMultishopActivationBlock();
         parent::initContent();

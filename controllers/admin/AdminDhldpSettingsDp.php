@@ -35,6 +35,7 @@ class AdminDhldpSettingsDpController extends ModuleAdminController
     {
         $this->content .= $this->renderMessages();
         $this->content .= $this->module->displayMenu();
+        $this->content .= $this->module->renderQuickStartPanel();
         $this->content .= $this->displayFormDPSettings();
         $this->content .= $this->renderMultishopActivationBlock();
         parent::initContent();

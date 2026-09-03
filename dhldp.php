@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.8
+ * @version   3.2.9
  * @link      https://www.silbersaiten.de
  */
 
@@ -46,7 +46,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.8';
+        $this->version = '3.2.9';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -2524,6 +2524,50 @@ class DhlDp extends Module
             '_path' => $this->getPathUri()
         ));
         return $this->display(__FILE__, 'views/templates/admin/menu.tpl');
+    }
+
+    public function renderQuickStartPanel()
+    {
+        $documents = array(
+            'en' => array('user-guide-en.html', 'module-description-en.html'),
+            'de' => array('benutzerhandbuch-de.html', 'modulbeschreibung-de.html'),
+            'es' => array('manual-de-usuario-es.html', 'descripcion-del-modulo-es.html'),
+            'pl' => array('podrecznik-uzytkownika-pl.html', 'opis-modulu-pl.html'),
+            'it' => array('manuale-utente-it.html', 'descrizione-modulo-it.html'),
+            'fr' => array('guide-utilisateur-fr.html', 'description-module-fr.html'),
+        );
+
+        $iso_code = Tools::strtolower((string)$this->context->language->iso_code);
+        $iso_parts = preg_split('/[-_]/', $iso_code);
+        $iso_code = isset($iso_parts[0]) ? $iso_parts[0] : 'en';
+        if (!isset($documents[$iso_code])) {
+            $iso_code = 'en';
+        }
+
+        $docs_url = $this->getPathUri() . 'docs/';
+        $this->context->smarty->assign(array(
+            'dhldp_quick_start_title' => $this->l('Quick start'),
+            'dhldp_quick_start_intro' => $this->l('Complete these steps before creating production labels:'),
+            'dhldp_quick_start_steps' => array(
+                $this->l('Get personal GKP access and, for production API use, a dedicated system user; locate the EKP and 14-character billing numbers in the contract data.'),
+                $this->l('Choose Sandbox for testing or Live for production, then enter the API user, password and 10-character EKP.'),
+                $this->l('Add the contracted DHL products from billing-number characters 11-12, enter participation from characters 13-14, and map PrestaShop carriers.'),
+                $this->l('Enter the shipper address or an exact GKP shipper reference; configure Portokasse separately if you use INTERNETMARKE.'),
+                $this->l('Create a test label from an order and verify the file and tracking number before going live.'),
+            ),
+            'dhldp_user_guide_label' => $this->l('User guide'),
+            'dhldp_module_description_label' => $this->l('Module description'),
+            'dhldp_more_modules_label' => $this->l('More PrestaShop modules'),
+            'dhldp_paid_support_label' => $this->l('Paid support'),
+            'dhldp_support_email_label' => $this->l('Support email'),
+            'dhldp_user_guide_url' => $docs_url . $documents[$iso_code][0],
+            'dhldp_module_description_url' => $docs_url . $documents[$iso_code][1],
+            'dhldp_more_modules_url' => 'https://www.silbersaiten.de/de/28-prestashop-module',
+            'dhldp_paid_support_url' => 'https://www.silbersaiten.de/de/44-support',
+            'dhldp_support_email_url' => 'mailto:support@silbersaiten.de',
+        ));
+
+        return $this->display(__FILE__, 'views/templates/admin/quick-start.tpl');
     }
 
     public function createDhlLabels($collection, $with_return = false)

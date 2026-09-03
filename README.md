@@ -1,6 +1,13 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.9 (28.08.2026)
+* Added local user guides and module descriptions in English, German, Spanish, Polish, Italian and French.
+* Added generated offline HTML documentation with Silbersaiten styling, print support and accessible tables of contents.
+* Added a translated Quick start panel with local documentation, module catalogue and support links to both settings pages.
+* Added documentation and release build scripts.
+* Reworked the user guides around first GKP/Portokasse access, finding EKP and billing numbers, carrier mapping, first-label creation and practical troubleshooting.
+
 #### 3.2.8 (11.08.2026)
 * Replace oldest options:
  - WithElectronicExportNtfctn -> hasElectronicExportNotification

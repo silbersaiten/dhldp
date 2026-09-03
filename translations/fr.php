@@ -2,6 +2,18 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{dhldp}prestashop>dhldp_06ad314b340900d226b1196e1fe289e9'] = 'Démarrage rapide';
+$_MODULE['<{dhldp}prestashop>dhldp_0177a3a39486199b8c21696b27e704bf'] = 'Suivez ces étapes avant de créer des étiquettes de production :';
+$_MODULE['<{dhldp}prestashop>dhldp_a3232d178d5675e35a626310c1f7a427'] = 'Obtenez un accès GKP personnel et, pour l’API de production, un utilisateur système dédié ; repérez l’EKP et les numéros de facturation de 14 caractères dans le contrat.';
+$_MODULE['<{dhldp}prestashop>dhldp_4152b73ad8ce56f31e6f9886165af892'] = 'Choisissez Sandbox pour les tests ou Live pour la production, puis saisissez l’utilisateur API, son mot de passe et l’EKP de dix caractères.';
+$_MODULE['<{dhldp}prestashop>dhldp_0804417fc3e3ceafc89d8c4c7123d47f'] = 'Ajoutez les produits du contrat à partir des caractères 11-12 du numéro, saisissez la participation des caractères 13-14 et associez les transporteurs PrestaShop.';
+$_MODULE['<{dhldp}prestashop>dhldp_f6d0dc25a63726312d3b94467e92223b'] = 'Renseignez l’expéditeur ou une référence GKP exacte ; configurez Portokasse séparément si vous utilisez INTERNETMARKE.';
+$_MODULE['<{dhldp}prestashop>dhldp_1988c65f5d71737aecfc4b28593db119'] = 'Créez une étiquette de test depuis une commande et vérifiez le fichier et le suivi avant la mise en production.';
+$_MODULE['<{dhldp}prestashop>dhldp_9c0229a92cbba3c2186662317d8b28bc'] = 'Guide utilisateur';
+$_MODULE['<{dhldp}prestashop>dhldp_1b9e7236be896a9846b22f21395f092a'] = 'Description du module';
+$_MODULE['<{dhldp}prestashop>dhldp_b1d85137e1a4d86f5bfbf5433c3b8f23'] = 'Autres modules PrestaShop';
+$_MODULE['<{dhldp}prestashop>dhldp_5b3e28e926772b0c88f5cdbbde578515'] = 'Assistance payante';
+$_MODULE['<{dhldp}prestashop>dhldp_6dcce363217b8653bba30f4edf38ded4'] = 'E-mail du support';
 $_MODULE['<{dhldp}prestashop>additional-services_0c2868718eaf308ec1de9c2407e3ee97'] = 'Chèque d\'identité';
 $_MODULE['<{dhldp}prestashop>additional-services_0cce9513a6ca132dda6a0679be8ef87d'] = 'Jour de livraison';
 $_MODULE['<{dhldp}prestashop>additional-services_11813f4618d9d308756ae134dd44940a'] = 'Voisin';

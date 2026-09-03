@@ -42,6 +42,48 @@ ul.dhl-tabs li {
     display: none;
 }
 
+.dhldp-quick-start {
+    border-top: 3px solid #6fa519;
+}
+
+.dhldp-quick-start__steps {
+    margin: 0 0 16px 22px;
+    padding: 0;
+}
+
+.dhldp-quick-start__steps li {
+    margin-bottom: 6px;
+}
+
+.dhldp-quick-start__separator {
+    border-top: 1px solid #dddddd;
+    margin: 16px 0;
+}
+
+.dhldp-quick-start__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.dhldp-quick-start__buttons:last-child {
+    margin-bottom: 0;
+}
+
+.dhldp-quick-start__service-buttons .btn:hover,
+.dhldp-quick-start__service-buttons .btn:focus {
+    background-color: #6fa519;
+    border-color: #507914;
+    color: #ffffff;
+}
+
+@media (max-width: 640px) {
+    .dhldp-quick-start__buttons .btn {
+        white-space: normal;
+    }
+}
+
 .dhl_authdata_live {display: none;}
 .dhl_authdata_sbx {display: none;}
 

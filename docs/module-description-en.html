@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>DHL Deutschepost 3.2.9 — Module description · DHL Deutschepost</title>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body id="top">
+  <a class="skip-link" href="#content">Skip to main content</a>
+  <header class="hero">
+    <div class="hero__inner">
+      <a class="brand-link" href="https://www.silbersaiten.de/" target="_blank" rel="noopener"><img src="silbersaiten-logo.jpg" width="179" height="41" alt="Silbersaiten"></a>
+      <p class="hero__module">DHL Deutschepost 3.2.9</p>
+      <h1>DHL Deutschepost 3.2.9 — Module description</h1>
+    </div><div class="hero__stripe" aria-hidden="true"></div>
+  </header>
+  <main id="content" class="page-shell">
+    <nav class="document-nav" aria-label="DHL Deutschepost">
+      <a class="button" href="user-guide-en.html">User guide</a>
+      <a class="button" href="module-description-en.html" aria-current="page">Module description</a>
+      <button class="button button--print" type="button" data-print-document>Print / save as PDF</button>
+    </nav>
+    <div class="layout">
+      <nav class="toc" aria-label="Contents"><h2 class="toc__title">Contents</h2><ul><li class="toc-level-2"><a href="#short-description">Short description</a></li>
+<li class="toc-level-2"><a href="#full-description">Full description</a></li>
+<li class="toc-level-2"><a href="#core-features">Core features</a></li>
+<li class="toc-level-2"><a href="#typical-uses">Typical uses</a></li>
+<li class="toc-level-2"><a href="#typical-workflow">Typical workflow</a></li>
+<li class="toc-level-2"><a href="#benefits-for-the-merchant">Benefits for the merchant</a></li>
+<li class="toc-level-2"><a href="#administration">Administration</a></li>
+<li class="toc-level-2"><a href="#multishop">Multishop</a></li>
+<li class="toc-level-2"><a href="#privacy-and-stored-data">Privacy and stored data</a></li>
+<li class="toc-level-2"><a href="#external-services">External services</a></li>
+<li class="toc-level-2"><a href="#compatibility">Compatibility</a></li>
+<li class="toc-level-2"><a href="#important-limitations">Important limitations</a></li>
+<li class="toc-level-2"><a href="#main-advantages">Main advantages</a></li>
+<li class="toc-level-2"><a href="#very-short-store-card-texts">Very short store-card texts</a></li></ul></nav>
+      <article class="document-card"><h2 id="short-description">Short description</h2>
+<p>Create DHL Paket and Deutsche Post INTERNETMARKE shipping labels from PrestaShop orders, store tracking data, and manage supported delivery, customs, manifest and return workflows from the Back Office.</p>
+<h2 id="full-description">Full description</h2>
+<p>DHL Deutschepost links selected PrestaShop carriers with contracted DHL and Deutsche Post products. Shop staff can prepare shipment data on an order, create and download supported labels, write the tracking number back to the order carrier, and optionally change order status or send the included transit email. DHL products can use configured package defaults, additional services, export data and return-label functions. The Deutsche Post section provides INTERNETMARKE product, label, page-position, manifest and shipping-list controls.</p>
+<p>The module addresses the repetitive work between an order and the carrier portal. It does not replace a DHL/Deutsche Post contract, calculate live checkout prices, or make unavailable services eligible.</p>
+<h2 id="core-features">Core features</h2>
+<ul><li>DHL Parcel Shipping API v2.1 label creation for the module&#039;s Germany shipper configuration.</li><li>Deutsche Post INTERNETMARKE REST label creation in PDF or PNG.</li><li>Mapping between PrestaShop carriers and DHL/Deutsche Post products.</li><li>Single-order and supported bulk DHL label workflows.</li><li>Tracking-number storage and a secure cron entry point for tracking refresh.</li><li>Optional order-status update and transit email after label creation.</li><li>Product customs tariff number and country-of-origin fields.</li><li>Export-document data and selectable DHL label formats.</li><li>Supported DHL additional services and defaults, including age check, routing and sustainability options.</li><li>Packstation and Postfiliale address assistance, with an optional Google map.</li><li>DHL return labels, enclosed returns and integration with supported PrestaShop RMA flows.</li><li>DHL manifests and Deutsche Post manifest/shipping-list options where the API/product permits.</li><li>Context-aware configuration and activation controls for multishop.</li><li>Local documentation in six languages, available without an internet connection.</li></ul>
+<h2 id="typical-uses">Typical uses</h2>
+<p>The module fits shops that fulfil contracted DHL Paket shipments from Germany, use Deutsche Post INTERNETMARKE for suitable mail products, need labels and tracking in the order workflow, or require customs and return-label data alongside PrestaShop orders.</p>
+<h2 id="typical-workflow">Typical workflow</h2>
+<ol><li>Select the shop context and configure account and sender data.</li><li>Add contracted products and map PrestaShop carriers.</li><li>Open an eligible order and review shipment, package and optional-service data.</li><li>Create and inspect the label.</li><li>The module stores label/tracking metadata and applies configured status/email behaviour.</li><li>Use manifest, return or tracking functions when required and supported.</li></ol>
+<h2 id="benefits-for-the-merchant">Benefits for the merchant</h2>
+<ul><li>Reduces re-entry of order and address data in separate carrier portals.</li><li>Keeps label references and tracking numbers connected to the PrestaShop order.</li><li>Gives warehouse staff controlled defaults for products, dimensions, formats and services.</li><li>Supports both DHL Paket and Deutsche Post workflows in one module interface.</li><li>Provides explicit controls for customer contact-data consent, logs and output choices.</li><li>Supplies offline user and product documentation in the module package.</li></ul>
+<h2 id="administration">Administration</h2>
+<p>Configuration is divided into <strong>DHL settings</strong>, <strong>DHL DP settings</strong>, <strong>Information</strong>, and <strong>DHL Manifest</strong>. DHL settings cover account authentication, products/carriers, label behaviour, additional services, returns, sender address and COD bank data. Deutsche Post settings cover INTERNETMARKE credentials, products/carriers, output format/page placement and sender address. A Quick start panel links to the local guide, local description, Silbersaiten&#039;s module catalogue, paid support and support email.</p>
+<h2 id="multishop">Multishop</h2>
+<p>The settings controllers accept all-shop, group and individual-shop contexts, and the module can be enabled or disabled for the selected context. Operational reads frequently use the order&#039;s shop ID. Some resources remain global or shared: Deutsche Post page formats and PPL version, downloaded products, product customs, and custom tables without a direct shop column. Manifest and Information screens require a single shop when multishop is active. Merchants should verify every shop separately and avoid describing the module as fully data-isolated per shop.</p>
+<h2 id="privacy-and-stored-data">Privacy and stored data</h2>
+<p>Shipment requests can transmit sender/recipient identity, addresses, shipment content and values, tracking references, email and phone to DHL or Deutsche Post as required by the chosen service. When the optional customer-confirmation setting is off, email and phone are sent to DHL by default. The merchant remains responsible for lawful processing, notices and retention.</p>
+<p>The module stores configuration credentials, shipment/label/package/tracking metadata, RMA consent, customs data, Deutsche Post products/prices, generated files and optional logs. Logs are masked by module logic but must still be treated as sensitive. Uninstall does not automatically erase these tables, settings, logs or generated files.</p>
+<h2 id="external-services">External services</h2>
+<p>Runtime functions can contact DHL Parcel Shipping, Returns, token, Location Finder and tracking services; Deutsche Post INTERNETMARKE and tracking; Silbersaiten infrastructure for the PPL CSV; Google Maps when explicitly enabled; and the shop mail system/HP ePrint address when configured. The included documentation itself is fully local and uses no CDN.</p>
+<h2 id="compatibility">Compatibility</h2>
+<p>The module declares PrestaShop <code>1.6</code> as minimum and the currently executing PrestaShop version as maximum. Its changelog records compatibility work for PrestaShop 8 and 9. No formal PHP version range is declared; the changelog records fixes for PHP 7.2 and 8.4. The current code is not compatible with PHP 8.5 because of its <code>SoapClient::__doRequest()</code> method signature. The exact environment and contracted carrier products must be tested before production.</p>
+<h2 id="important-limitations">Important limitations</h2>
+<ul><li>DHL sender country is Germany only in the current API definition.</li><li>DHL API selection is fixed to version 2.1.</li><li>Live accounts and eligible contract products are required.</li><li>There is no live checkout-rate engine, background queue or automatic log/file retention cleanup.</li><li>External availability, prices, delivery performance and service acceptance are controlled by DHL/Deutsche Post, not guaranteed by the module.</li><li>Multishop configuration is supported, but not every custom data store is physically separated by shop.</li></ul>
+<h2 id="main-advantages">Main advantages</h2>
+<ul><li>Integrated label and tracking workflow inside PrestaShop.</li><li>DHL Paket and Deutsche Post INTERNETMARKE in one module.</li><li>Carrier/product mapping and practical warehouse defaults.</li><li>Customs, additional-service, manifest and supported return controls.</li><li>Multishop-aware settings with clearly documented shared data.</li><li>Six-language offline documentation and direct support links.</li></ul>
+<h2 id="very-short-store-card-texts">Very short store-card texts</h2>
+<ol><li>Create DHL Paket and Deutsche Post INTERNETMARKE labels directly from PrestaShop orders.</li><li>Connect PrestaShop carriers with DHL/Deutsche Post labels, tracking, customs and returns.</li><li>Manage contracted DHL and Deutsche Post shipping workflows from your PrestaShop Back Office.</li></ol><a class="back-to-top" href="#top">Back to top</a></article>
+    </div>
+  </main>
+  <footer class="footer"><div class="footer__inner"><p>Silbersaiten · DHL Deutschepost 3.2.9</p></div></footer>
+  <script src="documentation.js"></script>
+</body>
+</html>

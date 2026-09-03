@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>DHL Deutschepost 3.2.9 — Manuale utente · DHL Deutschepost</title>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body id="top">
+  <a class="skip-link" href="#content">Vai al contenuto principale</a>
+  <header class="hero">
+    <div class="hero__inner">
+      <a class="brand-link" href="https://www.silbersaiten.de/" target="_blank" rel="noopener"><img src="silbersaiten-logo.jpg" width="179" height="41" alt="Silbersaiten"></a>
+      <p class="hero__module">DHL Deutschepost 3.2.9</p>
+      <h1>DHL Deutschepost 3.2.9 — Manuale utente</h1>
+    </div><div class="hero__stripe" aria-hidden="true"></div>
+  </header>
+  <main id="content" class="page-shell">
+    <nav class="document-nav" aria-label="DHL Deutschepost">
+      <a class="button" href="manuale-utente-it.html" aria-current="page">Manuale utente</a>
+      <a class="button" href="descrizione-modulo-it.html">Descrizione del modulo</a>
+      <button class="button button--print" type="button" data-print-document>Stampa / salva come PDF</button>
+    </nav>
+    <div class="layout">
+      <nav class="toc" aria-label="Indice"><h2 class="toc__title">Indice</h2><ul><li class="toc-level-2"><a href="#inizia-da-qui">Inizia da qui</a></li>
+<li class="toc-level-2"><a href="#dati-necessari-prima-della-configurazione">Dati necessari prima della configurazione</a></li>
+<li class="toc-level-2"><a href="#primo-accesso-al-portale-dhl">Primo accesso al portale DHL</a></li>
+<li class="toc-level-2"><a href="#trovare-ekp-prodotto-e-partecipazione">Trovare EKP, prodotto e partecipazione</a></li>
+<li class="toc-level-2"><a href="#requisiti-e-compatibilit-a">Requisiti e compatibilità</a></li>
+<li class="toc-level-2"><a href="#installazione-e-aggiornamento">Installazione e aggiornamento</a></li>
+<li class="toc-level-3"><a href="#nuova-installazione">Nuova installazione</a></li>
+<li class="toc-level-3"><a href="#aggiornamento-senza-perdere-dati">Aggiornamento senza perdere dati</a></li>
+<li class="toc-level-2"><a href="#prima-connessione-a-dhl">Prima connessione a DHL</a></li>
+<li class="toc-level-2"><a href="#creare-la-prima-etichetta-dhl">Creare la prima etichetta DHL</a></li>
+<li class="toc-level-2"><a href="#etichette-massive">Etichette massive</a></li>
+<li class="toc-level-2"><a href="#problemi-comuni-della-prima-etichetta">Problemi comuni della prima etichetta</a></li>
+<li class="toc-level-2"><a href="#impostazioni-da-decidere-consapevolmente">Impostazioni da decidere consapevolmente</a></li>
+<li class="toc-level-2"><a href="#prima-configurazione-internetmarke">Prima configurazione INTERNETMARKE</a></li>
+<li class="toc-level-2"><a href="#multishop">Multishop</a></li>
+<li class="toc-level-2"><a href="#dati-privacy-servizi-e-limiti">Dati, privacy, servizi e limiti</a></li>
+<li class="toc-level-2"><a href="#checklist-prima-della-produzione">Checklist prima della produzione</a></li></ul></nav>
+      <article class="document-card"><h2 id="inizia-da-qui">Inizia da qui</h2>
+<p>DHL Deutschepost collega gli ordini PrestaShop alle spedizioni DHL Paket per clienti commerciali e a Deutsche Post INTERNETMARKE. Dal Back Office crea etichette, salva i codici di tracciamento, gestisce la generazione massiva, i manifesti e i resi supportati e può agevolare gli indirizzi Packstation/Postfiliale nel checkout.</p>
+<p>Il modulo non stipula un contratto DHL, non attiva prodotti, non calcola tariffe in tempo reale nel checkout e non determina i servizi inclusi nel contratto. Prima di usare Live, ottieni da DHL i dati seguenti.</p>
+<h2 id="dati-necessari-prima-della-configurazione">Dati necessari prima della configurazione</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Dato</th><th scope="col">Dove si ottiene</th><th scope="col">Utilizzo</th></tr></thead><tbody><tr><td>Contratto commerciale DHL</td><td>Referente commerciale DHL</td><td>Spedizioni DHL Paket reali</td></tr><tr><td>Nome utente e password GKP</td><td>Post &amp; DHL Business Customer Portal</td><td>Autenticazione Live</td></tr><tr><td>EKP</td><td>Dati contratto GKP o documenti DHL</td><td>Identificazione dell&#039;account</td></tr><tr><td>Numeri di fatturazione (*Abrechnungsnummern*)</td><td>Posizioni contrattuali GKP</td><td>Prodotto/procedura e partecipazione</td></tr><tr><td>Abilitazione DHL Retoure</td><td>Contratto DHL</td><td>Etichette di reso, se necessarie</td></tr><tr><td>Account Portokasse</td><td>Deutsche Post</td><td>INTERNETMARKE, se utilizzata</td></tr></tbody></table></div>
+<p>Se manca un dato, richiedilo al referente del contratto. Il modulo non può ricavare né attivare numeri contrattuali.</p>
+<h2 id="primo-accesso-al-portale-dhl">Primo accesso al portale DHL</h2>
+<ol><li>Apri il <strong>Post &amp; DHL Business Customer Portal (GKP)</strong>: &lt;https://geschaeftskunden.dhl.de/&gt;.</li><li>Usa l&#039;utente personale ricevuto con il contratto e la password iniziale o il link di ripristino.</li><li>Completa l&#039;attivazione o il cambio password richiesto.</li><li>Se i dati non sono arrivati, usa <strong>Forgot password/Passwort vergessen</strong> o contatta l&#039;amministratore dell&#039;account o DHL. L&#039;accesso iniziale viene normalmente inviato dopo la registrazione commerciale.</li><li>Per un&#039;API di produzione, DHL raccomanda un <strong>utente di sistema commerciale</strong> dedicato. Crealo o richiedilo dopo che un amministratore personale può accedere a GKP.</li></ol>
+<p>L&#039;utente di sistema serve per l&#039;API e non può accedere all&#039;interfaccia web GKP. Mantieni almeno un amministratore personale. Non inserire client ID o client secret del DHL Developer Portal: il modulo non ha tali campi e usa le credenziali GKP configurate per Live.</p>
+<h2 id="trovare-ekp-prodotto-e-partecipazione">Trovare EKP, prodotto e partecipazione</h2>
+<p>In GKP apri l&#039;area del contratto, normalmente <strong>Vertragsdaten &gt; Vertragspositionen</strong>, e individua l&#039;<strong>Abrechnungsnummer</strong> di ogni prodotto. I nomi del portale possono cambiare; conta il numero assegnato alla posizione contrattuale.</p>
+<p>Il numero di fatturazione DHL Paket ha 14 caratteri:</p>
+<p><code>1234567890 01 01</code></p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Parte</th><th scope="col">Lunghezza</th><th scope="col">Esempio</th><th scope="col">Campo del modulo</th></tr></thead><tbody><tr><td>EKP</td><td>10 caratteri</td><td><code>1234567890</code></td><td><strong>EKP</strong></td></tr><tr><td>Procedura/prodotto</td><td>2 caratteri</td><td><code>01</code></td><td>Seleziona il <strong>prodotto DHL</strong> corrispondente</td></tr><tr><td>Partecipazione</td><td>2 caratteri</td><td><code>01</code></td><td><strong>Participation</strong> accanto al prodotto</td></tr></tbody></table></div>
+<p>Non incollare l&#039;intero numero nel campo Participation e non inserire lì il codice prodotto centrale.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Procedura</th><th scope="col">Prodotto nel modulo</th></tr></thead><tbody><tr><td><code>01</code></td><td>DHL Paket</td></tr><tr><td><code>53</code></td><td>DHL Paket International</td></tr><tr><td><code>54</code></td><td>DHL Europaket</td></tr><tr><td><code>62</code></td><td>DHL Kleinpaket</td></tr><tr><td><code>66</code></td><td>Warenpost International</td></tr></tbody></table></div>
+<p>Aggiungi solo prodotti presenti nel contratto. Uno stesso prodotto può avere più partecipazioni. DHL può assegnare valori numerici o alfanumerici, ma il campo separato <strong>Return participation</strong> di questa versione accetta esattamente due cifre.</p>
+<p>Per i resi usa la partecipazione della relativa posizione DHL Retoure. <code>01</code> è comune, non garantito. La vecchia documentazione descriveva credenziali Retoure Portal e portal ID separati; la versione attuale non ha questi campi e non usa quel login.</p>
+<h2 id="requisiti-e-compatibilit-a">Requisiti e compatibilità</h2>
+<ul><li>PrestaShop: il modulo dichiara 1.6 come minimo e la versione in esecuzione come massimo. Il CHANGELOG include modifiche per PrestaShop 8 e 9.</li><li>PHP: non è dichiarato un intervallo formale. Sono documentate correzioni per PHP 7.2 e 8.4. Il codice attuale non è compatibile con PHP 8.5 a causa della firma <code>SoapClient::__doRequest()</code>; usa una versione compatibile come PHP 8.4 fino all&#039;adeguamento.</li><li>Ambiente: usa HTTPS in uscita, cURL, JSON e mbstring; <code>logs</code>, <code>pdfs</code> e <code>data</code> devono essere scrivibili.</li><li>DHL: il paese mittente è attualmente solo Germania (<code>DE</code>) e l&#039;API di spedizione è fissata a <code>2.1</code>.</li><li>Account: Live richiede credenziali GKP e prodotti contrattuali; INTERNETMARKE richiede Portokasse.</li></ul>
+<p>Esegui backup, prova in staging, verifica HTTPS e decidi la corrispondenza dei corrieri PrestaShop. In multishop seleziona il contesto corretto prima del salvataggio.</p>
+<h2 id="installazione-e-aggiornamento">Installazione e aggiornamento</h2>
+<h3 id="nuova-installazione">Nuova installazione</h3>
+<ol><li>In <strong>Moduli &gt; Gestione moduli</strong>, scegli il caricamento di un modulo e seleziona lo ZIP di release.</li><li>Installa <strong>DHL Deutschepost</strong> e apri la configurazione.</li><li>Segui la prima connessione descritta sotto.</li></ol>
+<h3 id="aggiornamento-senza-perdere-dati">Aggiornamento senza perdere dati</h3>
+<p>Carica il nuovo ZIP o distribuisci l&#039;intera directory <code>dhldp</code> su quella esistente. Non disinstallare prima. Esegui l&#039;upgrade quando PrestaShop lo propone. Il percorso normale conserva chiavi e dati.</p>
+<p>Svuota cache PrestaShop e browser solo se restano visibili template, traduzioni o risorse vecchie.</p>
+<h2 id="prima-connessione-a-dhl">Prima connessione a DHL</h2>
+<ol><li>Apri <strong>DHL settings</strong>.</li><li>Seleziona <strong>Sandbox</strong> per imparare senza contratto reale; il modulo usa credenziali sandbox integrate. Usa <strong>Live</strong> solo in produzione.</li><li>In Live inserisci utente GKP/API, password ed EKP di dieci caratteri. Il salvataggio verifica l&#039;account. Gli asterischi successivi indicano solo una password memorizzata.</li><li>In <strong>DHL Products</strong> aggiungi ogni prodotto: i due caratteri centrali dell&#039;Abrechnungsnummer identificano il prodotto e gli ultimi due sono la Participation.</li><li>In <strong>Carriers</strong> associa ogni corriere PrestaShop alla combinazione corretta. Le azioni DHL compaiono solo per ordini con corriere associato.</li><li>Inserisci il mittente separando via e numero civico, oppure copia esattamente un riferimento mittente GKP.</li><li>Scegli il formato etichetta della stampante. Nel primo test lascia disattivati stato automatico, accettazione avvisi, resi immediati e servizi extra.</li><li>Salva e crea un&#039;etichetta per un ordine di prova.</li></ol>
+<p>Sandbox verifica il flusso del modulo, non il contratto Live. Esegui anche una prova Live controllata.</p>
+<h2 id="creare-la-prima-etichetta-dhl">Creare la prima etichetta DHL</h2>
+<ol><li>Apri un ordine di prova con corriere associato a DHL.</li><li>Nell&#039;area DHL scegli <strong>Generate label</strong>.</li><li>Controlla via e civico del destinatario, CAP, paese, peso e dimensioni. Prima di riprovare usa <strong>Update delivery address</strong>.</li><li>Per esportazioni, verifica descrizione, valore, origine e codice tariffario di ogni posizione.</li><li>Seleziona solo servizi supportati da prodotto e contratto e invia.</li><li>Apri il PDF e controlla mittente, destinatario, prodotto, formato e numero spedizione.</li><li>Verifica il tracking e che stato o e-mail siano stati eseguiti una sola volta.</li></ol>
+<p>Separa sempre il civico dalla via. Una riga combinata è una causa frequente di rifiuto.</p>
+<h2 id="etichette-massive">Etichette massive</h2>
+<ol><li>Nell&#039;elenco ordini seleziona quelli con associazione DHL valida.</li><li>Esegui l&#039;azione massiva <strong>Generate DHL labels</strong>.</li><li>Esamina i singoli errori: indirizzo, peso o servizio non valido possono riguardare un solo ordine.</li><li>Usa <strong>Print last labels</strong> per recuperare l&#039;ultimo lotto.</li></ol>
+<p>Inizia con pochi ordini. Il processo massivo richiede comunque indirizzi, pesi e dati doganali corretti.</p>
+<h2 id="problemi-comuni-della-prima-etichetta">Problemi comuni della prima etichetta</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Sintomo</th><th scope="col">Causa probabile</th><th scope="col">Controllo</th></tr></thead><tbody><tr><td>Account rifiutato al salvataggio</td><td>Utente, password o EKP Live errati; account bloccato</td><td>Verifica GKP personale e utente API separato, ripristina la password e confronta EKP col contratto.</td></tr><tr><td>Il portale funziona, il modulo no</td><td>Confusione fra utente personale e di sistema, o password scaduta</td><td>Usa le credenziali API; l&#039;utente di sistema non accede al web GKP.</td></tr><tr><td>Nessuna azione DHL</td><td>Corriere non associato nel negozio</td><td>Salva l&#039;associazione nel contesto dell&#039;ordine.</td></tr><tr><td>Prodotto/partecipazione rifiutati</td><td>Parte sbagliata del numero</td><td>Nei 14 caratteri: posizioni 11–12 = prodotto, 13–14 = partecipazione.</td></tr><tr><td>Indirizzo rifiutato</td><td>Civico nella via, CAP o paese errato</td><td>Separa via/civico e verifica il formato del paese.</td></tr><tr><td>Peso/dimensioni rifiutati</td><td>Vuoto, zero, conversione errata o limite</td><td>Controlla pesi e imballo; <code>1</code> per kg o <code>0.001</code> per grammi.</td></tr><tr><td>Esportazione fallita</td><td>Mancano descrizione, valore, origine o tariffa</td><td>Completa ogni posizione; il modulo convalida 6, 8 o 10 cifre.</td></tr><tr><td>Servizio non disponibile</td><td>Prodotto, destinazione o contratto non lo supportano</td><td>Rimuovilo o chiedi conferma a DHL.</td></tr><tr><td>PDF assente</td><td><code>pdfs</code> non scrivibile o errore API</td><td>Controlla permessi/spazio e abilita temporaneamente il log mascherato.</td></tr></tbody></table></div>
+<h2 id="impostazioni-da-decidere-consapevolmente">Impostazioni da decidere consapevolmente</h2>
+<ul><li><strong>Peso:</strong> calcolalo dai prodotti solo se aggiornato; <code>1</code> per kg o <code>0.001</code> per grammi, più l&#039;imballo realistico.</li><li><strong>Stampante:</strong> scegli il formato corretto; <code>100x70mm</code> è solo per DHL Kleinpaket e Warenpost International.</li><li><strong>Stato/e-mail:</strong> inizia senza automazioni e poi escludi messaggi doppi.</li><li><strong>Avvisi:</strong> non accettarli automaticamente nei primi test.</li><li><strong>Servizi extra:</strong> routing, GoGreen, GoGreen Plus, età, Premium e resi dipendono dal contratto e possono costare.</li><li><strong>Privacy:</strong> senza conferma, il modulo invia a DHL e-mail e telefono per impostazione predefinita. Definisci base giuridica e informativa.</li><li><strong>Packstation/Postfiliale:</strong> funzionano senza mappa; Google Maps è opzionale e richiede una chiave limitata.</li><li><strong>Resi:</strong> abilita la gestione estesa insieme ai resi PrestaShop dopo aver testato i paesi. L&#039;invio immediato è disattivato di default.</li><li><strong>Log:</strong> solo per diagnosi; log e PDF non vengono eliminati automaticamente.</li></ul>
+<h2 id="prima-configurazione-internetmarke">Prima configurazione INTERNETMARKE</h2>
+<ol><li>Registrati o accedi a <strong>Portokasse</strong>: &lt;https://portokasse.deutschepost.de/portokasse/&gt;. Una nuova registrazione può richiedere un codice inviato per posta.</li><li>Apri <strong>DHL DP settings</strong> e inserisci utente e password Portokasse/INTERNETMARKE.</li><li>Al primo collegamento, Portokasse può chiedere l&#039;autorizzazione permanente dell&#039;applicazione commerciale. Controlla <strong>Meine Daten &gt; Geschäftsanwendungen</strong>.</li><li>Recupera i formati pagina e aggiorna la lista PPL se necessario.</li><li>Associa solo i corrieri Deutsche Post, scegli prodotto, <code>pdf</code> o <code>png</code> e mittente.</li><li>Per fogli PDF imposta pagina, riga e colonna e stampa una prova.</li></ol>
+<p>Se l&#039;accesso fallisce, prova Portokasse direttamente e ripristina lì la password. Un prodotto visibile non garantisce né l&#039;idoneità dell&#039;account né il prezzo corrente.</p>
+<h2 id="multishop">Multishop</h2>
+<p>Le impostazioni supportano tutti i negozi, gruppo e singolo negozio con l&#039;ereditarietà PrestaShop. Salva valori generali globalmente e credenziali, mittenti e associazioni diverse nel singolo negozio.</p>
+<p>Le impostazioni operative sono di norma lette per il negozio dell&#039;ordine. Le sei tabelle però non hanno <code>id_shop</code> diretto; dogana prodotto e lista Deutsche Post sono condivise, versione PPL e formati sono globali. Manifest e Information richiedono un singolo negozio. Prova un&#039;etichetta in ogni negozio.</p>
+<h2 id="dati-privacy-servizi-e-limiti">Dati, privacy, servizi e limiti</h2>
+<p>Credenziali e opzioni sono nella configurazione PrestaShop; etichette, colli, consensi, dogana e INTERNETMARKE in sei tabelle <code>dhldp_*</code>; file in <code>pdfs</code>; log in <code>logs</code>; prodotti Deutsche Post in <code>data/ppl.csv</code>.</p>
+<p>In base al servizio, DHL o Deutsche Post possono ricevere nomi, indirizzi, contenuti, valori, riferimenti, e-mail e telefono. Integrazioni opzionali: DHL Location Finder, Google Maps, <code>prestamodule.silberserver.de</code> per PPL, posta del negozio e HP ePrint. La documentazione locale non richiede risorse esterne.</p>
+<p>Il paese mittente DHL è limitato alla Germania, l&#039;API alla 2.1 e non esistono tariffe checkout né worker. <code>cron_track.php</code> aggiorna il tracking con la chiave segreta: proteggi l&#039;URL. Il vecchio mittente austriaco, il login Retoure Portal separato e il vecchio URL manuale di tracking non valgono per questa versione.</p>
+<p>La disinstallazione rimuove schede e hook, ma conserva tabelle, configurazione, etichette, log e lista prodotti. Rimuovili manualmente dopo un backup solo se desideri la cancellazione completa.</p>
+<h2 id="checklist-prima-della-produzione">Checklist prima della produzione</h2>
+<ul><li>L&#039;account Live è convalidato con utente API ed EKP corretti.</li><li>Ogni corriere punta a prodotto e partecipazione del contratto.</li><li>Mittente, via/civico, conversione peso e formato stampa sono verificati.</li><li>Etichetta nazionale, esportazione necessaria e resi sono stati provati separatamente.</li><li>Stati, e-mail e consenso corrispondono alla politica del negozio.</li><li>Ogni contesto multishop ha una prova propria.</li><li>Il log diagnostico è disattivato.</li></ul><a class="back-to-top" href="#top">Torna in alto</a></article>
+    </div>
+  </main>
+  <footer class="footer"><div class="footer__inner"><p>Silbersaiten · DHL Deutschepost 3.2.9</p></div></footer>
+  <script src="documentation.js"></script>
+</body>
+</html>

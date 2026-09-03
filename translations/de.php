@@ -2,6 +2,18 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{dhldp}prestashop>dhldp_06ad314b340900d226b1196e1fe289e9'] = 'Schnellstart';
+$_MODULE['<{dhldp}prestashop>dhldp_0177a3a39486199b8c21696b27e704bf'] = 'Führen Sie diese Schritte aus, bevor Sie Produktivlabels erstellen:';
+$_MODULE['<{dhldp}prestashop>dhldp_a3232d178d5675e35a626310c1f7a427'] = 'Besorgen Sie sich einen persönlichen GKP-Zugang und für den produktiven API-Betrieb einen eigenen Systembenutzer; suchen Sie EKP und 14-stellige Abrechnungsnummern in den Vertragsdaten.';
+$_MODULE['<{dhldp}prestashop>dhldp_4152b73ad8ce56f31e6f9886165af892'] = 'Wählen Sie Sandbox zum Testen oder Live für den Produktivbetrieb und tragen Sie API-Benutzer, Passwort und zehnstellige EKP ein.';
+$_MODULE['<{dhldp}prestashop>dhldp_0804417fc3e3ceafc89d8c4c7123d47f'] = 'Legen Sie Vertragsprodukte anhand der Zeichen 11-12 der Abrechnungsnummer an, tragen Sie die Teilnahme aus Zeichen 13-14 ein und ordnen Sie PrestaShop-Versanddienste zu.';
+$_MODULE['<{dhldp}prestashop>dhldp_f6d0dc25a63726312d3b94467e92223b'] = 'Tragen Sie den Absender oder eine exakte GKP-Absenderreferenz ein; konfigurieren Sie die Portokasse separat, wenn Sie INTERNETMARKE nutzen.';
+$_MODULE['<{dhldp}prestashop>dhldp_1988c65f5d71737aecfc4b28593db119'] = 'Erzeugen Sie ein Testlabel aus einer Bestellung und prüfen Sie Datei und Sendungsnummer vor dem Livebetrieb.';
+$_MODULE['<{dhldp}prestashop>dhldp_9c0229a92cbba3c2186662317d8b28bc'] = 'Benutzerhandbuch';
+$_MODULE['<{dhldp}prestashop>dhldp_1b9e7236be896a9846b22f21395f092a'] = 'Modulbeschreibung';
+$_MODULE['<{dhldp}prestashop>dhldp_b1d85137e1a4d86f5bfbf5433c3b8f23'] = 'Weitere PrestaShop-Module';
+$_MODULE['<{dhldp}prestashop>dhldp_5b3e28e926772b0c88f5cdbbde578515'] = 'Kostenpflichtiger Support';
+$_MODULE['<{dhldp}prestashop>dhldp_6dcce363217b8653bba30f4edf38ded4'] = 'Support-E-Mail';
 $_MODULE['<{dhldp}prestashop>additional-services_099253d0884868eb4f10b9f4ddb07317'] = 'Filial-Routing';
 $_MODULE['<{dhldp}prestashop>additional-services_0c2868718eaf308ec1de9c2407e3ee97'] = 'Ident-Check';
 $_MODULE['<{dhldp}prestashop>additional-services_0cce9513a6ca132dda6a0679be8ef87d'] = 'Wunschtag';

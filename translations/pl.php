@@ -2,6 +2,18 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{dhldp}prestashop>dhldp_06ad314b340900d226b1196e1fe289e9'] = 'Szybki start';
+$_MODULE['<{dhldp}prestashop>dhldp_0177a3a39486199b8c21696b27e704bf'] = 'Wykonaj te kroki przed utworzeniem etykiet produkcyjnych:';
+$_MODULE['<{dhldp}prestashop>dhldp_a3232d178d5675e35a626310c1f7a427'] = 'Uzyskaj osobisty dostęp GKP, a do produkcyjnego API osobnego użytkownika systemowego; znajdź EKP i 14-znakowe numery rozliczeniowe w danych umowy.';
+$_MODULE['<{dhldp}prestashop>dhldp_4152b73ad8ce56f31e6f9886165af892'] = 'Wybierz Sandbox do testów lub Live do produkcji, a następnie wpisz użytkownika API, hasło i 10-znakowy EKP.';
+$_MODULE['<{dhldp}prestashop>dhldp_0804417fc3e3ceafc89d8c4c7123d47f'] = 'Dodaj produkty umowne według znaków 11-12 numeru, wpisz udział ze znaków 13-14 i przypisz przewoźników PrestaShop.';
+$_MODULE['<{dhldp}prestashop>dhldp_f6d0dc25a63726312d3b94467e92223b'] = 'Wpisz nadawcę lub dokładną referencję GKP; jeśli używasz INTERNETMARKE, skonfiguruj Portokasse osobno.';
+$_MODULE['<{dhldp}prestashop>dhldp_1988c65f5d71737aecfc4b28593db119'] = 'Utwórz etykietę testową z zamówienia i przed uruchomieniem produkcyjnym sprawdź plik oraz numer śledzenia.';
+$_MODULE['<{dhldp}prestashop>dhldp_9c0229a92cbba3c2186662317d8b28bc'] = 'Podręcznik użytkownika';
+$_MODULE['<{dhldp}prestashop>dhldp_1b9e7236be896a9846b22f21395f092a'] = 'Opis modułu';
+$_MODULE['<{dhldp}prestashop>dhldp_b1d85137e1a4d86f5bfbf5433c3b8f23'] = 'Więcej modułów PrestaShop';
+$_MODULE['<{dhldp}prestashop>dhldp_5b3e28e926772b0c88f5cdbbde578515'] = 'Płatne wsparcie';
+$_MODULE['<{dhldp}prestashop>dhldp_6dcce363217b8653bba30f4edf38ded4'] = 'E-mail wsparcia';
 $_MODULE['<{dhldp}prestashop>additional-services_0c2868718eaf308ec1de9c2407e3ee97'] = 'Identyfikator sprawdzania';
 $_MODULE['<{dhldp}prestashop>additional-services_0cce9513a6ca132dda6a0679be8ef87d'] = 'Dzień dostawy';
 $_MODULE['<{dhldp}prestashop>additional-services_11813f4618d9d308756ae134dd44940a'] = 'Sąsiad';

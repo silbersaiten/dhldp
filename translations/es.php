@@ -2,6 +2,18 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{dhldp}prestashop>dhldp_06ad314b340900d226b1196e1fe289e9'] = 'Inicio rápido';
+$_MODULE['<{dhldp}prestashop>dhldp_0177a3a39486199b8c21696b27e704bf'] = 'Complete estos pasos antes de crear etiquetas de producción:';
+$_MODULE['<{dhldp}prestashop>dhldp_a3232d178d5675e35a626310c1f7a427'] = 'Obtenga acceso personal a GKP y, para la API de producción, un usuario de sistema específico; localice el EKP y los números de facturación de 14 caracteres en el contrato.';
+$_MODULE['<{dhldp}prestashop>dhldp_4152b73ad8ce56f31e6f9886165af892'] = 'Elija Sandbox para probar o Live para producción e introduzca el usuario API, la contraseña y el EKP de diez caracteres.';
+$_MODULE['<{dhldp}prestashop>dhldp_0804417fc3e3ceafc89d8c4c7123d47f'] = 'Añada los productos contratados usando los caracteres 11-12 del número, introduzca la participación de los caracteres 13-14 y asigne los transportistas de PrestaShop.';
+$_MODULE['<{dhldp}prestashop>dhldp_f6d0dc25a63726312d3b94467e92223b'] = 'Introduzca el remitente o una referencia GKP exacta; configure Portokasse por separado si utiliza INTERNETMARKE.';
+$_MODULE['<{dhldp}prestashop>dhldp_1988c65f5d71737aecfc4b28593db119'] = 'Cree una etiqueta de prueba desde un pedido y verifique el archivo y el número de seguimiento antes de pasar a producción.';
+$_MODULE['<{dhldp}prestashop>dhldp_9c0229a92cbba3c2186662317d8b28bc'] = 'Manual de usuario';
+$_MODULE['<{dhldp}prestashop>dhldp_1b9e7236be896a9846b22f21395f092a'] = 'Descripción del módulo';
+$_MODULE['<{dhldp}prestashop>dhldp_b1d85137e1a4d86f5bfbf5433c3b8f23'] = 'Más módulos para PrestaShop';
+$_MODULE['<{dhldp}prestashop>dhldp_5b3e28e926772b0c88f5cdbbde578515'] = 'Soporte de pago';
+$_MODULE['<{dhldp}prestashop>dhldp_6dcce363217b8653bba30f4edf38ded4'] = 'Email de soporte';
 $_MODULE['<{dhldp}prestashop>add-carrier_c26732c157d7b353c1be9f7ba8962e57'] = 'Neuen Versender hinzufügen';
 $_MODULE['<{dhldp}prestashop>additional-services_0c2868718eaf308ec1de9c2407e3ee97'] = 'Comprobación de identificación';
 $_MODULE['<{dhldp}prestashop>additional-services_0cce9513a6ca132dda6a0679be8ef87d'] = 'Día de entrega';

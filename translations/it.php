@@ -2,6 +2,18 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{dhldp}prestashop>dhldp_06ad314b340900d226b1196e1fe289e9'] = 'Avvio rapido';
+$_MODULE['<{dhldp}prestashop>dhldp_0177a3a39486199b8c21696b27e704bf'] = 'Completa questi passaggi prima di creare etichette di produzione:';
+$_MODULE['<{dhldp}prestashop>dhldp_a3232d178d5675e35a626310c1f7a427'] = 'Ottieni l’accesso GKP personale e, per l’API di produzione, un utente di sistema dedicato; trova EKP e numeri di fatturazione di 14 caratteri nei dati contrattuali.';
+$_MODULE['<{dhldp}prestashop>dhldp_4152b73ad8ce56f31e6f9886165af892'] = 'Scegli Sandbox per i test o Live per la produzione, quindi inserisci utente API, password ed EKP di dieci caratteri.';
+$_MODULE['<{dhldp}prestashop>dhldp_0804417fc3e3ceafc89d8c4c7123d47f'] = 'Aggiungi i prodotti contrattuali dai caratteri 11-12 del numero, inserisci la partecipazione dai caratteri 13-14 e associa i corrieri PrestaShop.';
+$_MODULE['<{dhldp}prestashop>dhldp_f6d0dc25a63726312d3b94467e92223b'] = 'Inserisci il mittente o un riferimento GKP esatto; configura Portokasse separatamente se usi INTERNETMARKE.';
+$_MODULE['<{dhldp}prestashop>dhldp_1988c65f5d71737aecfc4b28593db119'] = 'Crea un’etichetta di prova da un ordine e verifica file e tracking prima di passare alla produzione.';
+$_MODULE['<{dhldp}prestashop>dhldp_9c0229a92cbba3c2186662317d8b28bc'] = 'Manuale utente';
+$_MODULE['<{dhldp}prestashop>dhldp_1b9e7236be896a9846b22f21395f092a'] = 'Descrizione del modulo';
+$_MODULE['<{dhldp}prestashop>dhldp_b1d85137e1a4d86f5bfbf5433c3b8f23'] = 'Altri moduli PrestaShop';
+$_MODULE['<{dhldp}prestashop>dhldp_5b3e28e926772b0c88f5cdbbde578515'] = 'Assistenza a pagamento';
+$_MODULE['<{dhldp}prestashop>dhldp_6dcce363217b8653bba30f4edf38ded4'] = 'Email di assistenza';
 $_MODULE['<{dhldp}prestashop>add-carrier_c26732c157d7b353c1be9f7ba8962e57'] = 'Neuen Versender hinzufügen';
 $_MODULE['<{dhldp}prestashop>additional-services_0c2868718eaf308ec1de9c2407e3ee97'] = 'Controllo identificato';
 $_MODULE['<{dhldp}prestashop>additional-services_0cce9513a6ca132dda6a0679be8ef87d'] = 'Giorno di consegna';
