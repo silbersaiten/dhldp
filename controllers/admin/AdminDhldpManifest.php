@@ -66,6 +66,9 @@ class AdminDhldpManifestController extends ModuleAdminController
             if (Tools::isSubmit('getManifest')) {
                 if (Tools::getValue('manifestDate', '') == '') {
                     $this->errors[] = Tools::displayError('Please select manifest date. Manifest date is empty.');
+                } elseif (!preg_match('/\A[0-9]{4}-[0-9]{2}-[0-9]{2}\z/', Tools::getValue('manifestDate'))
+                    || !Validate::isDate(Tools::getValue('manifestDate'))) {
+                    $this->errors[] = Tools::displayError('Please select a valid manifest date (YYYY-MM-DD).');
                 } else {
                     $this->module->dhldp_api_rest->setApiVersion(Configuration::get('DHLDP_DHL_API_VERSION', null, null, Context::getContext()->shop->id));
                     $response = $this->module->dhldp_api_rest->callDhlApi(

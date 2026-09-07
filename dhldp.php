@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.9
+ * @version   3.2.10
  * @link      https://www.silbersaiten.de
  */
 
@@ -46,7 +46,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.9';
+        $this->version = '3.2.10';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -2853,8 +2853,9 @@ class DhlDp extends Module
         }
 
         $basename = preg_replace('#[^a-zA-Z0-9_-]#', '', $basename);
-        if ($basename === '' || Tools::strlen($basename) > 100) {
-            $basename = 'label_' . sha1($label_url);
+        // Leave room for .pdf and keep generated names stable when read as local URLs.
+        if ($basename === '' || strlen($basename) > 32) {
+            $basename = 'label_' . substr(hash('sha256', $label_url), 0, 24);
         }
 
         return $basename;
@@ -2862,12 +2863,31 @@ class DhlDp extends Module
 
     public function getLabelFileNameByLabelUrl($label_url)
     {
-        return $this->getLocalPath() . 'pdfs/' . $this->normalizeLabelBasename($label_url) . '.pdf';
+        $label_file = $this->getLocalPath() . 'pdfs/' . $this->normalizeLabelBasename($label_url) . '.pdf';
+
+        // Reuse cached PDFs created before the filename limit was reduced.
+        // Keep the old file too: its URL may still be stored in an order.
+        if (!file_exists($label_file) || (int)filesize($label_file) === 0) {
+            $legacy_basename = str_replace(array('printShipment?token', '?', '=', ' '), '', basename($label_url));
+            if (substr($legacy_basename, -4) === '.pdf') {
+                $legacy_basename = substr($legacy_basename, 0, -4);
+            }
+            $legacy_basename = preg_replace('#[^a-zA-Z0-9_-]#', '', $legacy_basename);
+            if ($legacy_basename === '' || strlen($legacy_basename) > 100) {
+                $legacy_basename = 'label_' . sha1($label_url);
+            }
+            $legacy_file = $this->getLocalPath() . 'pdfs/' . $legacy_basename . '.pdf';
+            if ($legacy_file !== $label_file && is_file($legacy_file) && (int)filesize($legacy_file) > 0) {
+                copy($legacy_file, $label_file);
+            }
+        }
+
+        return $label_file;
     }
 
     public function getLabelFileURIByLabelUrl($label_url)
     {
-        return $this->getPathUri() . 'pdfs/' . $this->normalizeLabelBasename($label_url) . '.pdf';
+        return $this->getPathUri() . 'pdfs/' . basename($this->getLabelFileNameByLabelUrl($label_url));
     }
 
     public function saveLabelFile($label_url, $data)
