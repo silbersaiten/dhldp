@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.10
+ * @version   3.2.11
  * @link      https://www.silbersaiten.de
  */
 
@@ -46,7 +46,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.10';
+        $this->version = '3.2.11';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -1469,6 +1469,17 @@ class DhlDp extends Module
     {
         $order = new Order((int)$params['id_order']);
         $this->dhldp_api_rest->setApiVersionByIdShop($order->id_shop);
+        $feedback_key = 'dhldp_label_feedback_' . (int)$order->id;
+        if (isset($this->context->cookie->{$feedback_key})) {
+            $feedback = json_decode(base64_decode($this->context->cookie->{$feedback_key}), true);
+            unset($this->context->cookie->{$feedback_key});
+            $this->context->cookie->write();
+            if (is_array($feedback)) {
+                $this->context->smarty->assign('dhl_confirmations', $feedback['confirmations']);
+                $this->context->smarty->assign('dhl_warnings', $feedback['warnings']);
+                $this->context->smarty->assign('dhl_warnings_title', $this->l('THE SHIPPING LABEL WAS CREATED WITH WARNINGS'));
+            }
+        }
         if (Tools::getIsset('deleteDHLDPDhlLabel')) {
             $dhl_errors = array();
             $dhl_confirmations = array();
@@ -1565,12 +1576,6 @@ class DhlDp extends Module
             $dhl_warnings = array();
             $dhl_confirmations = array();
 
-            switch (Tools::getValue('dhlcm')) {
-                case '1':
-                    $dhl_confirmations[] = $this->l('Shipment order and shipping label have been created.');
-                    break;
-            }
-
             $packages = array(
                 array(
                     'weight' => (float)str_replace(',', '.', Tools::getValue('dhl_weight_package', 0)),
@@ -1645,11 +1650,18 @@ class DhlDp extends Module
                         }
                     }
                 } else {
-                    if (is_array($this->dhldp_api_rest->warnings) && count($this->dhldp_api_rest->warnings) > 0) {
-                        $dhl_warnings_title = $this->l('THE SHIPPING LABEL WAS CREATED WITH WARNINGS');
-                        $this->context->smarty->assign('dhl_warnings_title', $dhl_warnings_title);
-                    }
-                    $dhl_confirmations = $this->dhldp_api_rest->confirmations;
+                    // The order view was loaded before this display hook changed its state.
+                    // Start a fresh GET so status, invoices and tracking are rebuilt together.
+                    $this->context->cookie->{$feedback_key} = base64_encode(json_encode(array(
+                        'confirmations' => $this->dhldp_api_rest->confirmations ?: array($this->l('Shipment order and shipping label have been created.')),
+                        'warnings' => (array)$this->dhldp_api_rest->warnings,
+                    )));
+                    $this->context->cookie->write();
+                    $order_url = $this->is177
+                        ? $this->context->link->getAdminLink('AdminOrders', true, array(), array('vieworder' => 1, 'id_order' => (int)$order->id))
+                        : $this->getTabLink('AdminOrders', array('id_order' => (int)$order->id, 'vieworder' => true));
+                    Tools::redirectAdmin($order_url);
+                    return '';
                 }
             }
 
