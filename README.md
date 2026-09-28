@@ -4,6 +4,7 @@
 #### 3.2.12 (28.09.2026)
 * Fixed deleting DHL product
 * Fixed logging of the authorization process
+* Added separate DHL sandbox client credentials
 
 #### 3.2.11 (14.09.2026)
 * Fixed the issue where order data changed after label generation.

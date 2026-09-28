@@ -37,6 +37,8 @@ class DHLTokenManager
         }
         if ($mode == 1) {
             $this->tokenUrl = $this->tokenUrlLive;
+            $this->clientId = Configuration::get('DHLDP_DHL_CLIENT_ID');
+            $this->clientSecret = Configuration::get('DHLDP_DHL_CLIENT_SECRET');
             if (Tools::getIsset('DHLDP_DHL_LIVE_USER') && Tools::getIsset('DHLDP_DHL_LIVE_SIGN')) {
                 $this->dhl_user = Tools::getValue('DHLDP_DHL_LIVE_USER');
                 $this->dhl_pass = Tools::getValue('DHLDP_DHL_LIVE_SIGN');
@@ -46,11 +48,11 @@ class DHLTokenManager
             }
         } else {
             $this->tokenUrl = $this->tokenUrlSDX;
+            $this->clientId = Configuration::get('DHLDP_DHL_CLIENT_ID_TEST');
+            $this->clientSecret = Configuration::get('DHLDP_DHL_CLIENT_SECRET_TEST');
             $this->dhl_user = Configuration::get('DHLDP_DHL_SDX_USER');
             $this->dhl_pass = Configuration::get('DHLDP_DHL_SDX_PASS');
         }
-        $this->clientId = Configuration::get('DHLDP_DHL_CLIENT_ID');
-        $this->clientSecret = Configuration::get('DHLDP_DHL_CLIENT_SECRET');
     }
 
     public function getToken()

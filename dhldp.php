@@ -161,6 +161,16 @@ class DhlDp extends Module
             $result &= Configuration::updateGlobalValue($name, $value);
         }
 
+        $result &= $this->installSandboxApiCredentials();
+
+        return (bool)$result;
+    }
+
+    public function installSandboxApiCredentials()
+    {
+        $result = Configuration::updateGlobalValue('DHLDP_DHL_CLIENT_ID_TEST', 's34xKQgy3mnXsFGuPFAzZyvafhHciQlzgFO5U54Jr48DGVuO');
+        $result &= Configuration::updateGlobalValue('DHLDP_DHL_CLIENT_SECRET_TEST', 'sdPe5O42xnl6Hk3kRxgc2FHqXw7H2c067DCmZiAjTjGKGavpyUA2EUMMKlFG4imw');
+
         return (bool)$result;
     }
 
