@@ -84,13 +84,19 @@ class DHLTokenManager
         $res = $rclient->post($this->tokenUrl, $requestData);
 
         if ($res->error) {
-            $rclient->saveLogData('DHL', 'requestNewToken', null, null, curl_error($res->error));
-            throw new \Exception('Error requesting DHL token: ' . curl_error($res->error));
+            $rclient->saveLogData('DHL', 'requestNewToken', null, null, $res->error);
+            throw new \Exception('Error requesting DHL token: ' . $res->error);
         }
 
-        $tokenData = $res->decodeResponse();
+        try {
+            $tokenData = $res->decodeResponse();
+        } catch (\Exception $e) {
+            $message = 'DHL token request failed (HTTP ' . (int)$res->info->http_code . '): ' . $e->getMessage();
+            $rclient->saveLogData('DHL', 'requestNewToken', null, null, $message);
+            throw new \Exception($message, 0, $e);
+        }
 
-        if (isset($tokenData['access_token']) && isset($tokenData['expires_in'])) {
+        if ($res->info->http_code >= 200 && $res->info->http_code < 300 && isset($tokenData['access_token']) && isset($tokenData['expires_in'])) {
             $this->storeToken($tokenData['access_token'], $tokenData['expires_in']);
             return $tokenData['access_token'];
         }
@@ -100,7 +106,16 @@ class DHLTokenManager
             'expires_in' => isset($tokenData['expires_in']) ? $tokenData['expires_in'] : null,
             'token_type' => isset($tokenData['token_type']) ? $tokenData['token_type'] : null
         ]);
-        throw new \Exception('Invalid response from DHL: ' . $res->response);
+        $details = array();
+        foreach (array('title', 'detail', 'error', 'error_description') as $field) {
+            if (isset($tokenData[$field]) && is_string($tokenData[$field])) {
+                $details[] = $tokenData[$field];
+            }
+        }
+        $message = 'DHL token request failed (HTTP ' . (int)$res->info->http_code . '): '
+            . ($details ? implode('; ', $details) : 'Invalid token response');
+        $rclient->saveLogData('DHL', 'requestNewToken', null, null, $message);
+        throw new \Exception($message);
     }
 
     private function storeToken($accessToken, $expiresIn)

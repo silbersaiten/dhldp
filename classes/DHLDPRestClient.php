@@ -19,6 +19,7 @@ class DHLDPRestClient implements Iterator, ArrayAccess
     public $handle; // cURL resource handle.
     public $parameters;
     public $method;
+    public $url;
 
     // Populated after execution:
     public $response; // Response body.
@@ -240,7 +241,12 @@ class DHLDPRestClient implements Iterator, ArrayAccess
         $client->info = (object) curl_getinfo($client->handle);
 
         $client->error = curl_error($client->handle);
-        $client->saveLogData($client->info->request_header, $client->parameters, $client->headers, $client->response, $client->error);
+        // Do not log request headers: they may contain credentials.
+        $client->saveLogData('DHL', $method . ' ' . $client->maskSensitiveUrl($client->url), null, array(
+            'http_status' => $client->info->http_code,
+            'content_type' => isset($client->headers->content_type) ? $client->headers->content_type : null,
+            'body' => $client->response,
+        ), $client->error);
 
         curl_close($client->handle);
         return $client;
@@ -291,8 +297,12 @@ class DHLDPRestClient implements Iterator, ArrayAccess
         }
 
         if (!empty($this->headers->content_type)) {
+            $mediaType = strtolower(trim(explode(';', $this->headers->content_type)[0]));
+            if (preg_match('~^[^/]+/[^;]+\+json$~', $mediaType)) {
+                return 'json';
+            }
             if (preg_match($this->options['format_regex'], $this->headers->content_type, $matches)) {
-                return $matches[2];
+                return strtolower($matches[2]);
             }
         }
 
@@ -304,10 +314,13 @@ class DHLDPRestClient implements Iterator, ArrayAccess
         if (empty($this->decoded_response)) {
             $format = $this->getResponseFormat();
             if (!array_key_exists($format, $this->options['decoders'])) {
-                throw new DHLDPRestClientException("'${format}' is not a supported format, register a decoder to handle this response.");
+                throw new DHLDPRestClientException("'{$format}' is not a supported format, register a decoder to handle this response.");
             }
 
             $this->decoded_response = call_user_func($this->options['decoders'][$format], $this->response, true);
+            if ($this->options['decoders'][$format] === 'json_decode' && json_last_error() !== JSON_ERROR_NONE) {
+                throw new DHLDPRestClientException('Invalid JSON response: ' . json_last_error_msg());
+            }
         }
 
         return $this->decoded_response;
@@ -349,7 +362,7 @@ class DHLDPRestClient implements Iterator, ArrayAccess
                 "===================\n",
                 date('Y-m-d H:i:s'),
                 $operation,
-                is_string($request) ? $request : json_encode($request, JSON_PRETTY_PRINT)
+                is_string($maskedRequest) ? $maskedRequest : json_encode($maskedRequest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
             );
         }
 
@@ -370,12 +383,12 @@ class DHLDPRestClient implements Iterator, ArrayAccess
                 "=====================\n",
                 date('Y-m-d H:i:s'),
                 $operation,
-                is_string($response) ? $response : json_encode($response, JSON_PRETTY_PRINT),
+                is_string($maskedResponse) ? $maskedResponse : json_encode($maskedResponse, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
                 $error ? "Error: " . $error . "\n" : ""
             );
         }
 
-        if ($this->options['savelog_callback'] != null) {
+        if (is_callable($this->options['savelog_callback'])) {
             call_user_func($this->options['savelog_callback'], $type, $log_message, 'dhl_api');
         }
     }
@@ -389,6 +402,13 @@ class DHLDPRestClient implements Iterator, ArrayAccess
         return array_map(array($this, 'objectToArray'), (array) $object);
     }
     private function maskSensitiveData($data) {
+        if (is_string($data)) {
+            $decoded = json_decode($data, true);
+            if (is_array($decoded)) {
+                return $this->maskSensitiveData($decoded);
+            }
+            return $this->maskSensitiveUrl($data);
+        }
         $sensitiveFields = [
             'client_id',
             'client_secret',
@@ -400,16 +420,16 @@ class DHLDPRestClient implements Iterator, ArrayAccess
 //            'name2',
 //            'name3',
 //            'addressStreet',
-            'token'
+            'token', 'access_token', 'refresh_token', 'id_token', 'authorization', 'dhl-api-key'
         ];
         if (is_object($data)) {
             $data = (array)$data;
         }
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                if (in_array($key, $sensitiveFields)) {
+                if (in_array(strtolower((string)$key), $sensitiveFields)) {
                     $data[$key] = '***';
-                } else if (is_array($value) || is_object($value)) {
+                } else {
                     $data[$key] = $this->maskSensitiveData($value);
                 }
             }
@@ -418,6 +438,6 @@ class DHLDPRestClient implements Iterator, ArrayAccess
     }
 
     private function maskSensitiveUrl($url) {
-        return preg_replace('/token=[^&]*/', 'token=***', $url);
+        return preg_replace('/([?&](?:token|access_token|refresh_token|client_secret|password)=)[^&#\s]*/i', '$1***', $url);
     }
 }
