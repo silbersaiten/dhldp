@@ -417,7 +417,7 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                 if ($is_submit_products) {
                     $result_save = $result_save &&
                         Configuration::updateValue('DHLDP_DHL_RETURN_PARTICIPATION', Tools::getValue('DHLDP_DHL_RETURN_PARTICIPATION', DhlDp::getConfig('DHL_RETURN_PARTICIPATION'))) &&
-                        Configuration::updateValue('DHLDP_DHL_PRODUCTS', count($added_dhl_products) ? implode(';', $added_dhl_products) : DhlDp::getConfig('DHL_PRODUCTS'));
+                        Configuration::updateValue('DHLDP_DHL_PRODUCTS', implode(';', $added_dhl_products));
                 }
 
                 if ($is_submit_misc) {

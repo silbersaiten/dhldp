@@ -128,11 +128,13 @@ var dhldpAdminConfigure = {
 
         $('.dhl-products').on('click', '#removeDhlProduct', function (e) {
             e.preventDefault();
-            parent = $(this).parent().parent();
-            parent.fadeOut('slow', function () {
+            var row = $(this).closest('tr');
+            var product = row.find('.added_dhl_products');
+            self.removeCarrierProducts(product.val());
+            product.remove();
+            row.fadeOut('slow', function () {
                 $(this).remove();
             });
-            self.removeCarrierProducts(parent.find('.added_dhl_products').val());
         });
 
         $('.dhl-list-carriers').on('click', '.dhlc', function (e) {
