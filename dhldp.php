@@ -1240,11 +1240,10 @@ class DhlDp extends Module
     public function filterShipping($shipping, $id_shop)
     {
         $dhl_carriers = $this->getDhlCarriers(true, false, $id_shop);
-        $dhl_carriers_ids = array_keys($dhl_carriers);
         $return_shipping = array();
         if (is_array($shipping)) {
             foreach ($shipping as $shipping_item) {
-                if (in_array($shipping_item['id_carrier'], $dhl_carriers_ids)) {
+                if (!empty($shipping_item['id_carrier']) && isset($dhl_carriers[$shipping_item['id_carrier']]['product'])) {
                     $shipping_item['default_dhl_product_code'] = $dhl_carriers[$shipping_item['id_carrier']]['product'];
                     $return_shipping[] = $shipping_item;
                 }
