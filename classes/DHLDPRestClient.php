@@ -237,12 +237,24 @@ class DHLDPRestClient implements Iterator, ArrayAccess
         }
         curl_setopt_array($client->handle, $curlopt);
 
-        $client->parseResponse(curl_exec($client->handle));
+        // Log structured parameters before encoding so form credentials are masked too.
+        $operation = $method . ' ' . $client->maskSensitiveUrl($client->url);
+        $client->saveLogData('DHL', $operation, array(
+            'endpoint' => $client->url,
+            'data' => $parameters,
+        ));
+        $rawResponse = curl_exec($client->handle);
+        if ($rawResponse !== false) {
+            $client->parseResponse($rawResponse);
+        } else {
+            $client->headers = (object) array();
+            $client->response = false;
+        }
         $client->info = (object) curl_getinfo($client->handle);
 
         $client->error = curl_error($client->handle);
         // Do not log request headers: they may contain credentials.
-        $client->saveLogData('DHL', $method . ' ' . $client->maskSensitiveUrl($client->url), null, array(
+        $client->saveLogData('DHL', $operation, null, array(
             'http_status' => $client->info->http_code,
             'content_type' => isset($client->headers->content_type) ? $client->headers->content_type : null,
             'body' => $client->response,
@@ -345,8 +357,9 @@ class DHLDPRestClient implements Iterator, ArrayAccess
     public function saveLogData($type, $operation, $request = null, $response = null, $error = null)
     {
         $log_message = '';
+        $operation = $this->maskSensitiveUrl($operation);
 
-        if ($request) {
+        if ($request !== null) {
             $maskedRequest = $this->maskSensitiveData($request);
             if (is_array($maskedRequest) && isset($maskedRequest['endpoint'])) {
                 $maskedRequest['endpoint'] = $this->maskSensitiveUrl($maskedRequest['endpoint']);
@@ -366,7 +379,7 @@ class DHLDPRestClient implements Iterator, ArrayAccess
             );
         }
 
-        if ($response || $error) {
+        if ($response !== null || $error) {
             $maskedResponse = $this->maskSensitiveData($response);
             if (is_array($maskedResponse) && isset($maskedResponse['label']['url'])) {
                 $maskedResponse['label']['url'] = $this->maskSensitiveUrl($maskedResponse['label']['url']);

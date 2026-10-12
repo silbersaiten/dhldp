@@ -65,21 +65,13 @@ class DHLRestService
         $trackingEndpoint .= '/orders?shipment=' . $shipment_number . '&profile=' . \DhlDp::DHL_PROFILE;
 
         $dhlManager = new DHLTokenManager();
-        $rclient = new \DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
 
         $request = array(
             'profile' => \DhlDp::DHL_PROFILE,
             'shipmentNumber' => $shipment_number,
         );
 
-        $rclient->saveLogData('DHL', 'deleteDeliveryLabel', array(
-            'endpoint' => $trackingEndpoint,
-            'data' => $request,
-        ));
-
-        $response = $dhlManager->makeApiRequest($trackingEndpoint, 'DELETE', $request);
-
-        $rclient->saveLogData('DHL', 'deleteDeliveryLabel', null, $response);
+        $response = $dhlManager->makeApiRequest($trackingEndpoint, 'DELETE', $request, 'deleteDeliveryLabel');
 
         if (is_array($response) && isset($response['items'][0]['shipmentNo'])) {
             $id_dhldp_label = DHLDPLabel::getLabelIDByShipmentNumber($shipment_number);

@@ -18,6 +18,7 @@ use DHLDPRestClient;
 
 class DHLTokenManager
 {
+    public $httpStatus;
     const CONFIG_TOKEN_KEY = 'DHLDP_DHL_ACCESS_TOKEN';
     const CONFIG_TOKEN_EXPIRY = 'DHLDP_DHL_TOKEN_EXPIRY';
     private $clientId;
@@ -79,10 +80,6 @@ class DHLTokenManager
             'username' => $this->dhl_user,
             'password' => $this->dhl_pass
         );
-        $rclient->saveLogData('DHL', 'requestNewToken', [
-            'endpoint' => $this->tokenUrl,
-            'data' => array_merge($requestData, ['password' => '***', 'client_secret' => '***']) // Скрываем чувствительные данные
-        ]);
         $res = $rclient->post($this->tokenUrl, $requestData);
 
         if ($res->error) {
@@ -128,7 +125,7 @@ class DHLTokenManager
     }
 
     // Method to use the token in a DHL API request
-    public function makeApiRequest($endpoint, $method = 'GET', $data = [])
+    public function makeApiRequest($endpoint, $method = 'GET', $data = [], $operation = null)
     {
         $accessToken = $this->getToken();
         $ch = curl_init();
@@ -153,16 +150,25 @@ class DHLTokenManager
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
-//dump($ch);
+        $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
+        $operation = $operation ?: $method . ' ' . $endpoint;
+        $rclient->saveLogData('DHL', $operation, array(
+            'endpoint' => $endpoint,
+            'method' => $method,
+            'data' => $data,
+        ));
         $response = curl_exec($ch);
-
-//dump($response);
-//dump(curl_errno($ch));die;
-        if (curl_errno($ch)) {
-            throw new \Exception('DHL API Request Error: ' . curl_error($ch));
-        }
-
+        $error = curl_error($ch);
+        $this->httpStatus = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $rclient->saveLogData('DHL', $operation, null, array(
+            'http_status' => $this->httpStatus,
+            'content_type' => curl_getinfo($ch, CURLINFO_CONTENT_TYPE),
+            'body' => $response,
+        ), $error);
         curl_close($ch);
+        if ($error) {
+            throw new \Exception('DHL API Request Error: ' . $error);
+        }
         return json_decode($response, true);
     }
 }

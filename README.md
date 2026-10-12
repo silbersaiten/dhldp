@@ -1,6 +1,10 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.13 (12.10.2026)
+* Fixed saving options in the block `Default settings for additional services`
+* Expanded descriptions of errors and messages encountered during label generation.
+
 #### 3.2.12 (28.09.2026)
 * Fixed deleting DHL product
 * Fixed logging of the authorization process

@@ -9,7 +9,7 @@
 * @version   1.1.0
 * @link      http://www.silbersaiten.de
 *}
-<div class="row" id="dhldp_dhl_export_documents" style="{if !isset($export_docs.show_dhl_export_documents) || (isset($export_docs.show_dhl_export_documents) && $export_docs.show_dhl_export_documents != 1)}display: none;{/if}">
+<div class="row dhl-export-documents" id="dhldp_dhl_export_documents" data-pack-weight="{$export_docs.pack_weight|escape:'html':'UTF-8'}" style="{if !isset($export_docs.show_dhl_export_documents) || (isset($export_docs.show_dhl_export_documents) && $export_docs.show_dhl_export_documents != 1)}display: none;{/if}">
     <div class="panel card">
         <div class="panel-heading card-header"><button type="button" id="collapseDHLDPDhlExportDocuments" class="button btn btn-default btn-sm collapseDHLDPDhlExportDocuments">{if $is177}<i class="material-icons">expand_less</i>{else}<i class="icon-angle-double-up"></i>{/if} </button> {l s='Export documents' mod='dhldp'} </div>
         <div class="row form-wrapper form-horizontal">
@@ -132,7 +132,7 @@
                             {foreach from=$export_docs.exportdoc_positions key=product_key item=product_value name=position}
                             <tr class="export_doc_position {if $smarty.foreach.position.index%2} odd{/if}">
                                 <td>
-                                    <textarea class="textarea-autosize form-control" style="width: 100%;word-wrap: break-word; resize: none; height: 85px;" name="export_docs[{$export_docs.id_order_carrier|escape:'html':'UTF-8'}][ExportDocPosition][{$smarty.foreach.position.index}][description]" maxlength="256">{$product_value.description|escape:'htmlall':'UTF-8'}</textarea>
+                                    <textarea class="textarea-autosize form-control" style="width: 100%;word-wrap: break-word; resize: none; height: 85px;" name="export_docs[{$export_docs.id_order_carrier|escape:'html':'UTF-8'}][ExportDocPosition][{$smarty.foreach.position.index}][description]" maxlength="50">{$product_value.description|truncate:50:'':true|escape:'htmlall':'UTF-8'}</textarea>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" name="export_docs[{$export_docs.id_order_carrier|escape:'html':'UTF-8'}][ExportDocPosition][{$smarty.foreach.position.index}][countryCodeOrigin]" value="{$product_value.countryCodeOrigin|escape:'htmlall':'UTF-8'}" maxlength="2">

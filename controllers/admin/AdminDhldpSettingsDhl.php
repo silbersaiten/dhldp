@@ -305,16 +305,17 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
             if ($is_submit_retoure && (int)Tools::getValue('DHLDP_DHL_RETURNS_EXTEND') == 1 && !count(Tools::getValue('DHLDP_DHL_RA_COUNTRIES', array()))) {
                 $this->dhldpErrors[] = $this->module->l('Please select countries for Return label');
             }
-            if ($is_submit_misc && !in_array((int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM'), array(0, 1, 2))) {
+            if ($is_submit_additional && !in_array((int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM'), array(0, 1, 2))) {
                 $this->dhldpErrors[] = $this->module->l('Invalid value of "Invoice number of export document is"');
             }
-            if ($is_submit_misc && (Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM') != '') && !$this->module->isValidCustomsTariffNumber(Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM'))) {
+            if ($is_submit_additional && (Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM') != '') && !$this->module->isValidCustomsTariffNumber(Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM'))) {
                 $this->dhldpErrors[] = $this->module->l('Invalid value of Customs tariff number');
             }
-            if ($is_submit_misc && Tools::strlen(Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL')) > 35) {
+            if ($is_submit_additional && Tools::strlen(Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL')) > 35) {
                 $this->dhldpErrors[] = $this->module->l('The company name is too long');
             }
-            $fee = Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES');
+            $fee = str_replace(',', '.', trim((string)Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', DhlDp::getConfig('DHL_DEF_ADDITIONAL_CUSTOM_FEES'))));
+            $fee = $fee === '' ? '0' : $fee;
 
             if ($is_submit_additional && !Validate::isPrice($fee)) {
                 $this->dhldpErrors[] = $this->module->l('Invalid amount for additional custom fees.');
@@ -430,7 +431,6 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         Configuration::updateValue('DHLDP_DHL_DEFAULT_WIDTH', (int)Tools::getValue('DHLDP_DHL_DEFAULT_WIDTH', DhlDp::getConfig('DHL_DEFAULT_WIDTH'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEFAULT_HEIGHT', (int)Tools::getValue('DHLDP_DHL_DEFAULT_HEIGHT', DhlDp::getConfig('DHL_DEFAULT_HEIGHT'))) &&
                         Configuration::updateValue('DHLDP_DHL_AGE_CHECK', Tools::getValue('DHLDP_DHL_AGE_CHECK', DhlDp::getConfig('DHL_AGE_CHECK'))) &&
-                        Configuration::updateValue('DHLDP_DHL_PREMIUM', Tools::getValue('DHLDP_DHL_PREMIUM', DhlDp::getConfig('DHL_PREMIUM'))) &&
                         Configuration::updateValue('DHLDP_DHL_PFPS', (int)Tools::getValue('DHLDP_DHL_PFPS', DhlDp::getConfig('DHL_PFPS'))) &&
                         Configuration::updateValue('DHLDP_DHL_PFPS_MAP', (Tools::getValue('DHLDP_DHL_PFPS_MAP', DhlDp::getConfig('DHL_PFPS_MAP')) == 1) ? 1 : 0) &&
                         Configuration::updateValue('DHLDP_DHL_GOOGLEMAPAPIKEY', Tools::getValue('DHLDP_DHL_GOOGLEMAPAPIKEY', DhlDp::getConfig('DHL_GOOGLEMAPAPIKEY'))) &&
@@ -441,9 +441,6 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
                         Configuration::updateValue('DHLDP_DHL_RETURN_MAIL', (int)Tools::getValue('DHLDP_DHL_RETURN_MAIL', (int)DhlDp::getConfig('DHL_RETURN_MAIL'))) &&
                         Configuration::updateValue('DHLDP_DHL_LABEL_WITH_RETURN', (int)Tools::getValue('DHLDP_DHL_LABEL_WITH_RETURN', (int)DhlDp::getConfig('DHL_LABEL_WITH_RETURN'))) &&
                         Configuration::updateValue('DHLDP_DHL_LABEL_IGNORE_WARNING', (int)Tools::getValue('DHLDP_DHL_LABEL_IGNORE_WARNING', (int)DhlDp::getConfig('DHL_LABEL_IGNORE_WARNING'))) &&
-                        Configuration::updateValue('DHLDP_DHL_EXP_INV_NUM', (int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM', DhlDp::getConfig('DHL_EXP_INV_NUM'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM', Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM', DhlDp::getConfig('DHL_DEF_CUSTOMS_TARIFF_NUM'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', DhlDp::getConfig('DHL_DEF_PLACE_OF_COMMITAL'))) &&
                         Configuration::updateValue('DHLDP_DHL_LABEL_FORMAT', Tools::getValue('DHLDP_DHL_LABEL_FORMAT', DhlDp::getConfig('DHL_LABEL_FORMAT'))) &&
                         Configuration::updateValue('DHLDP_DHL_RETOURE_LABEL_FORMAT', Tools::getValue('DHLDP_DHL_RETOURE_LABEL_FORMAT', DhlDp::getConfig('DHL_RETOURE_LABEL_FORMAT'))) &&
                         Configuration::updateValue('DHLDP_DHL_EPRINT_EMAIL', Tools::getValue('DHLDP_DHL_EPRINT_EMAIL', DhlDp::getConfig('DHL_EPRINT_EMAIL')));
@@ -451,9 +448,13 @@ class AdminDhldpSettingsDhlController extends ModuleAdminController
 
                 if ($is_submit_additional) {
                     $result_save = $result_save &&
+                        Configuration::updateValue('DHLDP_DHL_PREMIUM', (int)Tools::getValue('DHLDP_DHL_PREMIUM', DhlDp::getConfig('DHL_PREMIUM'))) &&
+                        Configuration::updateValue('DHLDP_DHL_EXP_INV_NUM', (int)Tools::getValue('DHLDP_DHL_EXP_INV_NUM', DhlDp::getConfig('DHL_EXP_INV_NUM'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM', Tools::getValue('DHLDP_DHL_DEF_CUSTOMS_TARIFF_NUM', DhlDp::getConfig('DHL_DEF_CUSTOMS_TARIFF_NUM'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', Tools::getValue('DHLDP_DHL_DEF_PLACE_OF_COMMITAL', DhlDp::getConfig('DHL_DEF_PLACE_OF_COMMITAL'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', (int)Tools::getValue('DHLDP_DHL_DEF_PARCEL_ROUT_SERV', DhlDp::getConfig('DHL_DEF_PARCEL_ROUT_SERV'))) &&
                         Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN', DhlDp::getConfig('DHL_DEF_GOGREEN'))) &&
-                        Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', Tools::getValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', DhlDp::getConfig('DHL_DEF_ADDITIONAL_CUSTOM_FEES'))) &&
+                        Configuration::updateValue('DHLDP_DHL_DEF_ADDITIONAL_CUSTOM_FEES', $fee) &&
                         Configuration::updateValue('DHLDP_DHL_DEF_GOGREEN_PLUS', (int)Tools::getValue('DHLDP_DHL_DEF_GOGREEN_PLUS', DhlDp::getConfig('DHL_DEF_GOGREEN_PLUS')));
                 }
 

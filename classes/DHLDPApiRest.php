@@ -32,6 +32,7 @@ class DHLDPApiRest
     public $errors = [];
     public $warnings = [];
     public $confirmations = [];
+    public $responseMessages = [];
     public static $cig_endpoint_sandbox = 'https://api-sandbox.dhl.com/parcel/de/shipping/v2';
     public static $cig_endpoint_live = 'https://api-eu.dhl.com/parcel/de/shipping/v2/';
     public static $tracking_url = 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=[tracking_number]';
@@ -692,6 +693,7 @@ class DHLDPApiRest
 
     public function getDhlReturnLabel($data, $id_shop = null)
     {
+        $this->responseMessages = [];
         $this->errors = [];
         $this->warnings = [];
         $this->confirmations = [];
@@ -706,23 +708,18 @@ class DHLDPApiRest
         try {
             $method = 'POST';
             $dhlManager = new DHLTokenManager();
-            $rclient->saveLogData('DHL', 'Return label', [
-                'endpoint' => $trackingEndpoint,
-                'data' => $data
-            ]);
-            $response = $dhlManager->makeApiRequest($trackingEndpoint, $method, $data);
-            $rclient->saveLogData('DHL', 'Return label', null, $response);
-            return $this->getResponse($response);
+            $response = $dhlManager->makeApiRequest($trackingEndpoint, $method, $data, 'Return label');
+            return $this->getResponse($response, $dhlManager->httpStatus);
         } catch (\Exception $e) {
             $error_msg = $e->getMessage() . ((isset($e->detail)) ? ', ' . $e->detail : '');
             $this->errors[] = $error_msg;
             $rclient->saveLogData('DHL', 'Return label', null, null, $error_msg);
-            echo 'Error: ' . $e->getMessage();
         }
     }
 
     public function callDhlApi($function, $params, $id_shop = null)
     {
+        $this->responseMessages = [];
         $this->errors = array();
         $this->warnings = array();
         $this->confirmations = [];
@@ -763,16 +760,8 @@ class DHLDPApiRest
 
             $dhlManager = new DHLTokenManager();
 
-            $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
-            $rclient->saveLogData('DHL', $function, [
-                'endpoint' => $trackingEndpoint,
-                'data' => $data
-            ]);
-
-            $response = $dhlManager->makeApiRequest($trackingEndpoint, $method, $data);
-
-            $rclient->saveLogData('DHL', $function, null, $response);
-            return $this->getResponse($response);
+            $response = $dhlManager->makeApiRequest($trackingEndpoint, $method, $data, $function);
+            return $this->getResponse($response, $dhlManager->httpStatus);
         } catch (\Exception $e) {
             $error_msg = $e->getMessage() . ((isset($e->detail)) ? ', ' . $e->detail : '');
             $this->errors[] = $error_msg;
@@ -780,49 +769,76 @@ class DHLDPApiRest
             $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
             $rclient->saveLogData('DHL', $function, null, null, $error_msg);
 
-            echo 'Error: ' . $e->getMessage();
         }
         return false;
     }
 
-    public function getResponse($res)
+    public function getResponse($res, $httpStatus = null)
     {
-        if (isset($res['sstatus'])) {
-            // Return label
-            $http_status = $res['sstatus']['status'];
-            $http_status_title = $res['sstatus']['title'];
-            $http_status_detail = $res['sstatus']['detail'];
-        } elseif(isset($res['status']['status'])) {
-            $http_status = $res['status']['status'];
-            $http_status_title = $res['status']['title'];
-            $http_status_detail = $res['status']['detail'];
-        } else {
-            // Return label
-            $http_status = $res['status'];
-            $http_status_title = $res['title'];
-            $http_status_detail = $res['detail'];
+        $this->responseMessages = $this->getResponseMessages($res, 'Error', true);
+        if (!is_array($res)) {
+            $this->errors[] = 'DHL API: ' . ($httpStatus ? 'HTTP ' . $httpStatus . '. ' : '') . 'Empty or invalid JSON response.';
+            return false;
         }
+        $status = isset($res['sstatus']) && is_array($res['sstatus']) ? $res['sstatus']
+            : (isset($res['status']) && is_array($res['status']) ? $res['status'] : $res);
+        $code = isset($status['status']) && is_scalar($status['status']) ? (int)$status['status'] : (int)$httpStatus;
+        $failed = $code >= 400 || $httpStatus >= 400 || !empty($res['error']) || !empty($res['errors']);
+        $messages = $this->getResponseMessages($res, 'Error', $failed);
+        $warnings = $this->getResponseMessages($res, 'Warning');
+        // DHL can reject validation with HTTP 400 and only Warning-level details.
+        // Include those details in the failure alert, retaining their severity.
+        if ($failed) {
+            foreach ($warnings as $warning) {
+                $messages[] = 'Warning: ' . $warning;
+            }
+        }
+        if ($failed && !$messages) {
+            $messages[] = 'DHL API: HTTP ' . ($httpStatus >= 400 ? $httpStatus : $code);
+        }
+        $this->errors = array_values(array_unique(array_merge($this->errors, $messages)));
+        $this->warnings = array_values(array_unique(array_merge($this->warnings, $warnings)));
+        if ($this->errors) {
+            return false;
+        }
+        if (in_array($code, array(200, 201, 207))) {
+            $summary = array();
+            foreach (array('title', 'detail') as $field) {
+                if (!empty($status[$field]) && is_string($status[$field])) {
+                    $summary[] = $status[$field];
+                }
+            }
+            if ($summary) {
+                $this->confirmations[] = implode(': ', $summary);
+            }
+        }
+        return $res;
+    }
 
-        if ($http_status == '200' || $http_status == '201' || $http_status == '207') {
-            $this->confirmations[] = $http_status_title . ': ' . $http_status_detail;
+    private function getResponseMessages($node, $severity, $failed = false)
+    {
+        if (!is_array($node)) {
+            return $failed && $severity === 'Error' && is_string($node) && trim($node) !== '' ? array(trim($node)) : array();
         }
-        if (isset($res['items'])) {
-            if (isset($res['items'][0]['validationMessages'])) {
-                foreach ($res['items'][0]['validationMessages'] as $validationMessage) {
-                    if ($validationMessage['validationState'] === "Error") {
-                        $this->errors[] = (isset($validationMessage['property']) ? $validationMessage['property'] : '') . ': ' . $validationMessage['validationMessage'];
-                    }
-                    if ($validationMessage['validationState'] === "Warning") {
-                        $this->warnings[] = (isset($validationMessage['property']) ? $validationMessage['property'] : '') . ': ' . $validationMessage['validationMessage'];
-                    }
+        $state = isset($node['validationState']) ? $node['validationState'] : null;
+        $failed = $failed || (isset($node['status']) && is_numeric($node['status']) && $node['status'] >= 400)
+            || !empty($node['error']) || !empty($node['errors']);
+        $messages = array();
+        if (($state !== null && strcasecmp($state, $severity) === 0) || ($state === null && $failed && $severity === 'Error')) {
+            foreach (array('title', 'detail', 'message', 'error_description', 'error', 'validationMessage') as $field) {
+                if (isset($node[$field]) && is_string($node[$field]) && trim($node[$field]) !== '') {
+                    $messages[] = (!empty($node['property']) && is_string($node['property']) ? $node['property'] . ': ' : '') . trim($node[$field]);
                 }
             }
         }
-
-        if (is_array($this->errors) && count($this->errors) > 0) {
-            return false;
+        foreach ($node as $key => $value) {
+            if (is_int($key) || in_array($key, array('status', 'sstatus', 'items', 'validationMessages', 'errors', 'error'))) {
+                if (is_array($value) || $key === 'errors' || is_int($key)) {
+                    $messages = array_merge($messages, $this->getResponseMessages($value, $severity, $failed || $key === 'errors'));
+                }
+            }
         }
-        return $res;
+        return array_values(array_unique($messages));
     }
 
     public function getPageFormats($id = null)
@@ -839,6 +855,7 @@ class DHLDPApiRest
 
     public function validateDHLShipment($function, $params, $id_shop = null)
     {
+        $this->responseMessages = [];
         $this->errors = array();
         $this->warnings = array();
         $this->confirmations = [];
@@ -869,8 +886,8 @@ class DHLDPApiRest
         );
         $r['shipments'] = [$shipments];
         $dhlManager = new DHLTokenManager();
-        $response = $dhlManager->makeApiRequest($trackingEndpoint, 'POST', $r);
-        return $this->getResponse($response);
+        $response = $dhlManager->makeApiRequest($trackingEndpoint, 'POST', $r, 'validateDHLShipment');
+        return $this->getResponse($response, $dhlManager->httpStatus);
     }
 
     public function extractHouseNumberAndMoveText(&$address, &$name3)
@@ -924,7 +941,6 @@ class DHLDPApiRest
         $result = [
             "exportType" => $customs['exportType'], //exportType
             "exportDescription" => $customs['exportTypeDescription'], //exportTypeDescription
-            "shippingConditions" => $customs['termsOfTrade'], //termsOfTrade
             "officeOfOrigin" => $customs['placeOfCommital'], //placeOfCommital
             //"shipperCustomsRef" => "DE11111",
             //"consigneeCustomsRef" => "GB22222",
@@ -936,6 +952,11 @@ class DHLDPApiRest
             "items" => []
         ];
 
+        // An unset optional enum must be omitted, not sent as an empty string.
+        if (isset($customs['termsOfTrade']) && trim($customs['termsOfTrade']) !== '') {
+            $result['shippingConditions'] = trim($customs['termsOfTrade']);
+        }
+
         foreach ($customs['ExportDocPosition'] as $item) {
             if ((float)$item['amount'] <= 0) {
                 continue;
@@ -943,16 +964,16 @@ class DHLDPApiRest
 
             $country = (new \DhlDp)->getCountriesIDsForRA($item['countryCodeOrigin']);
             $itemData = [
-                "itemDescription" => $item['description'], // description
-                "packagedQuantity" => $item['amount'], // amount
+                "itemDescription" => Tools::substr($item['description'], 0, 50), // DHL customs description limit
+                "packagedQuantity" => (int)$item['amount'], // amount
                 "countryOfOrigin" => $country['iso_code3'],// countryCodeOrigin
                 "itemValue" => [
                     "currency" => "EUR",
-                    "value" => number_format($item['customsValue'], 2, '.', ','), // customsValue
+                    "value" => round((float)$item['customsValue'], 2), // customsValue
                 ],
                 "itemWeight" => [
                     "uom" => "kg",
-                    "value" => $item['netWeightInKG'], // netWeightInKG
+                    "value" => (float)$item['netWeightInKG'], // netWeightInKG
                 ]
             ];
             if (!empty($item['customsTariffNumber'])) {
@@ -1084,7 +1105,7 @@ class DHLDPApiRest
             $url = 'https://api-sandbox.dhl.com/location-finder/v1/find-by-address';
             $dhl_api_key = self::$dhl_sbx_ciguser; //'prestashop'
         }
-        $rclient = new DHLDPRestClient(array('savelog_callback' => ''));
+        $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
 
         $res = $rclient->get($url,
             array(
@@ -1140,7 +1161,7 @@ class DHLDPApiRest
             $url = 'https://api-sandbox.dhl.com/location-finder/v1/find-by-address';
             $dhl_api_key = self::$dhl_sbx_ciguser; //'prestashop'
         }
-        $rclient = new DHLDPRestClient(array('savelog_callback' => ''));
+        $rclient = new DHLDPRestClient(array('savelog_callback' => 'DHLDP::logToFile'));
 
         $res = $rclient->get($url,
             array(

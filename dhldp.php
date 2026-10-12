@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.12
+ * @version   3.2.13
  * @link      https://www.silbersaiten.de
  */
 
@@ -46,7 +46,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.12';
+        $this->version = '3.2.13';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -1656,6 +1656,7 @@ class DhlDp extends Module
                             $this->context->smarty->assign('dhl_warnings_title', $dhl_warnings_title);
                         } else {
                             $dhl_errors[] = $this->l('Unable to generate label for this request');
+                            $dhl_errors = array_merge($dhl_errors, $this->dhldp_api_rest->responseMessages);
                         }
                     }
                 } else {
@@ -2019,6 +2020,7 @@ class DhlDp extends Module
             'show_dhl_export_documents' => isset($doc_input['show_dhl_export_documents']) ? $doc_input['show_dhl_export_documents'] : '',
             'exporttype_options' => $this->getExportTypeOptions(),
             'termsoftrade_options' => $this->getTermsOfTradeOptions(),
+            'pack_weight' => (float)self::getConfig('DHL_PACK_WEIGHT', $order->id_shop),
             'exportdoc_positions' => $exportdoc_positions,
             'exportdoc_positions_limit_exceed' => (isset($order_positions) && (count($order_positions) > count($exportdoc_positions))) ? true : false,
             'invoiceNumber' => isset($doc_input['invoiceNumber']) ? $doc_input['invoiceNumber'] : $this->getInvoiceNumberForExportDocument($order),
@@ -2611,6 +2613,7 @@ class DhlDp extends Module
         $export_docs_input = Tools::getValue('export_docs');
 
         foreach ($collection as $id_order_carrier => $c) {
+            $api_errors = null;
             $order_errors = array();
             $order_confirmations = array();
             $order_warnings = array();
@@ -2769,10 +2772,12 @@ class DhlDp extends Module
                     } elseif ($has_warnings) {
 //                        $this->context->smarty->assign('warnings_title', $this->l('THE SHIPPING LABEL WAS CREATED WITH WARNINGS'));
                     } else {
-                        $order_errors[] = $this->_errors[] = sprintf(
+                        $api_errors = array_merge(array(sprintf(
                                 $this->l('Order #%s :'),
                                 $c['order_id']
-                            ) . ' ' . $this->l('Unable to generate label for this request');
+                            ) . ' ' . $this->l('Unable to generate label for this request')), $this->dhldp_api_rest->responseMessages);
+                        $order_errors = array_merge($order_errors, $api_errors);
+                        $this->_errors = array_merge($this->_errors, $api_errors);
                     }
 
                     $error_order_line[] = $c['order_id'];

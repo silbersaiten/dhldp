@@ -49,6 +49,7 @@ class TestLink
 }
 class TestDhlApi
 {
+    public $responseMessages = array();
     public $warnings = array();
     public $errors = array();
     public $confirmations = array('Shipment created');
@@ -118,16 +119,20 @@ foreach (array(false, true) as $modern) {
     }
 }
 
-foreach (array('error', 'warning', 'validation') as $failure) {
+foreach (array('error', 'warning', 'validation', 'response') as $failure) {
     $module = new OrderRedirectTestModule();
     $module->result = false;
     Tools::$request = array('submitDHLDPDhlLabelRequest' => 1, 'dhl_product_code' => $failure === 'validation' ? '' : 'V01PAK');
     Tools::$redirect = null;
     if ($failure === 'error') { $module->dhldp_api_rest->errors = array('DHL unavailable'); }
     if ($failure === 'warning') { $module->dhldp_api_rest->warnings = array('Please check address'); }
+    if ($failure === 'response') { $module->dhldp_api_rest->responseMessages = array('Billing number is not enabled for this product'); }
     $module->displayDHLAdminOrder(array('id_order' => 42));
     checkRedirect(Tools::$redirect === null, 'Failed request redirected');
     $messageKey = $failure === 'warning' ? 'dhl_warnings' : 'dhl_errors';
     checkRedirect(count($module->context->smarty->values[$messageKey]) > 0, 'Failure message lost');
+    if ($failure === 'response') {
+        checkRedirect(in_array('Billing number is not enabled for this product', $module->context->smarty->values['dhl_errors']), 'API response missing from alert');
+    }
 }
 echo "Order label redirect checks passed.\n";

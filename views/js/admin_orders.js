@@ -197,11 +197,14 @@ $(function() {
         recalculateParcelWeight: function(element) {
             var parcelWeight = 0;
             if ($(element).parents('.export_doc_position').parent().find('.export_doc_position').length) {
-                for (block of $(element).parents('.export_doc_position').parent().find('.export_doc_position')) {
+                for (var block of $(element).parents('.export_doc_position').parent().find('.export_doc_position')) {
                     var amount = $(block).find('.position_amount').val();
                     var unit_weight = $(block).find('.position_unit_weight').val();
 
                     parcelWeight += amount * unit_weight;
+                }
+                if (parcelWeight > 0) {
+                    parcelWeight += parseFloat($(element).closest('.dhl-export-documents').attr('data-pack-weight')) || 0;
                 }
                 $(element).parents('.ordercarrier-panel').find('input.parcel_weight').val(Math.round(parcelWeight*100)/100);
             }
