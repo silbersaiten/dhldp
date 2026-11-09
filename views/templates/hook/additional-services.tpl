@@ -312,6 +312,16 @@
                                 {if $addit_services.Premium == 1} checked="checked"{/if} value="1"/>
                     </div>
                 </div>
+                <div class="form-group-flex" style="display: none;">
+                    <label class="control-label col-lg-6">
+                        {l s='Postal Delivered Duty Paid (pDDP)' mod='dhldp'}
+                        <span class="help-box{if $is16}-f{/if}" data-toggle="popover" data-content="{l s='DHL charges an additional fee for this service.' mod='dhldp'}"></span>
+                    </label>
+                    <div class="col-lg-6">
+                        <input class="form-control" type="checkbox" name="addit_services[{$addit_services.id_order_carrier|escape:'html':'UTF-8'}][PostalDeliveryDutyPaid]"
+                               {if $addit_services.PostalDeliveryDutyPaid} checked="checked"{/if} value="1"/>
+                    </div>
+                </div>
                 <div class="form-group-flex">
                     <label class="control-label col-lg-6">{l s='Drop-off location' mod='dhldp'}
                         <span class="help-box{if $is16}-f{/if}" data-toggle="popover" data-content="{l s='This addressing version enables your customers to receive parcels round the clock, even if nobody sits at home. No extra charge.' mod='dhldp'}"></span>

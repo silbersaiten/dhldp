@@ -103,7 +103,7 @@
             <div class="col-lg-12">
                 {if $export_docs.exportdoc_positions_limit_exceed == true}<div class="alert alert-warning">{l s='Maximum quantity of positions is exceed. You see first 99 positions of order' mod='dhldp'}</div>{/if}
                 <div class="alert alert-info">
-                    <div> - {l s='Sum of weights of positions must be equal to weight of package' mod='dhldp'}</div>
+                    <div> - {l s='Enter net weights for the items and the total weight including packaging for the shipment.' mod='dhldp'}</div>
                     <div class="dhlp_new_release"> - {l s='If you don\'t want to add product in export document, then set "Amount" to 0' mod='dhldp'}</div>
                 </div>
                 <table class="table">

@@ -244,6 +244,10 @@ class DHLDPApiRest
             )
         );
 
+        if ($from_country === 'DE' && in_array($to_country, array('US', 'PR'), true)) {
+            $products['V53WPAK']['services'][] = 'PostalDeliveryDutyPaid';
+        }
+
         foreach ($products as $product_code => $product) {
             if ($product['active'] != true) {
                 unset($products[$product_code]);
@@ -1061,6 +1065,9 @@ class DHLDPApiRest
         }
         if (isset($services['Service']['premium'])) {
             $result['premium'] = true;
+        }
+        if (!empty($services['Service']['PostalDeliveryDutyPaid'])) {
+            $result['postalDeliveryDutyPaid'] = true;
         }
         if (isset($services['dhlRetoure'])) {
             $result['dhlRetoure'] = $services['dhlRetoure'];

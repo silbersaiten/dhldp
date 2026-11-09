@@ -1,6 +1,10 @@
 # DHL Deutschepost
 
 ## Changelog
+#### 3.2.14 (09.11.2026)
+* Added pDDP support for DHL Paket International shipments to the United States and Puerto Rico.
+* Clarified the difference between item net weight and shipment weight including packaging.
+
 #### 3.2.13 (12.10.2026)
 * Fixed saving options in the block `Default settings for additional services`
 * Expanded descriptions of errors and messages encountered during label generation.

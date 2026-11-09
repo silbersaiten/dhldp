@@ -7,7 +7,7 @@
  * @license   See joined file licence.txt
  * @category  Module
  * @support   silbersaiten <support@silbersaiten.de>
- * @version   3.2.13
+ * @version   3.2.14
  * @link      https://www.silbersaiten.de
  */
 
@@ -46,7 +46,7 @@ class DhlDp extends Module
     {
         $this->name = 'dhldp';
         $this->tab = 'shipping_logistics';
-        $this->version = '3.2.13';
+        $this->version = '3.2.14';
         $this->author = 'Silbersaiten';
         $this->module_key = '96d5521c4c1259e8e87786597735aa4e';
         $this->need_instance = 0;
@@ -541,6 +541,11 @@ class DhlDp extends Module
         }
         if (isset($options['addit_services']['Premium']) && $options['addit_services']['Premium'] != '') {
             $shipment_order['Shipment']['ShipmentDetails']['Service']['premium'] = true;
+        }
+        if (!empty($options['addit_services']['PostalDeliveryDutyPaid'])
+            && in_array('PostalDeliveryDutyPaid', $def['services'], true)
+        ) {
+            $shipment_order['Shipment']['ShipmentDetails']['Service']['PostalDeliveryDutyPaid'] = true;
         }
         if (isset($options['addit_services']['CashOnDelivery']) && $options['addit_services']['CashOnDelivery'] != '') {
             $CashOnDelivery_codAmount = $options['addit_services']['CashOnDelivery_codAmount'] == '' ? 0 : $options['addit_services']['CashOnDelivery_codAmount'];
@@ -1957,6 +1962,7 @@ class DhlDp extends Module
             'NoticeOfNonDeliverability' => isset($service_input['NoticeOfNonDeliverability']) ? $service_input['NoticeOfNonDeliverability'] : '',
             'ReturnReceipt' => isset($service_input['ReturnReceipt']) ? $service_input['ReturnReceipt'] : '',
             'Premium' => isset($service_input['Premium']) ? $service_input['Premium'] : self::getConfig('DHL_PREMIUM', $order->id_shop),
+            'PostalDeliveryDutyPaid' => !empty($service_input['PostalDeliveryDutyPaid']),
             'CashOnDelivery' => isset($service_input['CashOnDelivery']) ? $service_input['CashOnDelivery'] : '',
             'CashOnDelivery_addFee' => isset($service_input['CashOnDelivery_addFee']) ? $service_input['CashOnDelivery_addFee'] : '',
             'CashOnDelivery_codAmount' => isset($service_input['CashOnDelivery_codAmount']) ? $service_input['CashOnDelivery_codAmount'] : '',

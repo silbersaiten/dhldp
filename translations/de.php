@@ -50,6 +50,8 @@ $_MODULE['<{dhldp}prestashop>additional-services_78059097cf9dd1cbcd02901cec214b8
 $_MODULE['<{dhldp}prestashop>additional-services_879b70ad1c6b5954e7b80651b795226a'] = 'Vorausverfügung';
 $_MODULE['<{dhldp}prestashop>additional-services_8aa8ec333a8b931914f00358b3cd065e'] = 'Prüfung: Mindestalter';
 $_MODULE['<{dhldp}prestashop>additional-services_8d5e7e72f12067991186cdf3cb7d5d9d'] = 'Premium';
+$_MODULE['<{dhldp}prestashop>additional-services_51e4cb80c56787584dfff353ba82781d'] = 'Postal Delivered Duty Paid (pDDP)';
+$_MODULE['<{dhldp}prestashop>additional-services_40b5ae867eb1bae8121b41fa3682ca3d'] = 'DHL berechnet für diesen Service einen Aufpreis.';
 $_MODULE['<{dhldp}prestashop>additional-services_906677e30532fc7ac5cef3907a5fbe29'] = 'Mit diesem Service können Sie unkompliziert festlegen, dass Ihre Artikel nicht an Kinder oder Minderjährige übergeben werden. Aufpreis zusätzlich zum Paketpreis.';
 $_MODULE['<{dhldp}prestashop>additional-services_9a84a0bf573688bd67338fbd183e4660'] = 'Prüfung: Nachname';
 $_MODULE['<{dhldp}prestashop>additional-services_9b77be1f624c2a1caf0f0eaf81eb2bec'] = 'Rückschein';
@@ -570,7 +572,7 @@ $_MODULE['<{dhldp}prestashop>export-documents_7ad1e5de2723c9408adba133c3469ca2']
 $_MODULE['<{dhldp}prestashop>export-documents_84551068847dff478575f9ae53d00454'] = 'Zusätzliche Zollgebühren';
 $_MODULE['<{dhldp}prestashop>export-documents_8ae4286d38bb2235def98fd68d7420d2'] = 'Rechnungsnummer';
 $_MODULE['<{dhldp}prestashop>export-documents_8b513e0cffb36c0f292c8f1e56af9569'] = 'Zollwert';
-$_MODULE['<{dhldp}prestashop>export-documents_8d1787304583b502b70bdaf7134b586a'] = 'Die Summe der Gewichte der Positionen muss dem Gewicht des Pakets entsprechen';
+$_MODULE['<{dhldp}prestashop>export-documents_38af9bf325e04de7c91a4532ff3c2b75'] = 'Geben Sie für die Positionen das Nettogewicht und für die Sendung das Gesamtgewicht einschließlich Verpackung an.';
 $_MODULE['<{dhldp}prestashop>export-documents_8d7dbfbb509b1528c2daf12dd35211bc'] = 'Bestätigungsnummer';
 $_MODULE['<{dhldp}prestashop>export-documents_9a6d5e6b6d09dcd324786c9b5aee7ece'] = 'Dokumente exportieren';
 $_MODULE['<{dhldp}prestashop>export-documents_9c5dfe638e65bf2d0c426dd88c9051a0'] = 'Code des Herkunftslandes';
